@@ -12,10 +12,9 @@ describe("WriteBlog component", () => {
     let component = render(<WriteBlog />);
     expect(component.container).toBeInTheDocument();
   });
-
-  const exampleBlog = {
+ 
+  const exampleBlogPost = {
     title: 'Im Pickle Rick!!!',
-    username: 'Morty',
     text: 'I turned myself into a pickle Morty!!!'
   }
 
@@ -24,31 +23,29 @@ describe("WriteBlog component", () => {
 
     //adds text to title input
     const title = utils.getByTestId('writeTitle');
-    fireEvent.change(title, { target: { value: exampleBlog.title } });
-    expect(title.value).toBe(exampleBlog.title);
+    fireEvent.change(title, { target: { value: exampleBlogPost.title } });
+    expect(title.value).toBe(exampleBlogPost.title);
 
     //add text to blog text area
-    const blogPostText = utils.getByTestId('writeBlogPostText');
-    fireEvent.change(blogPostText, { target: { value: exampleBlog.text } });
-    expect(blogPostText.value).toBe(exampleBlog.text);
+    const text = utils.getByTestId('writeText');
+    fireEvent.change(text, { target: { value: exampleBlogPost.text } });
+    expect(text.value).toBe(exampleBlogPost.text);
   });
 
-  test("should be able to submit blog post", () => {
-    //stores submited value in variable submitOutput for testing
-    let submitOutput = null;
-    const handleSubmit = (blogPost) => submitOutput = blogPost;
-    const utils = render(<WriteBlog handleSubmit={handleSubmit} username="Morty"/>);
+  test('should clear title and textarea upon submit', () => {
+    const utils = render(<WriteBlog />);
 
-    //populates blog with title and blogPost text
+    //adds text to title and textarea inputs
     const title = utils.getByTestId('writeTitle');
-    fireEvent.change(title, { target: { value: exampleBlog.title } });
-    const blogPostText = utils.getByTestId('writeBlogPostText');
-    fireEvent.change(blogPostText, { target: { value: exampleBlog.text } });
+    fireEvent.change(title, { target: { value: exampleBlogPost.title } });
+    const text = utils.getByTestId('writeText');
+    fireEvent.change(text, { target: { value: exampleBlogPost.text } });
 
     //clicks submit button
     const submit = utils.getByTestId('submit');
     fireEvent.click(submit);
 
-    expect(submitOutput).toEqual(exampleBlog);
+    expect(title.value).toBe('');
+    expect(text.value).toBe('');
   });
 });

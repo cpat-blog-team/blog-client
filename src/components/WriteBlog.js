@@ -1,13 +1,33 @@
 import React, { useState } from 'react';
 
-export default function WriteBlog({ handleSubmit, username }) {
+export default function WriteBlog(props) {
 
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
 
+  const clearForm = () => {
+    setTitle('');
+    setText('');
+  }
+
+  const handleSubmit = (blogPost) => {
+    //to be implemented, post to api
+    //...
+
+    clearForm();
+  }
+
   return(
     <div>
-      <form>
+      <form
+        onSubmit={e => {
+          e.preventDefault();
+          handleSubmit({
+            title,
+            text
+          });
+        }}
+      >
         <div className="form-group">
           <label htmlFor="writeTitle">Title</label>
           <input 
@@ -17,18 +37,18 @@ export default function WriteBlog({ handleSubmit, username }) {
             data-testid="writeTitle"
             value={title || ""}
             onChange={e => {
-              e.preventDefault()
-              setTitle(e.target.value)
+              e.preventDefault();
+              setTitle(e.target.value);
             }}
           />
         </div>
         <div className="form-group">
-          <label htmlFor="writeBlogPostText">Blog Text</label>
+          <label htmlFor="writeText">Blog Text</label>
           <textarea 
             className="form-control" 
-            id="writeBlogPostText" 
+            id="writeText" 
             rows="10" 
-            data-testid="writeBlogPostText"
+            data-testid="writeText"
             value={text || ""}
             onChange={e => {
               e.preventDefault();
@@ -40,14 +60,6 @@ export default function WriteBlog({ handleSubmit, username }) {
           type="submit" 
           className="btn btn-primary mb-2" 
           data-testid="submit"
-          onClick={e => {
-            e.preventDefault();
-            handleSubmit({
-              title,
-              text,
-              username
-            })
-          }}
         >Post</button>
       </form>
     </div>
