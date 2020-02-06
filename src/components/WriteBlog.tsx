@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 interface Props {}
 
-export default function WriteBlog <Props> () {
+export default function WriteBlog (props: Props) {
 
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
