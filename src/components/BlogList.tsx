@@ -1,9 +1,16 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Props {}
 
 export default function BlogList (props: Props) {
+
+  const [list, setList] = useState([]);
+
+  useEffect(() => {
+    //todo call api for list and invoke setList with list
+  }, []);
+
   return (
     <div>
       <div className="banner">
