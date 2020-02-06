@@ -36,10 +36,7 @@ export default function WriteBlog(props) {
             placeholder="title of your post" 
             data-testid="writeTitle"
             value={title || ""}
-            onChange={e => {
-              e.preventDefault();
-              setTitle(e.target.value);
-            }}
+            onChange={e => setTitle(e.target.value)}
           />
         </div>
         <div className="form-group">
@@ -50,10 +47,7 @@ export default function WriteBlog(props) {
             rows="10" 
             data-testid="writeText"
             value={text || ""}
-            onChange={e => {
-              e.preventDefault();
-              setText(e.target.value);
-            }}
+            onChange={e => setText(e.target.value)}
           ></textarea>
         </div>
         <button 
