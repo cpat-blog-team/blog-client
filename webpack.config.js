@@ -2,13 +2,13 @@ const webpack = require("webpack");
 const path = require("path");
 
 const config = {
-  entry: "./src/index.js",
+  entry: "./src/index.tsx",
   output: { path: path.resolve(__dirname, "public"), filename: "bundle.js" },
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
-        use: "babel-loader",
+        test: /\.ts(x)?$/,
+        use: "awesome-typescript-loader",
         exclude: /node_modules/
       },
       {
@@ -33,7 +33,7 @@ const config = {
     ]
   },
   resolve: {
-    extensions: [".js", ".jsx"]
+    extensions: [".js", ".tsx", ".ts"]
   }
 };
 
