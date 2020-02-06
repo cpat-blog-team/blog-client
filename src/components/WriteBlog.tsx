@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import * as React from 'react';
+import { useState } from 'react';
 
-export default function WriteBlog(props) {
+interface Props {}
+
+export default function WriteBlog <Props> () {
 
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
@@ -10,7 +13,7 @@ export default function WriteBlog(props) {
     setText('');
   }
 
-  const handleSubmit = (blogPost) => {
+  const handleSubmit = (blogPost: {title: string, text: string}) => {
     //to be implemented, post to api
     //...
 
@@ -44,7 +47,7 @@ export default function WriteBlog(props) {
           <textarea 
             className="form-control" 
             id="writeText" 
-            rows="10" 
+            rows={10}
             data-testid="writeText"
             value={text || ""}
             onChange={e => setText(e.target.value)}
