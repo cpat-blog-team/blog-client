@@ -9,13 +9,12 @@ export default function App() {
     <div className="container">
       <div><Link to='/'>Home</Link></div>
       <div><Link to='/writeblog'>WriteBlog</Link></div>
-      <div><Link to='/viewBlog'>ViewBlog</Link></div>
-
       <hr />
+
       <Switch>
         <Route exact path='/' render={() => <BlogList />} />
         <Route path='/writeblog' render={() => <WriteBlog />} />
-        <Route path='/viewBlog' render={(id) => <ViewBlog id={id} />} />
+        <Route path='/viewBlog' render={({ location }) => <ViewBlog location={location} />} />
       </Switch>
     </div>
   );

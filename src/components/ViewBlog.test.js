@@ -2,7 +2,6 @@ import React from "react";
 import { render } from "@testing-library/react";
 import ViewBlog from "./ViewBlog";
 import "@testing-library/jest-dom";
-import { exampleBlogPost, emptyBlogPost } from './exampleBlogPost';
 
 describe("WriteBlog component", () => {
   test("canary test", () => {

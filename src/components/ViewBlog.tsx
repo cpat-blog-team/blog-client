@@ -2,14 +2,18 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { BlogPostInterface, emptyBlogPost, exampleBlogPost } from './exampleBlogPost';
 
-interface Props { id: string }
+interface Props {
+  location: {
+    id: string
+  }
+}
 
-export default function WriteBlog({ id }: Props) {
+export default function WriteBlog({ location }: Props) {
 
   const [blog, setBlog] = useState<BlogPostInterface>(emptyBlogPost());
 
   useEffect(() => {
-    //todo call api with props.id and invoke setBlog with blog recieved
+    //todo call api with location.id and invoke setBlog with blog recieved
     //... 
 
     //for now we will get our post from example post
