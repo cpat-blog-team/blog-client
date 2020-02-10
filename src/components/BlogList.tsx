@@ -19,11 +19,9 @@ export default function BlogList(props: Props) {
     setList(newList);
   }, []);
 
-
-
   return (
-    selectedPostID ?
-      <Redirect to={{ pathname: '/viewBlog', id: selectedPostID }} /> :
+    //if A post has been selected we will redirect to blogView passing the ID of the selected post
+    selectedPostID ? <Redirect to={{ pathname: '/viewBlog', id: selectedPostID }} /> :
 
       <div>
         <div className="banner">
