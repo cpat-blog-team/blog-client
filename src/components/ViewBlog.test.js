@@ -1,17 +1,15 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import App from "./app";
+import ViewBlog from "./ViewBlog";
 import "@testing-library/jest-dom";
-import { BrowserRouter } from 'react-router-dom';
 
-
-describe("App component", () => {
+describe("WriteBlog component", () => {
   test("canary test", () => {
     expect(true).toEqual(true);
   });
 
-  test("expect app to render", () => {
-    let component = render(<BrowserRouter><App /></BrowserRouter>);
+  test("expect WriteBlog to render", () => {
+    let component = render(<ViewBlog />);
     expect(component.container).toBeInTheDocument();
   });
 });
