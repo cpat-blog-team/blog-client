@@ -7,16 +7,34 @@ interface Props { }
 
 export default function BlogList(props: Props) {
 
+  const [searchInput, setSearchInput] = useState('');
+  const [searchData, setSearchData] = useState('');
+
   const [selectedPostID, setSelectedPostID] = useState('');
   const [list, setList] = useState<BlogPostInterface[]>([]);
 
-  useEffect(() => {
-    //todo call api for list and invoke setList with list
-    //... 
+  const handleSearch = () => {
+    setSearchData(searchInput);
+    setSearchInput('');
+  }
 
-    //for now we will get our list from the examplList funcion
-    const newList: BlogPostInterface[] = exampleList(8);
-    setList(newList);
+  const handleChange = ({ target }) => {
+    setSearchInput(target.value);
+  }
+
+  useEffect(() => {
+    if (searchData) {
+      //todo call api searching for blogs by title
+      //... 
+    }
+    else {
+      //todo call api for list and invoke setList with list
+      //... 
+
+      //for now we will get our list from the examplList funcion
+      const newList: BlogPostInterface[] = exampleList(8);
+      setList(newList);
+    }
   }, []);
 
   return (
@@ -24,10 +42,33 @@ export default function BlogList(props: Props) {
     selectedPostID ? <Redirect to={{ pathname: '/viewBlog', id: selectedPostID }} /> :
 
       <div>
+
+        <form
+          className="search-bar"
+          onSubmit={e => {
+            e.preventDefault();
+            handleSearch();
+          }}
+        >
+          <button
+            type="submit"
+            className="btn btn-primary"
+            data-testid="search-button"
+          >Search</button>
+          <input
+            className="form-control search-blog"
+            type="search"
+            data-testid="search-input"
+            onChange={handleChange}
+            value={searchInput}
+          ></input>
+        </form>
+
         <div className="banner">
           <div className="banner-title">cpat blog</div>
           <h3>Bringing fellow cpat'ers together</h3>
         </div>
+
         {list.map(({ title, summary, date, username, id }, i) => (
           <div className="list-group list-group-accent" key={i}>
             <div
