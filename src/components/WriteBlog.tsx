@@ -22,8 +22,30 @@ export default function WriteBlog(props: Props) {
     content: string
   }
 
-  const handleSubmit = (blogPost: UserPost) => {
-    axios.post('/blog/add', JSON.stringify(blogPost))
+  interface FormattedPost {
+    username: string,
+    userId: string,
+    title: string,
+    summary: string,
+    content: string,
+    version: number
+  }
+
+  // todo: get username and userId from session storage
+  const formatPost = (blogPost: UserPost) => ({
+    username: 'getMeFromSession',
+    userId: 'getMeFromSession',
+    title: blogPost.title,
+    summary: blogPost.summary,
+    content: blogPost.content,
+    version: 1
+  })
+
+  const handleSubmit = (blogPost: FormattedPost) => {
+    axios.post('/blog/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
+    // todo fix test environment to support .catch
+    // currently we are using jest.mock('axios'), 
+    // and have not been able to the the mocked post request to return a promise
     // .catch(err => console.error(err))
 
     clearForm();
@@ -34,11 +56,8 @@ export default function WriteBlog(props: Props) {
       <form
         onSubmit={e => {
           e.preventDefault();
-          handleSubmit({
-            title,
-            summary,
-            content
-          });
+          const formattedPost = formatPost({ title, summary, content });
+          handleSubmit(formattedPost);
         }}
       >
         <div className="form-group">
