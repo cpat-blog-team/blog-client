@@ -6,17 +6,18 @@ import { Redirect } from 'react-router-dom';
 interface Props { }
 
 export default function BlogList(props: Props) {
-
+  const newList: BlogPostInterface[] = exampleList(8);
   const [selectedPostID, setSelectedPostID] = useState('');
-  const [list, setList] = useState<BlogPostInterface[]>([]);
+  const [list, setList] = useState<BlogPostInterface[]>(newList);
 
   useEffect(() => {
-    //todo call api for list and invoke setList with list
-    //... 
+    fetch("http://localhost:3000/blog/all")
+    .then(res => res.json())
+    .then(blogs => {
+      setList(blogs);
+    });
 
-    //for now we will get our list from the examplList funcion
-    const newList: BlogPostInterface[] = exampleList(8);
-    setList(newList);
+
   }, []);
 
   return (
