@@ -1,61 +1,82 @@
 import * as React from 'react';
 import { useState } from 'react';
+import axios from 'axios';
 
-interface Props {}
+interface Props { }
 
-export default function WriteBlog (props: Props) {
+export default function WriteBlog(props: Props) {
 
   const [title, setTitle] = useState('');
-  const [text, setText] = useState('');
+  const [summary, setSummary] = useState('');
+  const [content, setContent] = useState('');
 
   const clearForm = () => {
     setTitle('');
-    setText('');
+    setSummary('');
+    setContent('');
   }
 
-  const handleSubmit = (blogPost: {title: string, text: string}) => {
-    //to be implemented, post to api
-    //...
+  interface UserPost {
+    title: string,
+    summary: string,
+    content: string
+  }
+
+  const handleSubmit = (blogPost: UserPost) => {
+    axios.post('/blog/add', JSON.stringify(blogPost))
+    // .catch(err => console.error(err))
 
     clearForm();
   }
 
-  return(
+  return (
     <div>
       <form
         onSubmit={e => {
           e.preventDefault();
           handleSubmit({
             title,
-            text
+            summary,
+            content
           });
         }}
       >
         <div className="form-group">
           <label htmlFor="writeTitle">Title</label>
-          <input 
-            className="form-control" 
-            id="writeTitle" 
-            placeholder="title of your post" 
+          <input
+            className="form-control"
+            id="writeTitle"
+            placeholder=""
             data-testid="writeTitle"
             value={title || ""}
             onChange={e => setTitle(e.target.value)}
           />
         </div>
         <div className="form-group">
-          <label htmlFor="writeText">Blog Text</label>
-          <textarea 
-            className="form-control" 
-            id="writeText" 
+          <label htmlFor="writeSummary">Summary</label>
+          <input
+            className="form-control"
+            id="writeSummary"
+            placeholder=""
+            data-testid="writeSummary"
+            value={summary || ""}
+            onChange={e => setSummary(e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="writeContent">Blog Content</label>
+          <textarea
+            className="form-control"
+            id="writeContent"
             rows={10}
-            data-testid="writeText"
-            value={text || ""}
-            onChange={e => setText(e.target.value)}
+            data-testid="writeContent"
+            value={content || ""}
+            onChange={e => setContent(e.target.value)}
           ></textarea>
         </div>
-        <button 
-          type="submit" 
-          className="btn btn-primary mb-2" 
+        <button
+          type="submit"
+          className="btn btn-primary mb-2"
           data-testid="submit"
         >Post</button>
       </form>
