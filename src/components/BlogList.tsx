@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { exampleList, BlogPostInterface } from './exampleBlogPost';
+import { BlogPostInterface } from './exampleBlogPost';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 
@@ -12,10 +12,10 @@ export default function BlogList(props: Props) {
 
   useEffect(() => {
     axios("/blog/all")
-    .then( ({data}) => {
-      setList(data.blogs);
-    })
-    .catch( err => console.error(err));
+      .then(({ data }) => {
+        setList(data.blogs);
+      })
+      .catch(err => console.error(err));
   }, []);
 
   return (
