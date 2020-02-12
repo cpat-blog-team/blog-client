@@ -2,22 +2,20 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { exampleList, BlogPostInterface } from './exampleBlogPost';
 import { Redirect } from 'react-router-dom';
+import axios from 'axios';
 
 interface Props { }
 
 export default function BlogList(props: Props) {
-  const newList: BlogPostInterface[] = exampleList(8);
   const [selectedPostID, setSelectedPostID] = useState('');
-  const [list, setList] = useState<BlogPostInterface[]>(newList);
+  const [list, setList] = useState<BlogPostInterface[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/blog/all")
-    .then(res => res.json())
-    .then(blogs => {
-      setList(blogs);
-    });
-
-
+    axios("/blog/all")
+    .then( ({data}) => {
+      setList(data.blogs);
+    })
+    .catch( err => console.error(err));
   }, []);
 
   return (
@@ -30,7 +28,7 @@ export default function BlogList(props: Props) {
           <h3>Bringing fellow cpat'ers together</h3>
         </div>
         {list.map(({ title, summary, date, username, id }, i) => (
-          <div className="list-group list-group-accent" key={i}>
+          <div className="list-group list-group-accent" key={i} data-testid={`blogPost${i}`}>
             <div
               onClick={() => { setSelectedPostID(id) }}
               className="list-group-item list-group-item-accent-dark blog-list-container"

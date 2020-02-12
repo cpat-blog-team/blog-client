@@ -12,4 +12,10 @@ describe("BlogList component", () => {
     const component = render(<BlogList />);
     expect(component.container).toBeInTheDocument();
   });
+
+  test("should call api for blogs and render with response", () => {
+    const component = render(<BlogList />);
+    const title = component.getByTestId('blogPost0');
+    expect(title).toBeInTheDocument();
+  });
 });

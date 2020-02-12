@@ -1,8 +1,15 @@
 const express = require("express");
 const path = require("path");
 const morgan = require("morgan");
+const proxy = require("http-proxy-middleware");
 
 const app = express();
+
+app.use(
+  "/blog",
+  proxy({ target: "http://localhost:3000/", changeOrigin: true})
+);
+
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
