@@ -5,11 +5,6 @@ export default function BlogList({ search }) {
 
   const [searchInput, setSearchInput] = useState('');
 
-  const handleSearch = () => {
-    search(searchInput);
-    setSearchInput('');
-  }
-
   const handleChange = ({ target }) => {
     setSearchInput(target.value);
   }
@@ -19,7 +14,8 @@ export default function BlogList({ search }) {
       className="search-bar"
       onSubmit={e => {
         e.preventDefault();
-        handleSearch();
+        search(searchInput);
+        setSearchInput('');
       }}
     >
       <button
@@ -30,6 +26,7 @@ export default function BlogList({ search }) {
       <input
         className="form-control search-blog"
         type="search"
+        placeholder="search for title"
         data-testid="search-input"
         onChange={handleChange}
         value={searchInput}

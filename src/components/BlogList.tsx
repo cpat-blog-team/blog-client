@@ -9,27 +9,25 @@ interface Props { }
 
 export default function BlogList(props: Props) {
 
-  const [searchData, setSearchData] = useState('');
-  const search = (data) => setSearchData(data);
-
   const [selectedPostID, setSelectedPostID] = useState('');
   const [list, setList] = useState<BlogPostInterface[]>([]);
 
   useEffect(() => {
-    if (null) {
-      //todo call api searching for blogs by title
-      //... 
-    }
-    else axios("/blog/all")
-      .then(({ data }) => {
-        setList(data.blogs);
-      })
+    axios("/blog/all")
+      .then(({ data }) => setList(data.blogs))
       .catch(err => console.error(err));
   }, []);
+
+  const search = async (title) => {
+    await axios(`/search?title=${title}`)
+      .then(({ data }) => setList(data.blogs))
+      .catch(err => console.error(err));
+  }
 
   return (
     //if A post has been selected we will redirect to blogView passing the ID of the selected post
     selectedPostID ? <Redirect to={{ pathname: '/viewBlog', id: selectedPostID }} /> :
+
       <div>
         <SearchBlog search={search} />
         <div className="banner">
