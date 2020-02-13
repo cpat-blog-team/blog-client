@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { exampleList, BlogPostInterface } from './exampleBlogPost';
+import { BlogPostInterface } from './exampleBlogPost';
 import { Redirect } from 'react-router-dom';
+import axios from 'axios';
 
 interface Props { }
 
@@ -27,14 +28,11 @@ export default function BlogList(props: Props) {
       //todo call api searching for blogs by title
       //... 
     }
-    else {
-      //todo call api for list and invoke setList with list
-      //... 
-
-      //for now we will get our list from the examplList funcion
-      const newList: BlogPostInterface[] = exampleList(8);
-      setList(newList);
-    }
+    else axios("/blog/all")
+      .then(({ data }) => {
+        setList(data.blogs);
+      })
+      .catch(err => console.error(err));
   }, []);
 
   return (
@@ -70,7 +68,7 @@ export default function BlogList(props: Props) {
         </div>
 
         {list.map(({ title, summary, date, username, id }, i) => (
-          <div className="list-group list-group-accent" key={i}>
+          <div className="list-group list-group-accent" key={i} data-testid={`blogPost${i}`}>
             <div
               onClick={() => { setSelectedPostID(id) }}
               className="list-group-item list-group-item-accent-dark blog-list-container"

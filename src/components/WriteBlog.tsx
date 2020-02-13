@@ -1,61 +1,101 @@
 import * as React from 'react';
 import { useState } from 'react';
+import axios from 'axios';
 
-interface Props {}
+interface Props { }
 
-export default function WriteBlog (props: Props) {
+export default function WriteBlog(props: Props) {
 
   const [title, setTitle] = useState('');
-  const [text, setText] = useState('');
+  const [summary, setSummary] = useState('');
+  const [content, setContent] = useState('');
 
   const clearForm = () => {
     setTitle('');
-    setText('');
+    setSummary('');
+    setContent('');
   }
 
-  const handleSubmit = (blogPost: {title: string, text: string}) => {
-    //to be implemented, post to api
-    //...
+  interface UserPost {
+    title: string,
+    summary: string,
+    content: string
+  }
+
+  interface FormattedPost {
+    username: string,
+    userId: string,
+    title: string,
+    summary: string,
+    content: string,
+    version: number
+  }
+
+  // todo: get username and userId from session storage
+  const formatPost = (blogPost: UserPost) => ({
+    username: 'getMeFromSession',
+    userId: 'getMeFromSession',
+    title: blogPost.title,
+    summary: blogPost.summary,
+    content: blogPost.content,
+    version: 1
+  })
+
+  const handleSubmit = (blogPost: FormattedPost) => {
+    axios.post('/blog/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
+    // todo fix test environment to support .catch
+    // currently we are using jest.mock('axios'), 
+    // and have not been able to the the mocked post request to return a promise
+    // .catch(err => console.error(err))
 
     clearForm();
   }
 
-  return(
+  return (
     <div>
       <form
         onSubmit={e => {
           e.preventDefault();
-          handleSubmit({
-            title,
-            text
-          });
+          const formattedPost = formatPost({ title, summary, content });
+          handleSubmit(formattedPost);
         }}
       >
         <div className="form-group">
           <label htmlFor="writeTitle">Title</label>
-          <input 
-            className="form-control" 
-            id="writeTitle" 
-            placeholder="title of your post" 
+          <input
+            className="form-control"
+            id="writeTitle"
+            placeholder=""
             data-testid="writeTitle"
             value={title || ""}
             onChange={e => setTitle(e.target.value)}
           />
         </div>
         <div className="form-group">
-          <label htmlFor="writeText">Blog Text</label>
-          <textarea 
-            className="form-control" 
-            id="writeText" 
+          <label htmlFor="writeSummary">Summary</label>
+          <input
+            className="form-control"
+            id="writeSummary"
+            placeholder=""
+            data-testid="writeSummary"
+            value={summary || ""}
+            onChange={e => setSummary(e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="writeContent">Blog Content</label>
+          <textarea
+            className="form-control"
+            id="writeContent"
             rows={10}
-            data-testid="writeText"
-            value={text || ""}
-            onChange={e => setText(e.target.value)}
+            data-testid="writeContent"
+            value={content || ""}
+            onChange={e => setContent(e.target.value)}
           ></textarea>
         </div>
-        <button 
-          type="submit" 
-          className="btn btn-primary mb-2" 
+        <button
+          type="submit"
+          className="btn btn-primary mb-2"
           data-testid="submit"
         >Post</button>
       </form>
