@@ -54,6 +54,6 @@ describe('BlogList component', () => {
 
     // "queriedRoute" is stored in the global scope of this describe block
     //  - it is updated by the mock axios call so that we can test it here
-    expect(queriedRoute).toEqual(`/search?title=${exampleBlogPost.title}`);
+    expect(queriedRoute).toEqual(`/blog/search?title=${exampleBlogPost.title}`);
   });
 });

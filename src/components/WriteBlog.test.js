@@ -5,7 +5,7 @@ import "@testing-library/jest-dom";
 import { exampleBlogPost } from './exampleBlogPost';
 import mockAxios from 'axios';
 
-jest.mock('axios')
+jest.mock('axios');
 
 describe("WriteBlog component", () => {
   test("canary test", () => {

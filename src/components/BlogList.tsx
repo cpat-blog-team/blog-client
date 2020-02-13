@@ -19,7 +19,7 @@ export default function BlogList(props: Props) {
   }, []);
 
   const search = async (title) => {
-    await axios(`/search?title=${title}`)
+    await axios(`/blog/search?title=${title}`)
       .then(({ data }) => setList(data.blogs))
       .catch(err => console.error(err));
   }
