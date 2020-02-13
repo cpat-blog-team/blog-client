@@ -1,10 +1,6 @@
 import React from "react";
-<<<<<<< HEAD
-import { render, fireEvent } from "@testing-library/react";
-=======
 import { render } from "@testing-library/react";
 import { exampleList } from './exampleBlogPost'
->>>>>>> f4a496f0714d2b5443e806b3f64affef11fdd71f
 import BlogList from "./BlogList";
 import "@testing-library/jest-dom";
 import axiosMock from 'axios';
@@ -12,37 +8,23 @@ import { act } from "react-dom/test-utils";
 
 jest.mock('axios');
 
-describe("BlogList component", () => {
+describe('BlogList component', () => {
 
   beforeAll(async () => {
     axiosMock.mockImplementation(() => Promise.resolve({ data: { blogs: exampleList(5) } }));
   });
 
-  test("canary test", () => {
+  test('canary test', () => {
     expect(true).toEqual(true);
   });
 
-  test("expect BlogList to render", async () => {
+  test('expect BlogList to render', async () => {
     let component;
     await act(async () => {
       component = await render(<BlogList />);
     });
 
     expect(component.container).toBeInTheDocument();
-  });
-
-  test("expect search bar to clear once blog is searched", () => {
-    const component = render(<BlogList />);
-
-    //adds text to search input
-    const searchInput = component.getByTestId('search-input');
-    fireEvent.change(searchInput, { target: { value: 'some blog title' } });
-
-    //clicks search button
-    const searchButton = component.getByTestId('search-button');
-    fireEvent.click(searchButton);
-
-    expect(searchInput.value).toBe('');
   });
 
   test('use effect should call api and set state with response', async () => {
