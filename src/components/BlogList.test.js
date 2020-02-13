@@ -3,7 +3,7 @@ import { render, wait, fireEvent } from "@testing-library/react";
 import { exampleList, exampleBlogPost } from './exampleBlogPost'
 import BlogList from "./BlogList";
 import "@testing-library/jest-dom";
-import axiosMock from 'axios';
+import mockAxios from 'axios';
 
 jest.mock('axios');
 
@@ -17,7 +17,7 @@ describe('BlogList component', () => {
       queriedRoute = route;
       return Promise.resolve({ data: { blogs: exampleList(5) } });
     };
-    axiosMock.mockImplementation(mockApi);
+    mockAxios.mockImplementation(mockApi);
   });
 
   beforeEach(async () => {

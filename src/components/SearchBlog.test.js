@@ -3,9 +3,6 @@ import { render, fireEvent, wait } from "@testing-library/react";
 import { exampleBlogPost } from './exampleBlogPost'
 import SearchBlog from "./SearchBlog";
 import "@testing-library/jest-dom";
-import axiosMock from 'axios';
-
-jest.mock('axios');
 
 describe("SearchBlog component", () => {
   let component;
