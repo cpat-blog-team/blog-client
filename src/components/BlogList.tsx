@@ -13,13 +13,13 @@ export default function BlogList(props: Props) {
   const [list, setList] = useState<BlogPostInterface[]>([]);
 
   useEffect(() => {
-    axios("/blog/all")
+    axios("/blogs")
       .then(({ data }) => setList(data.blogs))
       .catch(err => console.error(err));
   }, []);
 
   const search = async (title) => {
-    await axios(`/blog/search?title=${title}`)
+    await axios(`/blogs/search?title=${title}`)
       .then(({ data }) => setList(data.blogs))
       .catch(err => console.error(err));
   }

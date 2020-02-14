@@ -14,8 +14,8 @@ export default function WriteBlog({ location }: Props) {
   const [blog, setBlog] = useState<BlogPostInterface>(emptyBlogPost());
 
   useEffect(() => {
-    axios(`/blog/search?id=${_id}`)
-      .then(({ data }) => setBlog(data.blogs[0]))
+    axios(`/blogs/${_id}`)
+      .then(({ data }) => setBlog(data.blog))
       .catch(err => console.error(err));
   }, []);
 

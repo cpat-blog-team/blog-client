@@ -15,15 +15,15 @@ describe("ViewBlog component", () => {
     // mockAPI returns a mock blog and stores the queried route in the variable "queriedRoute" for testing
     const mockApi = (route) => {
       queriedRoute = route;
-      return Promise.resolve({ data: { blogs: [exampleBlogPost] } });
+      return Promise.resolve({ data: { blog: exampleBlogPost } });
     };
     mockAxios.mockImplementation(mockApi);
   });
 
   beforeEach(async () => {
     // component must be awaited because useEffect makes an api call upon first render
-    await wait(async () => {
-      component = await render(<ViewBlog location={{ _id: exampleBlogPost._id }} />);
+    await wait(() => {
+      component = render(<ViewBlog location={{ _id: exampleBlogPost._id }} />);
     });
   });
 
@@ -36,7 +36,7 @@ describe("ViewBlog component", () => {
   });
 
   test("should call api for blog post with passed down id from props", () => {
-    expect(queriedRoute).toBe(`/blog/search?id=${exampleBlogPost._id}`);
+    expect(queriedRoute).toBe(`/blogs/${exampleBlogPost._id}`);
   });
 
   test("should render blog post", () => {

@@ -42,11 +42,8 @@ export default function WriteBlog(props: Props) {
   })
 
   const handleSubmit = (blogPost: FormattedPost) => {
-    axios.post('/blog/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
-    // todo fix test environment to support .catch
-    // currently we are using jest.mock('axios'), 
-    // and have not been able to the the mocked post request to return a promise
-    // .catch(err => console.error(err))
+    axios.post('/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
+      .catch(err => console.error(err));
 
     clearForm();
   }

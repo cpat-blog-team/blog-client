@@ -6,8 +6,8 @@ const proxy = require("http-proxy-middleware");
 const app = express();
 
 app.use(
-  "/blog",
-  proxy({ target: "http://localhost:3000/", changeOrigin: true})
+  "/blogs",
+  proxy({ target: "http://localhost:3000/", changeOrigin: true })
 );
 
 if (process.env.NODE_ENV === "development") {
