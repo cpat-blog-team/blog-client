@@ -3,7 +3,7 @@ import { render, wait, fireEvent } from "@testing-library/react";
 import { exampleList, exampleBlogPost } from './exampleBlogPost'
 import BlogList from "./BlogList";
 import "@testing-library/jest-dom";
-import axiosMock from 'axios';
+import mockAxios from 'axios';
 
 jest.mock('axios');
 
@@ -13,17 +13,16 @@ describe('BlogList component', () => {
 
   beforeAll(() => {
     // this mock api call will store the route its invoke with and store it in the var "queriedRoute" for testing
-    const mockApi = (route) => {
+    mockAxios.mockImplementation((route) => {
       queriedRoute = route;
       return Promise.resolve({ data: { blogs: exampleList(5) } });
-    };
-    axiosMock.mockImplementation(mockApi);
+    });
   });
 
   beforeEach(async () => {
     // component must be awaited because useEffect makes an api call up first render
-    await wait(async () => {
-      component = await render(<BlogList />);
+    await wait(() => {
+      component = render(<BlogList />);
     });
   });
 
@@ -35,7 +34,8 @@ describe('BlogList component', () => {
     expect(component.container).toBeInTheDocument();
   });
 
-  test('use effect should call api and set state with response', () => {
+  test('use effect should call api at endpoint /blogs and render response', () => {
+    expect(queriedRoute).toBe('/blogs')
     expect(component.getByTestId('blogPost0')).toBeInTheDocument();
     expect(component.getByTestId('blogPost1')).toBeInTheDocument();
     expect(component.getByTestId('blogPost2')).toBeInTheDocument();
@@ -54,6 +54,6 @@ describe('BlogList component', () => {
 
     // "queriedRoute" is stored in the global scope of this describe block
     //  - it is updated by the mock axios call so that we can test it here
-    expect(queriedRoute).toEqual(`/blog/search?title=${exampleBlogPost.title}`);
+    expect(queriedRoute).toEqual(`/blogs/search?title=${exampleBlogPost.title}`);
   });
 });

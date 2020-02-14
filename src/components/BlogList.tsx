@@ -13,20 +13,20 @@ export default function BlogList(props: Props) {
   const [list, setList] = useState<BlogPostInterface[]>([]);
 
   useEffect(() => {
-    axios("/blog/all")
+    axios("/blogs")
       .then(({ data }) => setList(data.blogs))
       .catch(err => console.error(err));
   }, []);
 
   const search = async (title) => {
-    await axios(`/blog/search?title=${title}`)
+    await axios(`/blogs/search?title=${title}`)
       .then(({ data }) => setList(data.blogs))
       .catch(err => console.error(err));
   }
 
   return (
     //if A post has been selected we will redirect to blogView passing the ID of the selected post
-    selectedPostID ? <Redirect to={{ pathname: '/viewBlog', id: selectedPostID }} /> :
+    selectedPostID ? <Redirect to={{ pathname: '/viewBlog', _id: selectedPostID }} /> :
 
       <div>
         <SearchBlog search={search} />
@@ -35,10 +35,10 @@ export default function BlogList(props: Props) {
           <h3>Bringing fellow cpat'ers together</h3>
         </div>
 
-        {list.map(({ title, summary, date, username, id }, i) => (
+        {list.map(({ title, summary, date, username, _id }, i) => (
           <div className="list-group list-group-accent" key={i} data-testid={`blogPost${i}`}>
             <div
-              onClick={() => { setSelectedPostID(id) }}
+              onClick={() => setSelectedPostID(_id)}
               className="list-group-item list-group-item-accent-dark blog-list-container"
             >
               <h5>{title}</h5>

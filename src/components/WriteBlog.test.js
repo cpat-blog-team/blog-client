@@ -8,18 +8,31 @@ import mockAxios from 'axios';
 jest.mock('axios');
 
 describe("WriteBlog component", () => {
+  let queriedRoute;
+  let postedData;
+  let component;
+
+  beforeAll(() => {
+    mockAxios.post.mockImplementation((route, data) => {
+      queriedRoute = route;
+      postedData = JSON.parse(data);
+      return Promise.resolve();
+    });
+  });
+
+  beforeEach(() => {
+    component = render(<WriteBlog />);
+  });
+
   test("canary test", () => {
     expect(true).toEqual(true);
   });
 
   test("expect WriteBlog to render", () => {
-    let component = render(<WriteBlog />);
     expect(component.container).toBeInTheDocument();
   });
 
   test("should be able to write blog title, summary and content", () => {
-    const component = render(<WriteBlog />);
-
     //adds text to title input
     const title = component.getByTestId('writeTitle');
     fireEvent.change(title, { target: { value: exampleBlogPost.title } });
@@ -36,9 +49,7 @@ describe("WriteBlog component", () => {
     expect(content.value).toBe(exampleBlogPost.content);
   });
 
-  test('should clear title, summary and content upon submit', () => {
-    const component = render(<WriteBlog />);
-
+  test('should clear title, summary and content upon submit', async () => {
     //adds text to title, summary and content inputs
     const title = component.getByTestId('writeTitle');
     fireEvent.change(title, { target: { value: exampleBlogPost.title } });
@@ -56,15 +67,7 @@ describe("WriteBlog component", () => {
     expect(content.value).toBe('');
   });
 
-  test('submited blog post should include fields title, summary and content', () => {
-    let postedData;
-
-    mockAxios.post.mockImplementationOnce((route, data) => {
-      postedData = JSON.parse(data);
-    });
-
-    const component = render(<WriteBlog />);
-
+  test('should make post request to route /blogs/add upon submit (body should include fields title, summary and content)', () => {
     //adds text to title, summary and content inputs
     const title = component.getByTestId('writeTitle');
     fireEvent.change(title, { target: { value: exampleBlogPost.title } });
@@ -80,5 +83,6 @@ describe("WriteBlog component", () => {
     expect(postedData.title).toEqual(exampleBlogPost.title);
     expect(postedData.summary).toEqual(exampleBlogPost.summary);
     expect(postedData.content).toEqual(exampleBlogPost.content);
+    expect(queriedRoute).toBe('/blogs/add');
   });
 });

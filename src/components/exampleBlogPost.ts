@@ -4,7 +4,7 @@ interface BlogPostInterface {
   summary: string,
   username: string,
   date: string,
-  id: string
+  _id: string
 }
 
 const exampleBlogPost: BlogPostInterface = {
@@ -26,7 +26,7 @@ const exampleBlogPost: BlogPostInterface = {
   summary: 'Rick turns himself into a pickle.',
   username: 'Morty',
   date: 'Feb 5',
-  id: 'G3J4K56M7J'
+  _id: 'G3J4K56M7J'
 }
 
 const emptyBlogPost = (): BlogPostInterface => ({
@@ -35,7 +35,7 @@ const emptyBlogPost = (): BlogPostInterface => ({
   summary: '',
   username: '',
   date: '',
-  id: ''
+  _id: ''
 });
 
 const exampleList = (numberOfPosts: number) => {
