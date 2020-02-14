@@ -5,17 +5,17 @@ import axios from 'axios';
 
 interface Props {
   location: {
-    id: string
+    _id: string
   }
 }
 
 export default function WriteBlog({ location }: Props) {
-  const { id } = location;
+  const { _id } = location;
   const [blog, setBlog] = useState<BlogPostInterface>(emptyBlogPost());
 
   useEffect(() => {
-    axios(`/blogs/blog?id=${id}`)
-      .then(({ data }) => setBlog(data.blog))
+    axios(`/blog/search?id=${_id}`)
+      .then(({ data }) => setBlog(data.blogs[0]))
       .catch(err => console.error(err));
   }, []);
 
