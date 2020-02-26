@@ -17,7 +17,6 @@ describe("SearchBlog component", () => {
     expect(true).toEqual(true);
   });
 
-
   test("expect SearchBlog to render", async () => {
     expect(component.container).toBeInTheDocument();
   });
