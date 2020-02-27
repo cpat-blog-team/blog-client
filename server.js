@@ -58,7 +58,6 @@ app.use(passport.authenticate(WebAppStrategy.STRATEGY_NAME));
 
 app.use("/", express.static(path.join(__dirname + "/public")));
 
-
 let port = process.env.PORT || 3001;
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
