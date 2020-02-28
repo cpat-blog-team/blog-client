@@ -9,12 +9,15 @@ export default function App() {
     <div className="container">
       <div><Link to='/'>Home</Link></div>
       <div><Link to='/writeblog'>WriteBlog</Link></div>
+      <a href="/appid/logout">Logout</a>
       <hr />
 
       <Switch>
-        <Route exact path='/' render={() => <BlogList />} />
         <Route path='/writeblog' render={() => <WriteBlog />} />
         <Route path='/viewBlog' render={({ location }) => <ViewBlog location={location} />} />
+
+        {/* Must be last route */}
+        <Route path='/' render={() => <BlogList />} />
       </Switch>
     </div>
   );
