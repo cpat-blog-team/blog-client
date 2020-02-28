@@ -9,7 +9,7 @@ export default function App() {
     <div className="container">
       <div><Link to='/'>Home</Link></div>
       <div><Link to='/writeblog'>WriteBlog</Link></div>
-      <div><Link to='/appid/logout'>Logout</Link></div>
+      <a href="/appid/logout">Logout</a>
       <hr />
 
       <Switch>
