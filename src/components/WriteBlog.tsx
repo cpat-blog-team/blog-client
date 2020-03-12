@@ -25,8 +25,8 @@ export default function WriteBlog(props: Props) {
   }
 
   interface FormattedPost {
-    username: string,
-    userId: string,
+    name: string,
+    email: string,
     title: string,
     summary: string,
     content: string,
@@ -41,7 +41,7 @@ export default function WriteBlog(props: Props) {
     summary: blogPost.summary,
     content: blogPost.content,
     version: 1
-  })
+  });
 
   const handleSubmit = (blogPost: FormattedPost) => {
     axios.post('/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
