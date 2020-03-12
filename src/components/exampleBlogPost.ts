@@ -2,8 +2,8 @@ interface BlogPostInterface {
   title: string,
   content: string,
   summary: string,
-  username: string,
-  date: string,
+  name: string,
+  updatedAt: string,
   _id: string
 }
 
@@ -24,8 +24,8 @@ const exampleBlogPost: BlogPostInterface = {
     The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
   `,
   summary: 'Rick turns himself into a pickle.',
-  username: 'Morty',
-  date: 'Feb 5',
+  name: 'Morty',
+  updatedAt: 'Feb 5',
   _id: 'G3J4K56M7J'
 }
 
@@ -33,8 +33,8 @@ const emptyBlogPost = (): BlogPostInterface => ({
   title: '',
   content: '',
   summary: '',
-  username: '',
-  date: '',
+  name: '',
+  updatedAt: '',
   _id: ''
 });
 

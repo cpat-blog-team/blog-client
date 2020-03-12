@@ -19,7 +19,7 @@ export default function WriteBlog({ location }: Props) {
       .catch(err => console.error(err));
   }, []);
 
-  const { title, summary, username, date, content } = blog;
+  const { title, summary, name, updatedAt, content } = blog;
   return (
     <div className="jumbotron jumbotron-fluid">
       <div className="container">
@@ -27,8 +27,8 @@ export default function WriteBlog({ location }: Props) {
         <p className="lead" data-testid="blogSummary">{summary}</p>
         <hr className="my-4"></hr>
         <div className="callout callout-info">
-          <strong className="h4" data-testid="blogUsername">{username}</strong><br></br>
-          <small className="text-muted" data-testid="blogDate">{date}</small>
+          <strong className="h4" data-testid="blogUsername">{name}</strong><br></br>
+          <small className="text-muted" data-testid="blogDate">{updatedAt}</small>
         </div>
         <pre className="formated-blog-content" data-testid="blogContent">{content}</pre>
       </div>

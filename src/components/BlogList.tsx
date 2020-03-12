@@ -35,7 +35,7 @@ export default function BlogList(props: Props) {
           <h3>Bringing fellow cpat'ers together</h3>
         </div>
 
-        {list.map(({ title, summary, date, username, _id }, i) => (
+        {list.map(({ title, summary, updatedAt, name, _id }, i) => (
           <div className="list-group list-group-accent" key={i} data-testid={`blogPost${i}`}>
             <div
               onClick={() => setSelectedPostID(_id)}
@@ -43,8 +43,8 @@ export default function BlogList(props: Props) {
             >
               <h5>{title}</h5>
               <p>{summary}</p>
-              <div>{username}</div>
-              <div>{date}</div>
+              <div>{name}</div>
+              <div>{updatedAt}</div>
             </div>
           </div>
         ))}
