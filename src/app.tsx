@@ -8,7 +8,8 @@ import WriteBlog from "./components/WriteBlog";
 import BlogList from "./components/BlogList";
 import ViewBlog from "./components/ViewBlog";
 
-import "./styles.scss";
+import './index.scss';
+
 import {
   Header,
   HeaderName,
@@ -16,6 +17,9 @@ import {
   HeaderMenu,
   HeaderMenuItem
 } from "carbon-components-react/lib/components/UIShell";
+
+import { Button } from 'carbon-components-react';
+
 
 export default function App() {
   const [userData, setUserData] = useState({ name: "", email: "" });
@@ -31,12 +35,13 @@ export default function App() {
   return (
     <userContext.Provider value={userData}>
       <div className="container">
+      <Button>HELLO</Button>
         <Header aria-label="IBM Platform Name">
           <HeaderName href="#" prefix="IBM">
             [Platform]
           </HeaderName>
           <HeaderNavigation aria-label="IBM [Platform]">
-            <HeaderMenuItem href="#">Link 1</HeaderMenuItem>
+            <HeaderMenuItem href="#">POTATO</HeaderMenuItem>
             <HeaderMenuItem href="#">Link 2</HeaderMenuItem>
             <HeaderMenuItem href="#">Link 3</HeaderMenuItem>
             <HeaderMenu aria-label="Link 4" menuLinkName="Link 4">

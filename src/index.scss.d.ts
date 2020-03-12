@@ -6,6 +6,9 @@ interface CssExports {
   'arrowDown': string;
   'arrowTop': string;
   'arrowUp': string;
+  'banner': string;
+  'banner-title': string;
+  'blog-list-container': string;
   'bx--accordion': string;
   'bx--accordion--end': string;
   'bx--accordion--start': string;
@@ -792,6 +795,7 @@ interface CssExports {
   'flatpickr-weeks': string;
   'flatpickr-weekwrapper': string;
   'flatpickr-wrapper': string;
+  'formated-blog-content': string;
   'fpFadeIn': string;
   'fpFadeInDown': string;
   'fpFadeOut': string;
@@ -818,6 +822,8 @@ interface CssExports {
   'rotate': string;
   'rotate-end-p1': string;
   'rotate-end-p2': string;
+  'search-bar': string;
+  'search-blog': string;
   'selected': string;
   'show-feedback': string;
   'showTimeInput': string;
