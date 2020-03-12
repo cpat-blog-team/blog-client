@@ -1,10 +1,32 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
+import axios from 'axios'
+
+import { Switch, Link, Route } from 'react-router-dom';
 import WriteBlog from './components/WriteBlog';
 import BlogList from './components/BlogList';
 import ViewBlog from './components/ViewBlog'
-import { Switch, Link, Route } from 'react-router-dom';
 
 export default function App() {
+  interface User {
+    name: string,
+    email: string
+  }
+  const emptyUser = {
+    name: '',
+    email: ''
+  }
+  const [userData, setUserData] = useState(emptyUser);
+
+  useEffect(() => {
+    const getUserData: any = async () => {
+      const { data } = await axios.get('/user');
+      console.log(data)
+      setUserData(data);
+    }
+    getUserData()
+  }, []);
+
   return (
     <div className="container">
       <div><Link to='/'>Home</Link></div>
