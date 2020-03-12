@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import userContext from '../userContext';
 import axios from 'axios';
 
 interface Props { }
@@ -9,6 +10,7 @@ export default function WriteBlog(props: Props) {
   const [title, setTitle] = useState('');
   const [summary, setSummary] = useState('');
   const [content, setContent] = useState('');
+  const { name, email } = useContext(userContext);
 
   const clearForm = () => {
     setTitle('');
@@ -33,8 +35,8 @@ export default function WriteBlog(props: Props) {
 
   // todo: get username and userId from session storage
   const formatPost = (blogPost: UserPost) => ({
-    username: 'getMeFromSession',
-    userId: 'getMeFromSession',
+    email,
+    name,
     title: blogPost.title,
     summary: blogPost.summary,
     content: blogPost.content,
