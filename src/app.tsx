@@ -2,6 +2,7 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import userContext from "./userContext";
 import axios from "axios";
+import './app.scss'
 
 import { Switch, Route } from "react-router-dom";
 import NavBar from './components/NavBar'
