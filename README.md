@@ -1,2 +1,2 @@
 # blog-client
-CPAT blog frontend
+CPAT blog client
