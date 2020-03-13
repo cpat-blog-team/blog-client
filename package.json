@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "jest --watch",
+    "test": "jest",
+    "tdd": "jest --watch",
     "clean": "rm ./public/bundle.js",
     "build": "webpack -p --mode production",
     "start": "node server.js",
