@@ -16,6 +16,10 @@ const config = {
         use: ["style-loader", "css-loader"]
       },
       {
+        test: /\.scss$/,
+        use: ["style-loader", "css-loader", "sass-loader"]
+      },
+      {
         test: /\.png$/,
         use: [
           {
@@ -33,7 +37,7 @@ const config = {
     ]
   },
   resolve: {
-    extensions: [".js", ".tsx", ".ts"]
+    extensions: [".js", ".tsx", ".ts", ".css", ".scss"]
   }
 };
 

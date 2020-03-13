@@ -1,38 +1,38 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import userContext from './userContext'
-import axios from 'axios'
+import userContext from "./userContext";
+import axios from "axios";
+import './app.scss'
 
-import { Switch, Link, Route } from 'react-router-dom';
-import WriteBlog from './components/WriteBlog';
-import BlogList from './components/BlogList';
-import ViewBlog from './components/ViewBlog'
+import { Switch, Route } from "react-router-dom";
+import NavBar from './components/NavBar'
+import WriteBlog from "./components/WriteBlog";
+import BlogList from "./components/BlogList";
+import ViewBlog from "./components/ViewBlog";
 
 export default function App() {
-  const [userData, setUserData] = useState({ name: '', email: '' });
+  const [userData, setUserData] = useState({ name: "", email: "" });
   useEffect(() => {
     const getUserData: any = async () => {
-      const { data } = await axios.get('/user');
-      console.log(data);
+      const { data } = await axios.get("/user");
       setUserData(data);
-    }
+    };
     getUserData();
   }, []);
 
   return (
     <userContext.Provider value={userData}>
+      <NavBar />
       <div className="container">
-        <div><Link to='/'>Home</Link></div>
-        <div><Link to='/writeblog'>WriteBlog</Link></div>
-        <a href="/appid/logout">Logout</a>
-        <hr />
-
         <Switch>
-          <Route path='/writeblog' component={WriteBlog} />
-          <Route path='/viewBlog' render={({ location }) => <ViewBlog location={location} />} />
+          <Route path="/writeblog" component={WriteBlog} />
+          <Route
+            path="/viewBlog"
+            render={({ location }) => <ViewBlog location={location} />}
+          />
 
           {/* Must be last route */}
-          <Route path='/' component={BlogList} />
+          <Route path="/" component={BlogList} />
         </Switch>
       </div>
     </userContext.Provider>
