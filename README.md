@@ -1,2 +1,3 @@
 # blog-client
-CPAT blog front end
+CPAT blog client!
+
