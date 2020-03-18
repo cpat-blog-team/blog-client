@@ -3,6 +3,8 @@ import { useState, useContext } from 'react';
 import userContext from '../userContext';
 import axios from 'axios';
 
+import TextEditor from './TextEditor';
+
 interface Props { }
 
 export default function WriteBlog(props: Props) {
@@ -51,8 +53,11 @@ export default function WriteBlog(props: Props) {
   }
 
   return (
-    <div>
-      <form
+    <div className="writeBlogContainer">
+
+      <TextEditor />
+
+      {/* <form
         onSubmit={e => {
           e.preventDefault();
           const formattedPost = formatPost({ title, summary, content });
@@ -97,7 +102,7 @@ export default function WriteBlog(props: Props) {
           className="btn btn-primary mb-2"
           data-testid="submit"
         >Post</button>
-      </form>
+      </form> */}
     </div>
   );
 }
