@@ -25,10 +25,7 @@ export default function App() {
       <div className="container">
         <Switch>
           <Route path="/writeblog" component={WriteBlog} />
-          <Route
-            path="/viewBlog"
-            render={({ location }) => <ViewBlog location={location} />}
-          />
+          <Route path="/viewBlog" component={ViewBlog} />
 
           {/* Must be last route */}
           <Route path="/" component={BlogList} />

@@ -6,7 +6,6 @@ import {
   Header,
   HeaderName,
   HeaderNavigation,
-  HeaderMenuItem,
   HeaderGlobalAction,
   HeaderGlobalBar,
   HeaderPanel,
@@ -22,11 +21,11 @@ export default function NavBar() {
       <HeaderName href="/" prefix="IBM">CPAT Blog</HeaderName>
       <HeaderNavigation aria-label="IBM  CPAT Blog"></HeaderNavigation>
       <HeaderGlobalBar>
-        <HeaderGlobalAction aria-label="Search" onClick={() => {}}>
+        <HeaderGlobalAction aria-label="Search" onClick={() => { }}>
           <Search20 />
         </HeaderGlobalAction>
         <HeaderGlobalAction aria-label="Edit">
-          <Link to="/writeblog"><Edit20 fill="white"/></Link>
+          <Link to="/writeblog"><Edit20 fill="white" /></Link>
         </HeaderGlobalAction>
         <HeaderGlobalAction
           aria-label="User"
@@ -36,18 +35,18 @@ export default function NavBar() {
       </HeaderGlobalBar>
 
       <HeaderPanel aria-label="Header Panel" expanded={sideNav}>
-          <Switcher aria-label="Switcher Container">
-            <SwitcherItem href="#" aria-label="Link 2">
-              My Blog Posts
+        <Switcher aria-label="Switcher Container">
+          <SwitcherItem href="#" aria-label="Link 2">
+            My Blog Posts
             </SwitcherItem>
-            <SwitcherItem aria-label="Link 3">
-              <Link className="writePostNavLink" to="/writeblog">Write Post</Link>
-            </SwitcherItem>
-            <SwitcherDivider />
-            <SwitcherItem aria-label="Link 1" href="/appid/logout">
-              Log out <ArrowRight20 fill="white"/>
-            </SwitcherItem>
-          </Switcher>
+          <SwitcherItem aria-label="Link 3">
+            <Link className="writePostNavLink" to="/writeblog">Write Post</Link>
+          </SwitcherItem>
+          <SwitcherDivider />
+          <SwitcherItem aria-label="Link 1" href="/appid/logout">
+            Log out <ArrowRight20 fill="white" />
+          </SwitcherItem>
+        </Switcher>
       </HeaderPanel>
     </Header>
   );
