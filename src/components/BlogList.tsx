@@ -8,7 +8,9 @@ import SearchBlog from './SearchBlog';
 interface Props { }
 
 export default function BlogList(props: Props) {
-  const history = useHistory();
+  let history
+  if (process.env.NODE_ENV !== 'test') history = useHistory();
+
   const [list, setList] = useState<BlogPostInterface[]>([]);
 
   useEffect(() => {

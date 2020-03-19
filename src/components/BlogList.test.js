@@ -1,8 +1,8 @@
-import React from "react";
-import { render, wait, fireEvent } from "@testing-library/react";
+import React from 'react';
+import { render, wait, fireEvent } from '@testing-library/react';
 import { exampleList, exampleBlogPost } from './exampleBlogPost'
-import BlogList from "./BlogList";
-import "@testing-library/jest-dom";
+import BlogList from './BlogList';
+import '@testing-library/jest-dom';
 import mockAxios from 'axios';
 
 jest.mock('axios');
