@@ -4,7 +4,8 @@ import userContext from '../userContext';
 import axios from 'axios';
 
 import TextEditor from './TextEditor';
-import { TextInput } from "carbon-components-react";
+import { TextInput, Button } from "carbon-components-react";
+
 
 interface Props { }
 
@@ -46,22 +47,24 @@ export default function WriteBlog(props: Props) {
     version: 1
   });
 
-  const handleSubmit = (blogPost: FormattedPost) => {
-    axios.post('/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
-      .catch(err => console.error(err));
+  const handleSubmit = () => {
+    // console.log(title, summary)
+    // axios.post('/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
+    //   .catch(err => console.error(err));
 
-    clearForm();
+    // clearForm();
   }
 
   return (
     <div className="writeBlogContainer">
       <TextInput id="blogTitle" labelText="" hideLabel 
-        placeholder="Blog Post Title" invalid={false} 
+        placeholder="Blog Post Title" invalid={title ? false : true} 
         invalidText="Title is required" onChange={e => setTitle(e.target.value)}/>
       <TextInput id="blogSummary" labelText="" hideLabel 
-        placeholder="Summary" invalid={false} 
+        placeholder="Summary" invalid={summary ? false : true} 
         invalidText="Summary is required" onChange={e => setSummary(e.target.value)}/>
       <TextEditor />
+      <Button id="blogSubmit" kind="primary" onClick={handleSubmit}>Submit</Button>
     </div>
   );
 }

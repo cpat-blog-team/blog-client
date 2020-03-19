@@ -55,6 +55,10 @@
   font-weight: 200;
 }
 
+.ql-container {
+  height: 65vh;
+}
+
 .container {
   width: 100%;
   padding-top: 3.75rem;
@@ -62,5 +66,9 @@
 
 .textEditorContainer {
   margin-top: 1.5rem;
-  height: 65vh;
+}
+
+#blogSubmit {
+  margin-top: 1%;
+  float: right;
 }
