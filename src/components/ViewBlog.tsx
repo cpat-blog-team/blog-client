@@ -8,7 +8,7 @@ interface Props { }
 
 export default function WriteBlog(props: Props) {
   const location = useLocation();
-  const { _id } = useLocation().location.state;
+  const { _id } = location.state;
   const [blog, setBlog] = useState<BlogPostInterface>(emptyBlogPost());
 
   useEffect(() => {
