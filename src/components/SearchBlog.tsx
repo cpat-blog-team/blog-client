@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useState } from 'react';
 import { Search } from 'carbon-components-react';
 import { useHistory } from 'react-router-dom';
-import axios from 'axios';
 
 export default function BlogList() {
   const history = useHistory();
@@ -16,6 +15,7 @@ export default function BlogList() {
 
   return (
     <form
+      data-testid="search-form"
       onSubmit={e => {
         e.preventDefault();
         search(searchInput);

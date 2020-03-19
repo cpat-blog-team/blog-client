@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import userContext from "./userContext";
 import axios from "axios";
 
-import { Switch, Route, useParams } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import NavBar from './components/NavBar'
 import WriteBlog from "./components/WriteBlog";
 import BlogList from "./components/BlogList";
@@ -20,19 +20,14 @@ export default function App() {
     getUserData();
   }, []);
 
-  const TitleRoute: any = ({ component: Component, ...rest }) => {
-    const { title } = useParams();
-    return <Route {...rest} component={() => <Component title={title} />} />
-  }
-
   return (
     <userContext.Provider value={userData}>
       <NavBar />
       <div className="container">
         <Switch>
           <Route path="/writeblog" component={WriteBlog} />
-          <Route path="/viewBlog" component={ViewBlog} />
-          <TitleRoute path="/blogList/:title" component={(props) => <BlogList {...props} />} />
+          <Route path="/viewBlog/id=:_id" component={ViewBlog} />
+          <Route path="/blogList/:title" component={BlogList} />
 
           {/* Must be last route */}
           <Route path="/" component={BlogList} />

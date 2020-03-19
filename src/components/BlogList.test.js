@@ -7,6 +7,13 @@ import mockAxios from 'axios';
 
 jest.mock('axios');
 
+jest.mock('react-router-dom', () => ({
+  useHistory: () => ({
+    push: jest.fn(),
+  }),
+  useParams: () => ({})
+}));
+
 describe('BlogList component', () => {
   let component;
   let queriedRoute;
@@ -41,19 +48,5 @@ describe('BlogList component', () => {
     expect(component.getByTestId('blogPost2')).toBeInTheDocument();
     expect(component.getByTestId('blogPost3')).toBeInTheDocument();
     expect(component.getByTestId('blogPost4')).toBeInTheDocument();
-  });
-
-  test('should search by title when search button is clicked', async () => {
-    //adds text to search input
-    const searchInput = component.getByTestId('search-input');
-    await wait(() => fireEvent.change(searchInput, { target: { value: exampleBlogPost.title } }));
-
-    //clicks search button to trigger api searc call
-    const searchButton = component.getByTestId('search-button');
-    await wait(() => fireEvent.click(searchButton));
-
-    // "queriedRoute" is stored in the global scope of this describe block
-    //  - it is updated by the mock axios call so that we can test it here
-    expect(queriedRoute).toEqual(`/blogs/search?title=${exampleBlogPost.title}`);
   });
 });

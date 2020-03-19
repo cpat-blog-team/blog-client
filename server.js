@@ -71,10 +71,6 @@ app.get('/user', function (req, res) {
 // Protect the entire application
 app.use(passport.authenticate(WebAppStrategy.STRATEGY_NAME));
 
-// app.use('/bundle.js/', (req, res) => res.sendFile(__dirname, 'public/bundle.js'));
-// app.use('/*', express.static(path.join(__dirname, 'public')));
-// app.get('/*', (req, res) => res.sendFile(path.join(__dirname, 'public/index.html')));
-
 app.use("/", express.static(path.join(`${__dirname}/public`)));
 app.get("*/bundle.js", (req, res) => {
   res.sendFile(path.resolve(`${__dirname}/public/bundle.js`));

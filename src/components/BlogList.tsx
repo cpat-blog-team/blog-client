@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { BlogPostInterface } from './exampleBlogPost';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';
 
-interface Props { title: string }
+interface Props { }
 
-export default function BlogList({ title }: Props) {
+export default function BlogList(props: Props) {
   const history = useHistory();
+  const { title } = useParams();
 
   const [list, setList] = useState<BlogPostInterface[]>([]);
 
-  const searchByTitle = (title) => {
+  const searchByTitle = () => {
     axios(`/blogs/search?title=${title}`)
       .then(({ data }) => setList(data.blogs))
       .catch(err => console.error(err));
@@ -24,9 +25,9 @@ export default function BlogList({ title }: Props) {
   }
 
   useEffect(() => {
-    if (title) searchByTitle(title)
+    if (title) searchByTitle()
     else getAllBlogs()
-  }, []);
+  }, [title]);
 
   return (
     <div>
@@ -38,7 +39,7 @@ export default function BlogList({ title }: Props) {
       {list.map(({ title, summary, updatedAt, name, _id }, i) => (
         <div className="list-group list-group-accent" key={i} data-testid={`blogPost${i}`}>
           <div
-            onClick={() => history.push('/viewBlog', { _id })}
+            onClick={() => history.push(`/viewBlog/id=${_id}`)}
             className="list-group-item list-group-item-accent-dark blog-list-container"
           >
             <h5>{title}</h5>

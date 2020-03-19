@@ -1,17 +1,13 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { BlogPostInterface, emptyBlogPost } from './exampleBlogPost';
 import axios from 'axios';
 
-interface Props { location: { state: { _id: string } } }
+interface Props { }
 
 export default function WriteBlog(props: Props) {
-  let location;
-  if (process.env.NODE_ENV !== 'test') location = useLocation();
-  else if (process.env.NODE_ENV === 'test') location = props.location
-
-  const { _id } = location.state;
+  const { _id } = useParams();
   const [blog, setBlog] = useState<BlogPostInterface>(emptyBlogPost());
 
   useEffect(() => {
