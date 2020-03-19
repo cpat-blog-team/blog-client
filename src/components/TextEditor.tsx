@@ -4,7 +4,7 @@ import { useQuill } from 'react-quilljs';
 import 'quill/dist/quill.snow.css'; // Add css for snow theme
 
 export default function TextEditor () {
-    const { quill, quillRef } = useQuill();
+    const { quillRef } = useQuill();
    
     return (
       <div className="textEditorContainer">

@@ -41,15 +41,26 @@
   color: #c6c6c6;
 }
 
-.container {
-  width: 100%;
-  padding: none;
+.bx--text-input {
+  font-size: 1.25rem;
+  height: 3rem;
+  border-bottom: none;
+  font-weight: 500;
 }
 
-.writeBlogContainer {
-  padding-top: 15%;
+#blogSummary {
+  margin-top: 2%;
+  height: 2.5rem;
+  font-size: 1.15rem;
+  font-weight: 200;
+}
+
+.container {
+  width: 100%;
+  padding-top: 3.75rem;
 }
 
 .textEditorContainer {
-  height: 60vh;
+  margin-top: 1.5rem;
+  height: 65vh;
 }
