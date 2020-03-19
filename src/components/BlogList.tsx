@@ -3,31 +3,33 @@ import { useState, useEffect } from 'react';
 import { BlogPostInterface } from './exampleBlogPost';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import SearchBlog from './SearchBlog';
 
-interface Props { }
+interface Props { title: string }
 
-export default function BlogList(props: Props) {
-  let history
-  if (process.env.NODE_ENV !== 'test') history = useHistory();
+export default function BlogList({ title }: Props) {
+  const history = useHistory();
 
   const [list, setList] = useState<BlogPostInterface[]>([]);
 
-  useEffect(() => {
-    axios("/blogs")
-      .then(({ data }) => setList(data.blogs))
-      .catch(err => console.error(err));
-  }, []);
-
-  const search = async (title) => {
-    await axios(`/blogs/search?title=${title}`)
+  const searchByTitle = (title) => {
+    axios(`/blogs/search?title=${title}`)
       .then(({ data }) => setList(data.blogs))
       .catch(err => console.error(err));
   }
 
+  const getAllBlogs = () => {
+    axios("/blogs")
+      .then(({ data }) => setList(data.blogs))
+      .catch(err => console.error(err));
+  }
+
+  useEffect(() => {
+    if (title) searchByTitle(title)
+    else getAllBlogs()
+  }, []);
+
   return (
     <div>
-      <SearchBlog search={search} />
       <div className="banner">
         <div className="banner-title">cpat blog</div>
         <h3>Bringing fellow cpat'ers together</h3>

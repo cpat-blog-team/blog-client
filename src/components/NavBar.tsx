@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { User20, Edit20, Search20, ArrowRight20 } from '@carbon/icons-react';
-import { useHistory } from 'react-router-dom'
+import { useState } from 'react';
+import { User20, Edit20, ArrowRight20 } from '@carbon/icons-react';
+import { useHistory } from 'react-router-dom';
+import SearchBlog from './SearchBlog'
 
 import {
   Header,
@@ -15,17 +17,15 @@ import {
 } from "carbon-components-react/lib/components/UIShell";
 
 export default function NavBar() {
-  const [sideNav, setSideNav] = React.useState(false);
   const history = useHistory();
+  const [sideNav, setSideNav] = useState(false);
 
   return (
     <Header aria-label="IBM Platform Name">
       <HeaderName href="/" prefix="IBM">CPAT Blog</HeaderName>
       <HeaderNavigation aria-label="IBM  CPAT Blog"></HeaderNavigation>
       <HeaderGlobalBar>
-        <HeaderGlobalAction aria-label="Search" onClick={() => { }}>
-          <Search20 />
-        </HeaderGlobalAction>
+        <SearchBlog />
         <HeaderGlobalAction
           aria-label="Edit"
           onClick={() => history.push('/writeBlog')}
