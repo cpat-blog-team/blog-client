@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom'
 import { User20, Edit20, Search20, ArrowRight20 } from '@carbon/icons-react';
+import { useHistory } from 'react-router-dom'
 
 import {
   Header,
@@ -16,6 +16,8 @@ import {
 
 export default function NavBar() {
   const [sideNav, setSideNav] = React.useState(false);
+  const history = useHistory();
+
   return (
     <Header aria-label="IBM Platform Name">
       <HeaderName href="/" prefix="IBM">CPAT Blog</HeaderName>
@@ -24,8 +26,11 @@ export default function NavBar() {
         <HeaderGlobalAction aria-label="Search" onClick={() => { }}>
           <Search20 />
         </HeaderGlobalAction>
-        <HeaderGlobalAction aria-label="Edit">
-          <Link to="/writeblog"><Edit20 fill="white" /></Link>
+        <HeaderGlobalAction
+          aria-label="Edit"
+          onClick={() => history.push('/writeBlog')}
+        >
+          <Edit20 fill="white" />
         </HeaderGlobalAction>
         <HeaderGlobalAction
           aria-label="User"
@@ -39,8 +44,10 @@ export default function NavBar() {
           <SwitcherItem href="#" aria-label="Link 2">
             My Blog Posts
             </SwitcherItem>
-          <SwitcherItem aria-label="Link 3">
-            <Link className="writePostNavLink" to="/writeblog">Write Post</Link>
+          <SwitcherItem
+            aria-label="Link 3"
+            onClick={() => history.push('/writeBlog')}
+          >
           </SwitcherItem>
           <SwitcherDivider />
           <SwitcherItem aria-label="Link 1" href="/appid/logout">
