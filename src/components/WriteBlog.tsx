@@ -2,10 +2,9 @@ import * as React from 'react';
 import { useState, useContext } from 'react';
 import userContext from '../userContext';
 import axios from 'axios';
-
-import TextEditor from './TextEditor';
-import { FormGroup, TextInput, Button } from "carbon-components-react";
-import { isCompositeComponent } from 'react-dom/test-utils';
+import ReactQuill from 'react-quill';
+import 'quill/dist/quill.snow.css';
+import { TextInput, Button } from "carbon-components-react";
 
 interface Props { }
 
@@ -40,50 +39,77 @@ export default function WriteBlog(props: Props) {
   }
 
   // todo: get username and userId from session storage
-  const formatPost = (blogPost: UserPost) => ({
+  const formatPost = () => ({
     email,
     name,
-    title: blogPost.title,
-    summary: blogPost.summary,
-    content: blogPost.content,
+    title,
+    summary,
+    content,
     version: 1
   });
 
   const handleSubmit = () => {
-    // console.log(title, summary)
-    // axios.post('/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
-    //   .catch(err => console.error(err));
+    const blogPost = formatPost();
+    axios.post('/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
+      .catch(err => console.error(err));
 
-    // clearForm();
+    clearForm();
   }
 
   const validateTitle = () => title ? setInvalidTitle(false) : setInvalidTitle(true);
-
   const validateSummary = () => summary ? setInvalidSummary(false) : setInvalidSummary(true);
 
-  const handleChangeTitle = ({ target }) => { 
+  const handleChangeTitle = ({ target }) => {
     setTitle(target.value);
     validateTitle();
   }
-
-  const handleChangeSummary = ({ target }) => { 
+  const handleChangeSummary = ({ target }) => {
     setSummary(target.value);
     validateSummary();
   }
-
+  const handleChangeContent = (content) => setContent(content);
 
   return (
-    <form className="writeBlogContainer" onSubmit={ handleSubmit } >
-      <TextInput id="blogTitle" name="title" labelText="" hideLabel onBlur={validateTitle} value={title}
-        placeholder="Blog Post Title" invalid={ invalidTitle ? true : false }
-        invalidText="Title is required" onChange={ handleChangeTitle }/>
-      <br/>
-      <br/>
-      <TextInput id="blogSummary" name="summary" labelText="" hideLabel value={summary}
-        placeholder="Summary" invalid={ invalidSummary ? true : false} onBlur={validateSummary}
-        invalidText="Summary is required" onChange={ handleChangeSummary } />
-      <TextEditor />
-      <Button type="submit" id="blogSubmit" kind="primary">Submit</Button>
+    <form className="writeBlogContainer" onSubmit={handleSubmit} >
+      <TextInput
+        id="blogTitle"
+        data-testid="writeTitle"
+        name="title"
+        labelText=""
+        hideLabel
+        onBlur={validateTitle}
+        value={title}
+        placeholder="Blog Post Title"
+        invalid={invalidTitle ? true : false}
+        invalidText="Title is required"
+        onChange={handleChangeTitle}
+      />
+      <br />
+      <br />
+      <TextInput
+        id="blogSummary"
+        data-testid="writeSummary"
+        name="summary"
+        labelText=""
+        hideLabel
+        onBlur={validateSummary}
+        value={summary}
+        placeholder="Summary"
+        invalid={invalidSummary ? true : false}
+        invalidText="Summary is required"
+        onChange={handleChangeSummary}
+      />
+      <div className="textEditorContainer" >
+        <ReactQuill
+          value={content}
+          onChange={handleChangeContent} />
+      </div>
+      <Button
+        id="blogSubmit"
+        data-testid="submit"
+        type="submit"
+        kind="primary"
+      >Submit</Button>
     </form>
   );
 }
