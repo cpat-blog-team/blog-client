@@ -56,16 +56,16 @@ export default function WriteBlog(props: Props) {
     clearForm();
   }
 
-  const validateTitle = () => title ? setInvalidTitle(false) : setInvalidTitle(true);
-  const validateSummary = () => summary ? setInvalidSummary(false) : setInvalidSummary(true);
+  const validateTitle = ({ value }) => value ? setInvalidTitle(false) : setInvalidTitle(true);
+  const validateSummary = ({ value }) => value ? setInvalidSummary(false) : setInvalidSummary(true);
 
   const handleChangeTitle = ({ target }) => {
     setTitle(target.value);
-    validateTitle();
+    validateTitle(target);
   }
   const handleChangeSummary = ({ target }) => {
     setSummary(target.value);
-    validateSummary();
+    validateSummary(target);
   }
   const handleChangeContent = (content) => setContent(content);
 
@@ -77,7 +77,7 @@ export default function WriteBlog(props: Props) {
         name="title"
         labelText=""
         hideLabel
-        onBlur={validateTitle}
+        onBlur={({ target }) => validateTitle(target)}
         value={title}
         placeholder="Blog Post Title"
         invalid={invalidTitle ? true : false}
@@ -92,7 +92,7 @@ export default function WriteBlog(props: Props) {
         name="summary"
         labelText=""
         hideLabel
-        onBlur={validateSummary}
+        onBlur={({ target }) => validateSummary(target)}
         value={summary}
         placeholder="Summary"
         invalid={invalidSummary ? true : false}
