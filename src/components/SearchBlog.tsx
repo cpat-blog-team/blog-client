@@ -1,36 +1,36 @@
 import * as React from 'react';
 import { useState } from 'react';
+import { Search } from 'carbon-components-react';
+import { useHistory } from 'react-router-dom';
 
-export default function BlogList({ search }) {
-
+export default function BlogList() {
+  const history = useHistory();
   const [searchInput, setSearchInput] = useState('');
 
   const handleChange = ({ target }) => {
     setSearchInput(target.value);
   }
 
+  const search = (title) => history.push(`/blogList/${title}`)
+
   return (
     <form
-      className="search-bar"
+      data-testid="search-form"
       onSubmit={e => {
         e.preventDefault();
         search(searchInput);
         setSearchInput('');
       }}
     >
-      <button
-        type="submit"
-        className="btn btn-primary"
-        data-testid="search-button"
-      >Search</button>
-      <input
-        className="form-control search-blog"
+      <Search
+        id="search-1"
+        placeHolderText="Search blogs by title"
+        labelText="search"
         type="search"
-        placeholder="search for title"
         data-testid="search-input"
         onChange={handleChange}
         value={searchInput}
-      ></input>
+      />
     </form>
   );
 }

@@ -4,13 +4,20 @@ import { exampleBlogPost } from './exampleBlogPost'
 import SearchBlog from "./SearchBlog";
 import "@testing-library/jest-dom";
 
+let pushedHistory;
+
+jest.mock('react-router-dom', () => ({
+  useHistory: () => ({
+    push: (value) => pushedHistory = value,
+  }),
+  useParams: () => ({})
+}));
+
 describe("SearchBlog component", () => {
   let component;
-  let searchedTitle;
 
   beforeEach(() => {
-    const search = (title) => searchedTitle = title;
-    component = render(<SearchBlog search={search} />);
+    component = render(<SearchBlog />);
   });
 
   test("canary test", () => {
@@ -21,24 +28,23 @@ describe("SearchBlog component", () => {
     expect(component.container).toBeInTheDocument();
   });
 
-  test('should invoke search function passed in from props with title to search', async () => {
-    //adds text to search input
-    const searchInput = component.getByTestId('search-input');
-    await wait(() => fireEvent.change(searchInput, { target: { value: exampleBlogPost.title } }));
-    //clicks search button
-    const searchButton = component.getByTestId('search-button');
-    await wait(() => fireEvent.click(searchButton));
-
-    expect(searchedTitle).toBe(exampleBlogPost.title);
-  });
   test("expect search bar to clear once blog is searched", async () => {
-    //adds text to search input
+    //adds text to search input and submits 
     const searchInput = component.getByTestId('search-input');
     await wait(() => fireEvent.change(searchInput, { target: { value: 'some blog title' } }));
-    //clicks search button
-    const searchButton = component.getByTestId('search-button');
-    await wait(() => fireEvent.click(searchButton));
+    await wait(() => fireEvent.submit(searchInput));
 
     expect(searchInput.value).toBe('');
+  });
+
+  test('should push title to history when searched', async () => {
+    //adds text to search input and submits 
+    const searchInput = component.getByTestId('search-input');
+    await wait(() => fireEvent.change(searchInput, { target: { value: exampleBlogPost.title } }));
+    await wait(() => fireEvent.submit(searchInput));
+
+    // "pushedHistory" is stored in the global scope of this test
+    //  - it is updated by the jest.mock of the useHistory from the react-router-dom library
+    expect(pushedHistory).toEqual(`/blogList/${exampleBlogPost.title}`);
   });
 });
