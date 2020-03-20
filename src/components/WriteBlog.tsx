@@ -14,7 +14,8 @@ export default function WriteBlog(props: Props) {
   const [invalidTitle, setInvalidTitle] = useState(false);
   const [summary, setSummary] = useState('');
   const [invalidSummary, setInvalidSummary] = useState(false);
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState('<p><br></p>');
+  const [invalidContent, setInvalidContent] = useState(false);
   const { name, email } = useContext(userContext);
 
   const clearForm = () => {
@@ -49,35 +50,54 @@ export default function WriteBlog(props: Props) {
   });
 
   const handleSubmit = () => {
-    const blogPost = formatPost();
-    axios.post('/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
-      .catch(err => console.error(err));
+    if (title && summary && content) {
+      const blogPost = formatPost();
+      axios.post('/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
+        .catch(err => console.error(err))
 
-    clearForm();
+      clearForm();
+    }
+    else {
+      validateTitle(title);
+      validateSummary(summary);
+      console.log(content)
+      validateContent(content);
+    }
   }
 
-  const validateTitle = ({ value }) => value ? setInvalidTitle(false) : setInvalidTitle(true);
-  const validateSummary = ({ value }) => value ? setInvalidSummary(false) : setInvalidSummary(true);
+  const validateTitle = (value) => value ? setInvalidTitle(false) : setInvalidTitle(true);
+  const validateSummary = (value) => value ? setInvalidSummary(false) : setInvalidSummary(true);
+  const validateContent = (value) => value !== '<p><br></p>' ? setInvalidContent(false) : setInvalidContent(true);
+  const validateContentOnBlur = ({ index }) => index > 0 ? setInvalidContent(false) : setInvalidContent(true);
 
   const handleChangeTitle = ({ target }) => {
     setTitle(target.value);
-    validateTitle(target);
+    validateTitle(target.value);
   }
   const handleChangeSummary = ({ target }) => {
     setSummary(target.value);
-    validateSummary(target);
+    validateSummary(target.value);
   }
-  const handleChangeContent = (content) => setContent(content);
+  const handleChangeContent = (content) => {
+    setContent(content);
+    validateContent(content);
+  }
 
   return (
-    <form className="writeBlogContainer" onSubmit={handleSubmit} >
+    <form
+      className="writeBlogContainer"
+      onSubmit={(e) => {
+        e.preventDefault()
+        handleSubmit()
+      }}
+    >
       <TextInput
         id="blogTitle"
         data-testid="writeTitle"
         name="title"
         labelText=""
         hideLabel
-        onBlur={({ target }) => validateTitle(target)}
+        onBlur={({ target }) => validateTitle(target.value)}
         value={title}
         placeholder="Blog Post Title"
         invalid={invalidTitle ? true : false}
@@ -92,7 +112,7 @@ export default function WriteBlog(props: Props) {
         name="summary"
         labelText=""
         hideLabel
-        onBlur={({ target }) => validateSummary(target)}
+        onBlur={({ target }) => validateSummary(target.value)}
         value={summary}
         placeholder="Summary"
         invalid={invalidSummary ? true : false}
@@ -101,8 +121,12 @@ export default function WriteBlog(props: Props) {
       />
       <div className="textEditorContainer" >
         <ReactQuill
+          className={invalidContent ? "bx--text-input--invalid" : ""}
           value={content}
-          onChange={handleChangeContent} />
+          onBlur={validateContentOnBlur}
+          onChange={handleChangeContent}
+        />
+        <div style={{ visibility: invalidContent ? 'visible' : 'hidden' }} className="bx--form-requirement" id="blogSummary-error-msg">Body is required</div>
       </div>
       <Button
         id="blogSubmit"
