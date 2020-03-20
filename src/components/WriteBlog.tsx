@@ -4,15 +4,17 @@ import userContext from '../userContext';
 import axios from 'axios';
 
 import TextEditor from './TextEditor';
-import { TextInput, Button } from "carbon-components-react";
-
+import { FormGroup, TextInput, Button } from "carbon-components-react";
+import { isCompositeComponent } from 'react-dom/test-utils';
 
 interface Props { }
 
 export default function WriteBlog(props: Props) {
 
   const [title, setTitle] = useState('');
+  const [invalidTitle, setInvalidTitle] = useState(false);
   const [summary, setSummary] = useState('');
+  const [invalidSummary, setInvalidSummary] = useState(false);
   const [content, setContent] = useState('');
   const { name, email } = useContext(userContext);
 
@@ -55,16 +57,33 @@ export default function WriteBlog(props: Props) {
     // clearForm();
   }
 
+  const validateTitle = () => title ? setInvalidTitle(false) : setInvalidTitle(true);
+
+  const validateSummary = () => summary ? setInvalidSummary(false) : setInvalidSummary(true);
+
+  const handleChangeTitle = ({ target }) => { 
+    setTitle(target.value);
+    validateTitle();
+  }
+
+  const handleChangeSummary = ({ target }) => { 
+    setSummary(target.value);
+    validateSummary();
+  }
+
+
   return (
-    <div className="writeBlogContainer">
-      <TextInput id="blogTitle" labelText="" hideLabel 
-        placeholder="Blog Post Title" invalid={title ? false : true} 
-        invalidText="Title is required" onChange={e => setTitle(e.target.value)}/>
-      <TextInput id="blogSummary" labelText="" hideLabel 
-        placeholder="Summary" invalid={summary ? false : true} 
-        invalidText="Summary is required" onChange={e => setSummary(e.target.value)}/>
+    <form className="writeBlogContainer" onSubmit={ handleSubmit } >
+      <TextInput id="blogTitle" name="title" labelText="" hideLabel onBlur={validateTitle} value={title}
+        placeholder="Blog Post Title" invalid={ invalidTitle ? true : false }
+        invalidText="Title is required" onChange={ handleChangeTitle }/>
+      <br/>
+      <br/>
+      <TextInput id="blogSummary" name="summary" labelText="" hideLabel value={summary}
+        placeholder="Summary" invalid={ invalidSummary ? true : false} onBlur={validateSummary}
+        invalidText="Summary is required" onChange={ handleChangeSummary } />
       <TextEditor />
-      <Button id="blogSubmit" kind="primary" onClick={handleSubmit}>Submit</Button>
-    </div>
+      <Button type="submit" id="blogSubmit" kind="primary">Submit</Button>
+    </form>
   );
 }
