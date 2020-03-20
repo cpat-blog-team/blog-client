@@ -11,6 +11,7 @@ import ViewBlog from "./components/ViewBlog";
 
 export default function App() {
   const [userData, setUserData] = useState({ name: "", email: "" });
+
   useEffect(() => {
     const getUserData: any = async () => {
       const { data } = await axios.get("/user");
@@ -25,10 +26,8 @@ export default function App() {
       <div className="container">
         <Switch>
           <Route path="/writeblog" component={WriteBlog} />
-          <Route
-            path="/viewBlog"
-            render={({ location }) => <ViewBlog location={location} />}
-          />
+          <Route path="/viewBlog/id=:_id" component={ViewBlog} />
+          <Route path="/blogList/:title" component={BlogList} />
 
           {/* Must be last route */}
           <Route path="/" component={BlogList} />

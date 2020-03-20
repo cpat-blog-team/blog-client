@@ -7,6 +7,15 @@ import mockAxios from 'axios';
 
 jest.mock('axios');
 
+jest.mock('react-router-dom', () => ({
+  useHistory: () => ({
+    push: jest.fn(),
+  }),
+  useParams: () => ({
+    _id: 'G3J4K56M7J'
+  })
+}));
+
 describe("ViewBlog component", () => {
   let component;
   let queriedRoute;
@@ -23,7 +32,7 @@ describe("ViewBlog component", () => {
   beforeEach(async () => {
     // component must be awaited because useEffect makes an api call upon first render
     await wait(() => {
-      component = render(<ViewBlog location={{ _id: exampleBlogPost._id }} />);
+      component = render(<ViewBlog location={{ state: { _id: 'G3J4K56M7J' } }} />);
     });
   });
 

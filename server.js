@@ -71,7 +71,13 @@ app.get('/user', function (req, res) {
 // Protect the entire application
 app.use(passport.authenticate(WebAppStrategy.STRATEGY_NAME));
 
-app.use("/", express.static(path.join(__dirname + "/public")));
+app.use("/", express.static(path.join(`${__dirname}/public`)));
+app.get("*/bundle.js", (req, res) => {
+  res.sendFile(path.resolve(`${__dirname}/public/bundle.js`));
+});
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(`${__dirname}/public/index.html`));
+});
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
