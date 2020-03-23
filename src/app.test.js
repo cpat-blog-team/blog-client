@@ -4,6 +4,7 @@ import App from "./app";
 import "@testing-library/jest-dom";
 import { BrowserRouter } from 'react-router-dom';
 
+jest.mock('quill/dist/quill.snow.css', () => jest.fn())
 
 describe("App component", () => {
   test("canary test", () => {

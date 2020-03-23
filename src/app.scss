@@ -34,3 +34,34 @@
 .writePostNavLink, .writePostNavLink:hover {
   color: #c6c6c6;
 }
+
+.bx--text-input {
+  font-size: 1.25rem;
+  height: 3rem;
+  border-bottom: none;
+  font-weight: 500;
+}
+
+#blogSummary {
+  height: 2.5rem;
+  font-size: 1.15rem;
+  font-weight: 200;
+}
+
+.ql-container {
+  height: 65vh;
+}
+
+.container {
+  width: 100%;
+  padding-top: 3.75rem;
+}
+
+.textEditorContainer {
+  margin-top: 1.5rem;
+}
+
+#blogSubmit {
+  margin-top: 1%;
+  float: right;
+}
