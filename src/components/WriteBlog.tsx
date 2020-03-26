@@ -36,7 +36,7 @@ export default function WriteBlog(props: Props) {
     name,
     title,
     summary,
-    content: JSON.stringify(delta),
+    content: btoa(JSON.stringify(delta)),
     version: 1
   });
 
@@ -50,7 +50,6 @@ export default function WriteBlog(props: Props) {
     const blogPost = formatPost();
     axios.post('/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
       .catch(err => console.error(err))
-
     clearForm();
   }
 
