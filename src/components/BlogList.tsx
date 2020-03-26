@@ -35,6 +35,7 @@ export default function BlogList(props: Props) {
         <div className="banner-title">cpat blog</div>
         <h3>Bringing fellow cpat'ers together</h3>
       </div>
+      <hr className="my-4"></hr>
 
       {list.map(({ title, summary, updatedAt, name, _id }, i) => (
         <div className="list-group list-group-accent" key={i} data-testid={`blogPost${i}`}>

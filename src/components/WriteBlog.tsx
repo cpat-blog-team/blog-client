@@ -5,6 +5,7 @@ import axios from 'axios';
 import ReactQuill from 'react-quill';
 import 'quill/dist/quill.snow.css';
 import { TextInput, Button } from "carbon-components-react";
+const Delta = require('quill-delta');
 
 interface Props { }
 
@@ -12,57 +13,50 @@ export default function WriteBlog(props: Props) {
 
   const [title, setTitle] = useState('');
   const [invalidTitle, setInvalidTitle] = useState(false);
+
   const [summary, setSummary] = useState('');
   const [invalidSummary, setInvalidSummary] = useState(false);
+
   const [content, setContent] = useState('<p><br></p>');
   const [invalidContent, setInvalidContent] = useState(false);
+
+  const [delta, setDelta] = useState(new Delta());
+
   const { name, email } = useContext(userContext);
 
   const clearForm = () => {
     setTitle('');
     setSummary('');
     setContent('');
+    setDelta(new Delta());
   }
 
-  interface UserPost {
-    title: string,
-    summary: string,
-    content: string
-  }
-
-  interface FormattedPost {
-    name: string,
-    email: string,
-    title: string,
-    summary: string,
-    content: string,
-    version: number
-  }
-
-  // todo: get username and userId from session storage
   const formatPost = () => ({
     email,
     name,
     title,
     summary,
-    content,
+    content: JSON.stringify(delta),
     version: 1
   });
 
-  const handleSubmit = () => {
-    if (title && summary && content) {
-      const blogPost = formatPost();
-      axios.post('/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
-        .catch(err => console.error(err))
+  const validateForm = () => {
+    validateTitle(title);
+    validateSummary(summary);
+    validateContent(content);
+  }
 
-      clearForm();
-    }
-    else {
-      validateTitle(title);
-      validateSummary(summary);
-      console.log(content)
-      validateContent(content);
-    }
+  const submit = () => {
+    const blogPost = formatPost();
+    axios.post('/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
+      .catch(err => console.error(err))
+
+    clearForm();
+  }
+
+  const handleSubmit = () => {
+    if (title && summary && content) submit()
+    else validateForm()
   }
 
   const validateTitle = (value) => value ? setInvalidTitle(false) : setInvalidTitle(true);
@@ -78,9 +72,10 @@ export default function WriteBlog(props: Props) {
     setSummary(target.value);
     validateSummary(target.value);
   }
-  const handleChangeContent = (content) => {
+  const handleChangeContent = (content, delta, source, editor) => {
     setContent(content);
     validateContent(content);
+    setDelta(editor.getContents());
   }
 
   return (
