@@ -5,8 +5,7 @@ import axios from 'axios';
 import ReactQuill from 'react-quill';
 import 'quill/dist/quill.snow.css';
 import { useHistory } from 'react-router-dom';
-import { TextInput, Button } from "carbon-components-react";
-import ErrorModal from './ErrorModal';
+import { TextInput, Button, Modal } from "carbon-components-react";
 const Delta = require('quill-delta');
 
 interface Props { }
@@ -23,18 +22,11 @@ export default function WriteBlog(props: Props) {
   const [content, setContent] = useState('<p><br></p>');
   const [invalidContent, setInvalidContent] = useState(false);
 
+  const [errorMessage, setErrorMessage] = useState('');
+
   const [delta, setDelta] = useState(new Delta());
 
-  const [modalError, setModalError] = useState('');
-
   const { name, email } = useContext(userContext);
-
-  const clearForm = () => {
-    setTitle('');
-    setSummary('');
-    setContent('');
-    setDelta(new Delta());
-  }
 
   const formatPost = () => ({
     email,
@@ -44,6 +36,13 @@ export default function WriteBlog(props: Props) {
     content: btoa(JSON.stringify(delta)),
     version: 1
   });
+
+  const clearForm = () => {
+    setTitle('');
+    setSummary('');
+    setContent('');
+    setDelta(new Delta());
+  }
 
   const validateForm = () => {
     validateTitle(title);
@@ -63,12 +62,11 @@ export default function WriteBlog(props: Props) {
     history.push('/');
   }
 
-  const submitFail = (errMessage) => {
-    if(errMessage.response.status === 413) {
-      setModalError("Image too large. Please use different image!");
-    } else {
-      setModalError(errMessage.response.statusText);
+  const submitFail = ({ status, statusText }) => {
+    if (status === 413) {
+      setErrorMessage("Image too large. Please use different image!");
     }
+    else setErrorMessage(statusText);
   }
 
   const handleSubmit = () => {
@@ -100,8 +98,8 @@ export default function WriteBlog(props: Props) {
   const modules = {
     toolbar: [
       [{ 'header': [1, 2, false] }],
-      ['bold', 'italic', 'underline','strike', 'blockquote'],
-      [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
       ['link', 'image'],
       ['clean']
     ],
@@ -115,7 +113,6 @@ export default function WriteBlog(props: Props) {
   ]
 
   return (
-    modalError ? <ErrorModal message={modalError} open /> :
     <form
       className="writeBlogContainer"
       onSubmit={(e) => {
@@ -168,6 +165,16 @@ export default function WriteBlog(props: Props) {
         type="submit"
         kind="primary"
       >Submit</Button>
-    </form>
+
+      {/* Error Modal will open automatically when errorMessage state is set */}
+      <Modal
+        open={errorMessage ? true : false}
+        onRequestClose={() => setErrorMessage('')}
+        passiveModal
+        modalHeading="Sorry We Couldn't Submit Your Post!"
+      >
+        <p>{errorMessage}</p>
+      </Modal>
+    </form >
   );
 }
