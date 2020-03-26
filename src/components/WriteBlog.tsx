@@ -6,6 +6,7 @@ import ReactQuill from 'react-quill';
 import 'quill/dist/quill.snow.css';
 import { useHistory } from 'react-router-dom';
 import { TextInput, Button } from "carbon-components-react";
+import ErrorModal from './ErrorModal';
 const Delta = require('quill-delta');
 
 interface Props { }
@@ -23,6 +24,8 @@ export default function WriteBlog(props: Props) {
   const [invalidContent, setInvalidContent] = useState(false);
 
   const [delta, setDelta] = useState(new Delta());
+
+  const [modalError, setModalError] = useState('');
 
   const { name, email } = useContext(userContext);
 
@@ -51,18 +54,26 @@ export default function WriteBlog(props: Props) {
   const submit = () => {
     const blogPost = formatPost();
     axios.post('/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
-      .then(() => {
-        clearForm();
-      })
-      .catch(err => {
-        console.error(err.status) 
-      })
+      .then(() => submitSuccess())
+      .catch((errMessage) => submitFail(errMessage))
+  }
+
+  const submitSuccess = () => {
+    clearForm();
+    history.push('/');
+  }
+
+  const submitFail = (errMessage) => {
+    if(errMessage.response.status === 413) {
+      setModalError("Image too large. Please use different image!");
+    } else {
+      setModalError(errMessage.response.statusText);
+    }
   }
 
   const handleSubmit = () => {
     if (title && summary && content) {
       submit();
-      history.push('/');
     }
     else validateForm();
   }
@@ -104,11 +115,11 @@ export default function WriteBlog(props: Props) {
   ]
 
   return (
+    modalError ? <ErrorModal message={modalError} open /> :
     <form
       className="writeBlogContainer"
       onSubmit={(e) => {
         e.preventDefault()
-        console.log(e)
         handleSubmit();
       }}
     >
