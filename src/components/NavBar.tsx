@@ -21,7 +21,7 @@ export default function NavBar() {
   const [sideNav, setSideNav] = useState(false);
 
   return (
-    <Header aria-label="IBM Platform Name">
+    <Header aria-label="IBM Platform Name" className="nav-box-shadow">
       <HeaderName href="/" prefix="IBM">CPAT Blog</HeaderName>
       <HeaderNavigation aria-label="IBM  CPAT Blog"></HeaderNavigation>
       <HeaderGlobalBar>

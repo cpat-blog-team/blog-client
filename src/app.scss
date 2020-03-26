@@ -1,6 +1,6 @@
 .banner {
   height: 18rem;
-  background-color: #f4f4f4;
+  // background-color: #f4f4f4;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -68,4 +68,12 @@
 
 .formatted-blog-content {
   white-space: normal;
+}
+
+.background-white {
+  background-color: white;
+}
+
+.nav-box-shadow {
+  box-shadow: 0px 5px 20px rgb(199, 199, 199);
 }

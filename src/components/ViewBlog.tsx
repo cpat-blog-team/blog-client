@@ -27,7 +27,7 @@ export default function WriteBlog(props: Props) {
   const { title, summary, name, updatedAt } = blog;
 
   return (
-    <div className="jumbotron jumbotron-fluid">
+    <div className="jumbotron jumbotron-fluid background-white">
       <div className="container">
         <h1 className="display-4" data-testid="blogTitle">{title}</h1>
         <p className="lead" data-testid="blogSummary">{summary}</p>
