@@ -51,8 +51,12 @@ export default function WriteBlog(props: Props) {
   const submit = () => {
     const blogPost = formatPost();
     axios.post('/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
-      .catch(err => console.error(err))
-    clearForm();
+      .then(() => {
+        clearForm();
+      })
+      .catch(err => {
+        console.error(err.status) 
+      })
   }
 
   const handleSubmit = () => {
@@ -60,7 +64,7 @@ export default function WriteBlog(props: Props) {
       submit();
       history.push('/');
     }
-    else validateForm()
+    else validateForm();
   }
 
   const validateTitle = (value) => value ? setInvalidTitle(false) : setInvalidTitle(true);
@@ -104,7 +108,8 @@ export default function WriteBlog(props: Props) {
       className="writeBlogContainer"
       onSubmit={(e) => {
         e.preventDefault()
-        handleSubmit()
+        console.log(e)
+        handleSubmit();
       }}
     >
       <TextInput
