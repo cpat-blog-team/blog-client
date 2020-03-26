@@ -77,6 +77,23 @@ export default function WriteBlog(props: Props) {
     setDelta(editor.getContents());
   }
 
+  const modules = {
+    toolbar: [
+      [{ 'header': [1, 2, false] }],
+      ['bold', 'italic', 'underline','strike', 'blockquote'],
+      [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+      ['link', 'image'],
+      ['clean']
+    ],
+  },
+
+  const formats = [
+    'header',
+    'bold', 'italic', 'underline', 'strike', 'blockquote',
+    'list', 'bullet', 'indent',
+    'link', 'image'
+  ]
+
   return (
     <form
       className="writeBlogContainer"
@@ -119,6 +136,8 @@ export default function WriteBlog(props: Props) {
           value={content}
           onBlur={validateContentOnBlur}
           onChange={handleChangeContent}
+          modules={modules}
+          formats={formats}
         />
         <div style={{ visibility: invalidContent ? 'visible' : 'hidden' }} className="bx--form-requirement" id="blogSummary-error-msg">Body is required</div>
       </div>
