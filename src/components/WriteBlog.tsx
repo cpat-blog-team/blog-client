@@ -4,12 +4,14 @@ import userContext from '../userContext';
 import axios from 'axios';
 import ReactQuill from 'react-quill';
 import 'quill/dist/quill.snow.css';
+import { useHistory } from 'react-router-dom';
 import { TextInput, Button } from "carbon-components-react";
 const Delta = require('quill-delta');
 
 interface Props { }
 
 export default function WriteBlog(props: Props) {
+  const history = useHistory();
 
   const [title, setTitle] = useState('');
   const [invalidTitle, setInvalidTitle] = useState(false);
@@ -54,14 +56,17 @@ export default function WriteBlog(props: Props) {
   }
 
   const handleSubmit = () => {
-    if (title && summary && content) submit()
+    if (title && summary && content) {
+      submit();
+      history.push('/');
+    }
     else validateForm()
   }
 
   const validateTitle = (value) => value ? setInvalidTitle(false) : setInvalidTitle(true);
   const validateSummary = (value) => value ? setInvalidSummary(false) : setInvalidSummary(true);
   const validateContent = (value) => value !== '<p><br></p>' ? setInvalidContent(false) : setInvalidContent(true);
-  const validateContentOnBlur = ({ index }) => index > 0 ? setInvalidContent(false) : setInvalidContent(true);
+  const validateContentOnBlur = () => content ? setInvalidContent(false) : setInvalidContent(true);
 
   const handleChangeTitle = ({ target }) => {
     setTitle(target.value);
@@ -85,7 +90,7 @@ export default function WriteBlog(props: Props) {
       ['link', 'image'],
       ['clean']
     ],
-  },
+  }
 
   const formats = [
     'header',
