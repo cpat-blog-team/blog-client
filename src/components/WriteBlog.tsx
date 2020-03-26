@@ -54,7 +54,7 @@ export default function WriteBlog(props: Props) {
     const blogPost = formatPost();
     axios.post('/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
       .then(() => submitSuccess())
-      .catch((errMessage) => submitFail(errMessage))
+      .catch(({ response }) => submitFail(response))
   }
 
   const submitSuccess = () => {
