@@ -48,6 +48,7 @@ export default function NavBar() {
             aria-label="Link 3"
             onClick={() => history.push('/writeBlog')}
           >
+            Write A Blog
           </SwitcherItem>
           <SwitcherDivider />
           <SwitcherItem aria-label="Link 1" href="/appid/logout">
