@@ -21,12 +21,10 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 passport.serializeUser((user, cb) => {
-  // console.log(user)
   cb(null, user)
 }
 );
 passport.deserializeUser((user, cb) => {
-  // console.log(user)
   cb(null, user)
 });
 passport.use(new WebAppStrategy({
