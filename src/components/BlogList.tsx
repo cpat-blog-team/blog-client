@@ -37,7 +37,7 @@ export default function BlogList(props: Props) {
       </div>
       <hr className="my-4"></hr>
 
-      {list.map(({ title, summary, updatedAt, name, _id }, i) => (
+      {list.map(({ title, summary, date, name, _id }, i) => (
         <div className="list-group list-group-accent" key={i} data-testid={`blogPost${i}`}>
           <div
             onClick={() => history.push(`/viewBlog/id=${_id}`)}
@@ -46,7 +46,7 @@ export default function BlogList(props: Props) {
             <h5>{title}</h5>
             <p>{summary}</p>
             <div>{name}</div>
-            <div>{updatedAt}</div>
+            <div>{date}</div>
           </div>
         </div>
       ))}

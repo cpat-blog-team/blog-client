@@ -33,7 +33,7 @@ export default function WriteBlog(props: Props) {
     name,
     title,
     summary,
-    content: btoa(JSON.stringify(delta)),
+    content: JSON.stringify(delta),
     version: 1
   });
 

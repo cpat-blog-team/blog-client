@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom'
 import { BlogPostInterface, emptyBlogPost } from './exampleBlogPost';
-import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html'; 
+import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 
 import axios from 'axios';
 
@@ -13,18 +13,20 @@ export default function WriteBlog(props: Props) {
   const [blog, setBlog] = useState<BlogPostInterface>(emptyBlogPost());
   const [html, setHtml] = useState('');
 
+  const loadBlog = ({ blog }) => {
+    const content = JSON.parse(blog.content);
+    const converter = new QuillDeltaToHtmlConverter(content.ops);
+    setHtml(converter.convert());
+    setBlog(blog);
+  }
+
   useEffect(() => {
     axios(`/blogs/${_id}`)
-      .then(({ data }) => {
-        const content = JSON.parse(atob(data.blog.content));
-        const converter = new QuillDeltaToHtmlConverter(content.ops);
-        setHtml(converter.convert());
-        setBlog(data.blog);
-      })
+      .then(({ data }) => loadBlog(data))
       .catch(err => console.error(err));
   }, []);
 
-  const { title, summary, name, updatedAt } = blog;
+  const { title, summary, name, date } = blog;
 
   return (
     <div className="jumbotron jumbotron-fluid background-white">
@@ -34,7 +36,7 @@ export default function WriteBlog(props: Props) {
         <hr className="my-4"></hr>
         <div className="callout callout-info">
           <strong className="h4" data-testid="blogUsername">{name}</strong><br></br>
-          <small className="text-muted" data-testid="blogDate">{updatedAt}</small>
+          <small className="text-muted" data-testid="blogDate">{date}</small>
         </div>
         <pre className="formatted-blog-content" data-testid="blogContent" dangerouslySetInnerHTML={{ __html: html }} />
       </div>
