@@ -11,7 +11,9 @@ export default function BlogList() {
     setSearchInput(target.value);
   }
 
-  const search = (title) => history.push(`/blogList/${title}`)
+  const search = (title) => {
+    history.push(`/blogList/title/${title}`);
+  }
 
   return (
     <form

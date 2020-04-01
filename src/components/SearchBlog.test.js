@@ -45,6 +45,10 @@ describe("SearchBlog component", () => {
 
     // "pushedHistory" is stored in the global scope of this test
     //  - it is updated by the jest.mock of the useHistory from the react-router-dom library
-    expect(pushedHistory).toEqual(`/blogList/${exampleBlogPost.title}`);
+    expect(
+      pushedHistory
+    ).toEqual(
+      `/blogList/title/${exampleBlogPost.title}`
+    );
   });
 });

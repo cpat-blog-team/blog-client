@@ -27,7 +27,7 @@ export default function App() {
         <Switch>
           <Route path="/writeblog" component={WriteBlog} />
           <Route path="/viewBlog/id=:_id" component={ViewBlog} />
-          <Route path="/blogList/:title" component={BlogList} />
+          <Route path="/blogList/:searchType/:searchValue" component={BlogList} />
 
           {/* Must be last route */}
           <Route path="/" component={BlogList} />
