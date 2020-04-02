@@ -8,26 +8,25 @@ interface Props { }
 
 export default function BlogList(props: Props) {
   const history = useHistory();
-  const { title } = useParams();
+  const { searchType, searchValue } = useParams();
 
   const [list, setList] = useState<BlogPostInterface[]>([]);
 
-  const searchByTitle = () => {
-    axios(`/blogs/search?title=${title}`)
-      .then(({ data }) => setList(data.blogs))
-      .catch(err => console.error(err));
+  const getQuery = () => {
+    if (searchType) return `/blogs/search?${searchType}=${searchValue}`
+    return '/blogs'
   }
 
-  const getAllBlogs = () => {
-    axios("/blogs")
+  const getBlogs = () => {
+    const query = getQuery()
+    axios(query)
       .then(({ data }) => setList(data.blogs))
       .catch(err => console.error(err));
   }
 
   useEffect(() => {
-    if (title) searchByTitle()
-    else getAllBlogs()
-  }, [title]);
+    getBlogs()
+  }, [searchValue]);
 
   return (
     <div>

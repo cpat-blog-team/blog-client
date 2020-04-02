@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { User20, Edit20, ArrowRight20 } from '@carbon/icons-react';
 import { useHistory } from 'react-router-dom';
-import SearchBlog from './SearchBlog'
+import SearchBlog from './SearchBlog';
+import userContext from '../userContext';
 
 import {
   Header,
@@ -19,6 +20,8 @@ import {
 export default function NavBar() {
   const history = useHistory();
   const [sideNav, setSideNav] = useState(false);
+
+  const { name, email } = useContext(userContext);
 
   return (
     <Header aria-label="IBM Platform Name" className="nav-box-shadow">
@@ -41,7 +44,10 @@ export default function NavBar() {
 
       <HeaderPanel aria-label="Header Panel" expanded={sideNav}>
         <Switcher aria-label="Switcher Container">
-          <SwitcherItem href="#" aria-label="Link 2">
+          <SwitcherItem
+            onClick={() => history.push(`/blogList/username/${name}`)}
+            aria-label="Link 2"
+          >
             My Blog Posts
             </SwitcherItem>
           <SwitcherItem

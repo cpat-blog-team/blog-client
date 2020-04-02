@@ -11,7 +11,8 @@
     "start": "node server.js",
     "react-dev": "webpack -d --mode development --watch",
     "server-dev": "NODE_ENV=\"development\" nodemon server.js",
-    "dev": "concurrently --kill-others-on-fail \"npm run server-dev \" \"npm run react-dev\""
+    "dev": "concurrently --kill-others-on-fail \"npm run server-dev \" \"npm run react-dev\"",
+    "dev:no-auth": "AUTH_DISABLED=\"true\" npm run dev"
   },
   "keywords": [],
   "author": "",
