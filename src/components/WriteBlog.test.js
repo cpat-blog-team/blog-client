@@ -86,8 +86,4 @@ describe("WriteBlog component", () => {
     expect(postedData.summary).toEqual(exampleBlogPost.summary);
     expect(queriedRoute).toBe('/blogs/add');
   });
-
-  test('should render in update blog post mode when id params are passed', () => {
-
-  });
 });
