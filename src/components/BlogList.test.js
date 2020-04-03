@@ -11,7 +11,7 @@ jest.mock('react-router-dom', () => ({
   useHistory: () => ({
     push: jest.fn(),
   }),
-  useParams: () => ({})
+  useParams: () => ({}) 
 }));
 
 describe('BlogList component', () => {
@@ -48,5 +48,9 @@ describe('BlogList component', () => {
     expect(component.getByTestId('blogPost2')).toBeInTheDocument();
     expect(component.getByTestId('blogPost3')).toBeInTheDocument();
     expect(component.getByTestId('blogPost4')).toBeInTheDocument();
+  });
+
+  test('render the update button if the blog post is the post of the user', () => {
+    
   });
 });

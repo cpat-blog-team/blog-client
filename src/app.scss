@@ -16,6 +16,16 @@
   margin-bottom: 1rem;
 }
 
+.blog-list-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.blog-list-component {
+  display: flex;
+  align-items: center;
+}
+
 .blog-list-container:hover {
   background-color: #f2f4f8;
 }
