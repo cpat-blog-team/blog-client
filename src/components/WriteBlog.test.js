@@ -11,7 +11,8 @@ jest.mock('quill/dist/quill.snow.css', () => jest.fn());
 jest.mock('react-router-dom', () => ({
   useHistory: () => ({
     push: jest.fn(),
-  })
+  }),
+  useParams: () => ({_id: null})
 }));
 
 describe("WriteBlog component", () => {
@@ -84,5 +85,9 @@ describe("WriteBlog component", () => {
     expect(postedData.title).toEqual(exampleBlogPost.title);
     expect(postedData.summary).toEqual(exampleBlogPost.summary);
     expect(queriedRoute).toBe('/blogs/add');
+  });
+
+  test('should render in update blog post mode when id params are passed', () => {
+
   });
 });

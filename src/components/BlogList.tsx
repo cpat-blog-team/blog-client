@@ -12,7 +12,6 @@ export default function BlogList(props: Props) {
   const history = useHistory();
   const { searchType, searchValue } = useParams();
   const { name: currentUsername } = useContext(userContext);
-  // console.log('currentUsername', currentUsername);
 
   const [list, setList] = useState<BlogPostInterface[]>([]);
 
@@ -53,7 +52,7 @@ export default function BlogList(props: Props) {
             </div>
             
             <div className="blog-list-component">
-              {currentUsername === name && <Link href="#" onClick={() => history.push(`/writeBlog/id=${_id}`)}>Update</Link>}
+              {currentUsername === name ? <Link href="#" data-testid={`updateLink${i}`} onClick={() => history.push(`/writeBlog/id=${_id}`)}>Update</Link> : null }
             </div>
             
           </div>

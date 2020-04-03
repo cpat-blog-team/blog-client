@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import userContext from '../userContext';
 import axios from 'axios';
 import ReactQuill from 'react-quill';
 import 'quill/dist/quill.snow.css';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { TextInput, Button, Modal } from "carbon-components-react";
+import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
+
 const Delta = require('quill-delta');
 
 interface Props { }
@@ -24,9 +26,31 @@ export default function WriteBlog(props: Props) {
 
   const [errorMessage, setErrorMessage] = useState('');
 
+  const [editorMode, setEditorMode] = useState('default');
+
   const [delta, setDelta] = useState(new Delta());
 
   const { name, email } = useContext(userContext);
+
+
+  const { _id } = useParams();
+
+  const loadBlog = ({ blog }) => {
+    let content = JSON.parse(blog.content);
+    const converter = new QuillDeltaToHtmlConverter(content.ops);
+    setContent(converter.convert());
+    setTitle(blog.title);
+    setSummary(blog.summary);
+  }
+
+  useEffect(() => {
+    if(_id) {
+      setEditorMode('update');
+      axios(`/blogs/${_id}`)
+      .then(({ data }) => loadBlog(data))
+      .catch(err => console.error(err));
+    }
+  }, []);
 
   const formatPost = () => ({
     email,
@@ -52,9 +76,21 @@ export default function WriteBlog(props: Props) {
 
   const submit = () => {
     const blogPost = formatPost();
-    axios.post('/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
+
+    if(editorMode === 'update') {
+      const updateBlogPostBody = {
+        ...blogPost,
+        _id
+      };
+    axios.post('/blogs/update', JSON.stringify(updateBlogPostBody), { headers: { 'Content-Type': 'application/json' } })
+    .then(() => submitSuccess())
+    .catch(({ response }) => submitFail(response))
+
+    } else {
+      axios.post('/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
       .then(() => submitSuccess())
       .catch(({ response }) => submitFail(response))
+    }
   }
 
   const submitSuccess = () => {
