@@ -11,7 +11,8 @@ jest.mock('quill/dist/quill.snow.css', () => jest.fn());
 jest.mock('react-router-dom', () => ({
   useHistory: () => ({
     push: jest.fn(),
-  })
+  }),
+  useParams: () => ({_id: null})
 }));
 
 describe("WriteBlog component", () => {

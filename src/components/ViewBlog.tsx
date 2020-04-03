@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom';
 import { BlogPostInterface, emptyBlogPost } from './exampleBlogPost';
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
-
 import axios from 'axios';
 
 interface Props { }
 
-export default function WriteBlog(props: Props) {
+export default function ViewBlog(props: Props) {
   const { _id } = useParams();
   const [blog, setBlog] = useState<BlogPostInterface>(emptyBlogPost());
   const [html, setHtml] = useState('');

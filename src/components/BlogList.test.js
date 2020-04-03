@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, wait } from '@testing-library/react';
-import { exampleList } from './exampleBlogPost'
+import { exampleList, exampleBlogPost } from './exampleBlogPost'
+import userContext from "../userContext";
 import BlogList from './BlogList';
 import '@testing-library/jest-dom';
 import mockAxios from 'axios';
@@ -11,8 +12,10 @@ jest.mock('react-router-dom', () => ({
   useHistory: () => ({
     push: jest.fn(),
   }),
-  useParams: () => ({})
+  useParams: () => ({}) 
 }));
+
+
 
 describe('BlogList component', () => {
   let component;
@@ -29,7 +32,11 @@ describe('BlogList component', () => {
   beforeEach(async () => {
     // component must be awaited because useEffect makes an api call up first render
     await wait(() => {
-      component = render(<BlogList />);
+      component = render(
+        <userContext.Provider value={{name: exampleBlogPost.name}} >
+          <BlogList />
+        </userContext.Provider>
+      )
     });
   });
 
@@ -42,11 +49,18 @@ describe('BlogList component', () => {
   });
 
   test('use effect should call api at endpoint /blogs and render response', () => {
+    const { getByTestId } = component;
     expect(queriedRoute).toBe('/blogs')
-    expect(component.getByTestId('blogPost0')).toBeInTheDocument();
-    expect(component.getByTestId('blogPost1')).toBeInTheDocument();
-    expect(component.getByTestId('blogPost2')).toBeInTheDocument();
-    expect(component.getByTestId('blogPost3')).toBeInTheDocument();
-    expect(component.getByTestId('blogPost4')).toBeInTheDocument();
+    getByTestId('blogPost0');
+    getByTestId('blogPost1');
+    getByTestId('blogPost2');
+    getByTestId('blogPost3');
+    getByTestId('blogPost4');
   });
+
+  test('render the update button if the blog post is the post of the user', () => {
+    const { getByTestId } = component;
+    getByTestId('updateLink0');
+    });
+
 });
