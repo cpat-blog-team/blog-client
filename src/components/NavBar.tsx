@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom'
-import { User20, Edit20, Search20, ArrowRight20 } from '@carbon/icons-react';
+import { useState, useContext } from 'react';
+import { User20, Edit20, ArrowRight20 } from '@carbon/icons-react';
+import { useHistory } from 'react-router-dom';
+import SearchBlog from './SearchBlog';
+import userContext from '../userContext';
 
 import {
   Header,
   HeaderName,
   HeaderNavigation,
-  HeaderMenuItem,
   HeaderGlobalAction,
   HeaderGlobalBar,
   HeaderPanel,
@@ -16,17 +18,22 @@ import {
 } from "carbon-components-react/lib/components/UIShell";
 
 export default function NavBar() {
-  const [sideNav, setSideNav] = React.useState(false);
+  const history = useHistory();
+  const [sideNav, setSideNav] = useState(false);
+
+  const { name, email } = useContext(userContext);
+
   return (
-    <Header aria-label="IBM Platform Name">
+    <Header aria-label="IBM Platform Name" className="nav-box-shadow">
       <HeaderName href="/" prefix="IBM">CPAT Blog</HeaderName>
       <HeaderNavigation aria-label="IBM  CPAT Blog"></HeaderNavigation>
       <HeaderGlobalBar>
-        <HeaderGlobalAction aria-label="Search" onClick={() => {}}>
-          <Search20 />
-        </HeaderGlobalAction>
-        <HeaderGlobalAction aria-label="Edit">
-          <Link to="/writeblog"><Edit20 fill="white"/></Link>
+        <SearchBlog />
+        <HeaderGlobalAction
+          aria-label="Edit"
+          onClick={() => history.push('/writeBlog')}
+        >
+          <Edit20 fill="white" />
         </HeaderGlobalAction>
         <HeaderGlobalAction
           aria-label="User"
@@ -36,18 +43,24 @@ export default function NavBar() {
       </HeaderGlobalBar>
 
       <HeaderPanel aria-label="Header Panel" expanded={sideNav}>
-          <Switcher aria-label="Switcher Container">
-            <SwitcherItem href="#" aria-label="Link 2">
-              My Blog Posts
+        <Switcher aria-label="Switcher Container">
+          <SwitcherItem
+            onClick={() => history.push(`/blogList/username/${name}`)}
+            aria-label="Link 2"
+          >
+            My Blog Posts
             </SwitcherItem>
-            <SwitcherItem aria-label="Link 3">
-              <Link className="writePostNavLink" to="/writeblog">Write Post</Link>
-            </SwitcherItem>
-            <SwitcherDivider />
-            <SwitcherItem aria-label="Link 1" href="/appid/logout">
-              Log out <ArrowRight20 fill="white"/>
-            </SwitcherItem>
-          </Switcher>
+          <SwitcherItem
+            aria-label="Link 3"
+            onClick={() => history.push('/writeBlog')}
+          >
+            Write A Blog
+          </SwitcherItem>
+          <SwitcherDivider />
+          <SwitcherItem aria-label="Link 1" href="/appid/logout">
+            Log out <ArrowRight20 fill="white" />
+          </SwitcherItem>
+        </Switcher>
       </HeaderPanel>
     </Header>
   );

@@ -1,6 +1,6 @@
 .banner {
   height: 18rem;
-  background-color: #f4f4f4;
+  // background-color: #f4f4f4;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,6 +16,16 @@
   margin-bottom: 1rem;
 }
 
+.blog-list-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.blog-list-component {
+  display: flex;
+  align-items: center;
+}
+
 .blog-list-container:hover {
   background-color: #f2f4f8;
 }
@@ -27,16 +37,53 @@
   word-break: break-word;
 }
 
-.search-bar {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 0.5rem;
-}
-
 .search-blog {
   width: 10rem;
 }
 
 .writePostNavLink, .writePostNavLink:hover {
   color: #c6c6c6;
+}
+
+.bx--text-input {
+  font-size: 1.25rem;
+  height: 3rem;
+  border-bottom: none;
+  font-weight: 500;
+}
+
+#blogSummary {
+  height: 2.5rem;
+  font-size: 1.15rem;
+  font-weight: 200;
+}
+
+.ql-container {
+  height: 65vh;
+}
+
+.container {
+  width: 100%;
+  padding-top: 3.75rem;
+}
+
+.textEditorContainer {
+  margin-top: 1.5rem;
+}
+
+#blogSubmit {
+  margin-top: 1%;
+  float: right;
+}
+
+.formatted-blog-content {
+  white-space: normal;
+}
+
+.background-white {
+  background-color: white;
+}
+
+.nav-box-shadow {
+  box-shadow: 0px 5px 20px rgb(199, 199, 199);
 }

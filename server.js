@@ -21,12 +21,10 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 passport.serializeUser((user, cb) => {
-  // console.log(user)
   cb(null, user)
 }
 );
 passport.deserializeUser((user, cb) => {
-  // console.log(user)
   cb(null, user)
 });
 passport.use(new WebAppStrategy({
@@ -60,18 +58,36 @@ app.get('/appid/logout', function (req, res) {
   res.redirect('/');
 });
 
+// Handle Requests for App Id user credentials
 app.get('/user', function (req, res) {
-  const { given_name, family_name, email } = req.user
-  res.json({
-    email,
-    name: `${given_name} ${family_name}`
-  });
+  // If App Id is disabled for dev purposes send placeholder credentials
+  if (process.env.AUTH_DISABLED) {
+    res.json({
+      email: 'ExampleUser@email.com',
+      name: 'Example User'
+    });
+  }
+  else {
+    const { given_name, family_name, email } = req.user
+    res.json({
+      email,
+      name: `${given_name} ${family_name}`
+    });
+  }
 });
 
-// Protect the entire application
-app.use(passport.authenticate(WebAppStrategy.STRATEGY_NAME));
+// Protect the entire application with App Id
+process.env.AUTH_DISABLED
+  ? console.log('app id disabled')
+  : app.use(passport.authenticate(WebAppStrategy.STRATEGY_NAME));
 
-app.use("/", express.static(path.join(__dirname + "/public")));
+app.use("/", express.static(path.join(`${__dirname}/public`)));
+app.get("*/bundle.js", (req, res) => {
+  res.sendFile(path.resolve(`${__dirname}/public/bundle.js`));
+});
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(`${__dirname}/public/index.html`));
+});
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
