@@ -3,7 +3,7 @@ The front end for a blogging web app to foster growth amongst the IBM CPAT team 
 
 ## Prerequisites  
   This App is the front end for the cpat-blog-bff found here https://github.com/cpat-blog-team/cpat-blog-bff/.  
-  Before starting the Getting Started for the blog-client found here. Make sure you have completed the Getting Started section for the bff and have the bff running in a separate terminal on your computer.
+  Before starting this Getting Started. Make sure you have completed the "Getting Started / Installation Instructions" and "Start dev server" sections of the bff and have the bff running in a separate terminal on your computer.
 
 
 ## Getting Started
