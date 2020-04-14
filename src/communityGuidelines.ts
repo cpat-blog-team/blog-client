@@ -1,0 +1,1 @@
+export const communityGuidelines = 'PlaceHolder Guidelines \nThese are some guidelines for the blogs posts. \nPlease follow them'

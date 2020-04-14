@@ -7,6 +7,7 @@ import 'quill/dist/quill.snow.css';
 import { useHistory, useParams } from 'react-router-dom';
 import { TextInput, Button, Modal } from "carbon-components-react";
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
+import { communityGuidelines } from '../communityGuidelines';
 
 const Delta = require('quill-delta');
 
@@ -26,7 +27,6 @@ export default function WriteBlog(props: Props) {
   const [delta, setDelta] = useState(new Delta());
   const [errorMessage, setErrorMessage] = useState('');
   const [openCommunityGuidelinesModal, setOpenCommunityGuidelinesModal] = useState(false);
-  const communityGuidelines = 'These are our Guidelines \nPlease follow them \nThanks very much.'
 
   const { name, email } = useContext(userContext);
   const { _id } = useParams();
