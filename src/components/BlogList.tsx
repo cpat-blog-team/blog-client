@@ -6,7 +6,7 @@ import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
 import { Link, Modal, Button } from "carbon-components-react";
 
-interface Props {}
+interface Props { }
 
 export default function BlogList(props: Props) {
   const history = useHistory();
@@ -74,7 +74,7 @@ export default function BlogList(props: Props) {
               {currentUsername === name ? (
                 <Link
                   href="#"
-                  data-testid={`updateLink${i}`}
+                  data-testid={`deleteLink${i}`}
                   onClick={() => setDeleteId(_id)}
                 >
                   Delete
