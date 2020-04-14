@@ -224,7 +224,8 @@ export default function WriteBlog(props: Props) {
           submit()
         }}
       >
-        <p>{communityGuidelines}</p>
+        
+      <pre className="formatted-blog-content" data-testid="blogContent" dangerouslySetInnerHTML={{ __html: communityGuidelines }} />
       </Modal>
     </form >
   );
