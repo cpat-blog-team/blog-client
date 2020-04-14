@@ -2,6 +2,7 @@ const dotenv = require("dotenv");
 const express = require("express");
 const path = require("path");
 const proxy = require("http-proxy-middleware");
+const bodyParser = require('body-parser');
 
 const app = express();
 
@@ -11,6 +12,8 @@ const log4js = require('log4js');
 const passport = require('passport');
 const WebAppStrategy = require('ibmcloud-appid').WebAppStrategy;
 const logger = log4js.getLogger('blog');
+
+app.use(bodyParser.json());
 
 app.use(session({
   secret: '123456',
@@ -37,7 +40,34 @@ passport.use(new WebAppStrategy({
 
 app.use(
   "/blogs",
-  proxy({ target: "http://localhost:3000/", changeOrigin: true })
+  proxy({
+    target: "http://localhost:3000/",
+    changeOrigin: true,
+    onProxyReq(proxyReq, req, res) {
+      if (req.method === 'POST') {
+        const { given_name, family_name, email } = req.user;
+        const name = `${given_name} ${family_name}`;
+        // Make any needed POST parameter changes
+        let body = req.body;
+        body.name = name;
+        body.email = email;
+
+        // URI encode JSON object
+        body = Object.keys(body)
+          .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(body[key]))
+          .join('&');
+
+        // Update header
+        proxyReq.setHeader('content-type', 'application/x-www-form-urlencoded');
+        proxyReq.setHeader('content-length', body.length);
+
+        // Write out body changes to the proxyReq stream
+        proxyReq.write(body);
+        proxyReq.end();
+
+      }
+    }
+  })
 );
 
 if (process.env.NODE_ENV === "development") {
@@ -69,12 +99,24 @@ app.get('/user', function (req, res) {
   }
   else {
     const { given_name, family_name, email } = req.user
+    // const roles = {
+    //   update_guidelines: WebAppStrategy.hasScope(req, "update_guidelines")
+    // }
     res.json({
       email,
       name: `${given_name} ${family_name}`
     });
   }
 });
+
+// app.get("/protected", passport.authenticate(WebAppStrategy.STRATEGY_NAME), function (req, res) {
+//   if (WebAppStrategy.hasScope(req, "read write")) {
+//     res.json(req.user);
+//   }
+//   else {
+//     res.send("insufficient scopes");
+//   }
+// });
 
 // Protect the entire application with App Id
 process.env.AUTH_DISABLED

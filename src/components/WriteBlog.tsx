@@ -28,7 +28,6 @@ export default function WriteBlog(props: Props) {
   const [errorMessage, setErrorMessage] = useState('');
   const [openCommunityGuidelinesModal, setOpenCommunityGuidelinesModal] = useState(false);
 
-  const { name, email } = useContext(userContext);
   const { _id } = useParams();
 
   const loadBlog = ({ blog }) => {
@@ -49,8 +48,6 @@ export default function WriteBlog(props: Props) {
   }, []);
 
   const formatPost = () => ({
-    email,
-    name,
     title,
     summary,
     content: JSON.stringify(delta),
@@ -224,8 +221,8 @@ export default function WriteBlog(props: Props) {
           submit()
         }}
       >
-        
-      <pre className="formatted-blog-content" data-testid="blogContent" dangerouslySetInnerHTML={{ __html: communityGuidelines }} />
+
+        <pre className="formatted-blog-content" data-testid="blogContent" dangerouslySetInnerHTML={{ __html: communityGuidelines }} />
       </Modal>
     </form >
   );
