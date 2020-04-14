@@ -6,7 +6,7 @@ import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
 import { Link, Modal, Button } from "carbon-components-react";
 
-interface Props {}
+interface Props { }
 
 export default function BlogList(props: Props) {
   const history = useHistory();
@@ -74,7 +74,7 @@ export default function BlogList(props: Props) {
               {currentUsername === name ? (
                 <Link
                   href="#"
-                  data-testid={`updateLink${i}`}
+                  data-testid={`deleteLink${i}`}
                   onClick={() => setDeleteId(_id)}
                 >
                   Delete
@@ -88,29 +88,12 @@ export default function BlogList(props: Props) {
       <Modal
         open={deleteId ? true : false}
         onRequestClose={() => setDeleteId("")}
-        passiveModal
         modalHeading="Are you sure you want to delete this blog?"
+        primaryButtonText="Yes"
+        secondaryButtonText="Cancel"
+        onSecondarySubmit={() => setDeleteId("")}
+        onRequestSubmit={() => deleteBlog()}
       >
-        <Button
-          id=""
-          data-testid=""
-          type="submit"
-          kind="primary"
-          onClick={() => {
-            deleteBlog();
-          }}
-        >
-          Yes
-        </Button>
-        <Button
-          id=""
-          data-testid=""
-          type="submit"
-          kind="danger"
-          onClick={() => setDeleteId("")}
-        >
-          Cancel
-        </Button>
       </Modal>
     </div>
   );

@@ -7,6 +7,7 @@ import 'quill/dist/quill.snow.css';
 import { useHistory, useParams } from 'react-router-dom';
 import { TextInput, Button, Modal } from "carbon-components-react";
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
+import { communityGuidelines } from '../communityGuidelines';
 
 const Delta = require('quill-delta');
 
@@ -17,22 +18,17 @@ export default function WriteBlog(props: Props) {
 
   const [title, setTitle] = useState('');
   const [invalidTitle, setInvalidTitle] = useState(false);
-
   const [summary, setSummary] = useState('');
   const [invalidSummary, setInvalidSummary] = useState(false);
-
   const [content, setContent] = useState('<p><br></p>');
   const [invalidContent, setInvalidContent] = useState(false);
 
-  const [errorMessage, setErrorMessage] = useState('');
-
   const [editorMode, setEditorMode] = useState('default');
-
   const [delta, setDelta] = useState(new Delta());
+  const [errorMessage, setErrorMessage] = useState('');
+  const [openCommunityGuidelinesModal, setOpenCommunityGuidelinesModal] = useState(false);
 
   const { name, email } = useContext(userContext);
-
-
   const { _id } = useParams();
 
   const loadBlog = ({ blog }) => {
@@ -44,11 +40,11 @@ export default function WriteBlog(props: Props) {
   }
 
   useEffect(() => {
-    if(_id) {
+    if (_id) {
       setEditorMode('update');
       axios(`/blogs/${_id}`)
-      .then(({ data }) => loadBlog(data))
-      .catch(err => console.error(err));
+        .then(({ data }) => loadBlog(data))
+        .catch(err => console.error(err));
     }
   }, []);
 
@@ -77,19 +73,19 @@ export default function WriteBlog(props: Props) {
   const submit = () => {
     const blogPost = formatPost();
 
-    if(editorMode === 'update') {
+    if (editorMode === 'update') {
       const updateBlogPostBody = {
         ...blogPost,
         _id
       };
-    axios.post('/blogs/update', JSON.stringify(updateBlogPostBody), { headers: { 'Content-Type': 'application/json' } })
-    .then(() => submitSuccess())
-    .catch(({ response }) => submitFail(response))
+      axios.post('/blogs/update', JSON.stringify(updateBlogPostBody), { headers: { 'Content-Type': 'application/json' } })
+        .then(() => submitSuccess())
+        .catch(({ response }) => submitFail(response))
 
     } else {
       axios.post('/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
-      .then(() => submitSuccess())
-      .catch(({ response }) => submitFail(response))
+        .then(() => submitSuccess())
+        .catch(({ response }) => submitFail(response))
     }
   }
 
@@ -107,7 +103,7 @@ export default function WriteBlog(props: Props) {
 
   const handleSubmit = () => {
     if (title && summary && content) {
-      submit();
+      setOpenCommunityGuidelinesModal(true);
     }
     else validateForm();
   }
@@ -204,12 +200,32 @@ export default function WriteBlog(props: Props) {
 
       {/* Error Modal will open automatically when errorMessage state is set */}
       <Modal
+        modalLabel='Error'
         open={errorMessage ? true : false}
         onRequestClose={() => setErrorMessage('')}
         passiveModal
         modalHeading="Sorry We Couldn't Submit Your Post!"
       >
         <p>{errorMessage}</p>
+      </Modal>
+
+      {/* Community Guidelines Modal will when openCommunityGuidelinesModal state is set to true */}
+      <Modal
+        data-testid='community-guidelines-modal'
+        modalLabel='Please Accept To Continue'
+        open={openCommunityGuidelinesModal}
+        onRequestClose={() => setOpenCommunityGuidelinesModal(false)}
+        modalHeading="Community Guidelines"
+        primaryButtonText="Accept"
+        secondaryButtonText="Cancel"
+        onSecondarySubmit={() => setOpenCommunityGuidelinesModal(false)}
+        onRequestSubmit={() => {
+          setOpenCommunityGuidelinesModal(false);
+          submit()
+        }}
+      >
+        
+      <pre className="formatted-blog-content" data-testid="blogContent" dangerouslySetInnerHTML={{ __html: communityGuidelines }} />
       </Modal>
     </form >
   );

@@ -12,7 +12,7 @@ jest.mock('react-router-dom', () => ({
   useHistory: () => ({
     push: jest.fn(),
   }),
-  useParams: () => ({}) 
+  useParams: () => ({})
 }));
 
 
@@ -29,15 +29,16 @@ describe('BlogList component', () => {
     });
   });
 
-  beforeEach(async () => {
+  beforeEach(async (done) => {
     // component must be awaited because useEffect makes an api call up first render
     await wait(() => {
       component = render(
-        <userContext.Provider value={{name: exampleBlogPost.name}} >
+        <userContext.Provider value={{ name: exampleBlogPost.name }} >
           <BlogList />
         </userContext.Provider>
       )
     });
+    done();
   });
 
   test('canary test', () => {
@@ -58,9 +59,9 @@ describe('BlogList component', () => {
     getByTestId('blogPost4');
   });
 
-  test('render the update button if the blog post is the post of the user', () => {
+  test('render the update and delete buttons if the blog post is the post of the user', () => {
     const { getByTestId } = component;
     getByTestId('updateLink0');
-    });
-
+    getByTestId('deleteLink0');
+  });
 });
