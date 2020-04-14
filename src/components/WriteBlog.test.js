@@ -68,7 +68,10 @@ describe("WriteBlog component", () => {
     //clicks submit button
     const submit = getByTestId('submit');
     await wait(() => fireEvent.click(submit));
-    const accept = getByTestId('community-guidelines-modal-accept-button');
+
+    //clicks accept button in community guidelines modal
+    const modal = getByTestId('community-guidelines-modal');
+    const accept = modal.children[1].children[2].children[1];
     await wait(() => fireEvent.click(accept));
 
     expect(title.value).toBe('');
@@ -86,7 +89,10 @@ describe("WriteBlog component", () => {
     //clicks submit button
     const submit = getByTestId('submit');
     await wait(() => fireEvent.click(submit));
-    const accept = getByTestId('community-guidelines-modal-accept-button');
+
+    //clicks accept button in community guidelines modal
+    const modal = getByTestId('community-guidelines-modal');
+    const accept = modal.children[1].children[2].children[1];
     await wait(() => fireEvent.click(accept));
 
     expect(postedData.title).toEqual(exampleBlogPost.title);

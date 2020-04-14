@@ -211,6 +211,7 @@ export default function WriteBlog(props: Props) {
 
       {/* Community Guidelines Modal will when openCommunityGuidelinesModal state is set to true */}
       <Modal
+        data-testid='community-guidelines-modal'
         modalLabel='Please Accept To Continue'
         open={openCommunityGuidelinesModal}
         onRequestClose={() => setOpenCommunityGuidelinesModal(false)}
