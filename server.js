@@ -99,24 +99,12 @@ app.get('/user', function (req, res) {
   }
   else {
     const { given_name, family_name, email } = req.user
-    // const roles = {
-    //   update_guidelines: WebAppStrategy.hasScope(req, "update_guidelines")
-    // }
     res.json({
       email,
       name: `${given_name} ${family_name}`
     });
   }
 });
-
-// app.get("/protected", passport.authenticate(WebAppStrategy.STRATEGY_NAME), function (req, res) {
-//   if (WebAppStrategy.hasScope(req, "read write")) {
-//     res.json(req.user);
-//   }
-//   else {
-//     res.send("insufficient scopes");
-//   }
-// });
 
 // Protect the entire application with App Id
 process.env.AUTH_DISABLED
