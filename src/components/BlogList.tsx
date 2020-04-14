@@ -88,29 +88,12 @@ export default function BlogList(props: Props) {
       <Modal
         open={deleteId ? true : false}
         onRequestClose={() => setDeleteId("")}
-        passiveModal
         modalHeading="Are you sure you want to delete this blog?"
+        primaryButtonText="Yes"
+        secondaryButtonText="Cancel"
+        onSecondarySubmit={() => setDeleteId("")}
+        onRequestSubmit={() => deleteBlog()}
       >
-        <Button
-          id=""
-          data-testid=""
-          type="submit"
-          kind="primary"
-          onClick={() => {
-            deleteBlog();
-          }}
-        >
-          Yes
-        </Button>
-        <Button
-          id=""
-          data-testid=""
-          type="submit"
-          kind="danger"
-          onClick={() => setDeleteId("")}
-        >
-          Cancel
-        </Button>
       </Modal>
     </div>
   );

@@ -200,6 +200,7 @@ export default function WriteBlog(props: Props) {
 
       {/* Error Modal will open automatically when errorMessage state is set */}
       <Modal
+        modalLabel='Error'
         open={errorMessage ? true : false}
         onRequestClose={() => setErrorMessage('')}
         passiveModal
@@ -210,29 +211,19 @@ export default function WriteBlog(props: Props) {
 
       {/* Community Guidelines Modal will when openCommunityGuidelinesModal state is set to true */}
       <Modal
+        modalLabel='Please Accept To Continue'
         open={openCommunityGuidelinesModal}
         onRequestClose={() => setOpenCommunityGuidelinesModal(false)}
-        passiveModal
         modalHeading="Community Guidelines"
+        primaryButtonText="Accept"
+        secondaryButtonText="Cancel"
+        onSecondarySubmit={() => setOpenCommunityGuidelinesModal(false)}
+        onRequestSubmit={() => {
+          setOpenCommunityGuidelinesModal(false);
+          submit()
+        }}
       >
         <p>{communityGuidelines}</p>
-        <Button
-          data-testid="community-guidelines-modal-accept-button"
-          id=""
-          kind="primary"
-          onClick={() => {
-            submit();
-          }}
-        >
-          Accept
-        </Button>
-        <Button
-          id=""
-          kind="danger"
-          onClick={() => setOpenCommunityGuidelinesModal(false)}
-        >
-          Cancel
-        </Button>
       </Modal>
     </form >
   );
