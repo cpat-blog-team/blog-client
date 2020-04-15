@@ -7,7 +7,6 @@ import 'quill/dist/quill.snow.css';
 import { useHistory, useParams } from 'react-router-dom';
 import { TextInput, Button, Modal, ToggleSmall } from "carbon-components-react";
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
-import { communityGuidelines } from '../communityGuidelines';
 
 const Delta = require('quill-delta');
 
@@ -22,6 +21,7 @@ export default function WriteBlog(props: Props) {
   const [invalidSummary, setInvalidSummary] = useState(false);
   const [content, setContent] = useState('<p><br></p>');
   const [oldContent, setOldContent] = useState('<p><br></p>');
+  const [communityGuidelines, setCommunityGuidelines] = useState('<p><br></p>');
   const [invalidContent, setInvalidContent] = useState(false);
 
   const [oldEditorMode, setOldEditorMode] = useState('');
@@ -46,6 +46,14 @@ export default function WriteBlog(props: Props) {
     setContent(converter.convert());
   };
 
+  const loadCommunityGuidelines =  ({ content }) => { 
+      console.log(typeof content)
+      let { ops } = JSON.parse(content);
+      const converter = new QuillDeltaToHtmlConverter(ops);  
+      setCommunityGuidelines(converter.convert());
+  }
+  
+
   // This function takes an array of tuples where the first element of each tuple is the state 
   // and the second is a callback function to set the given state
   const setMultiState = (arr) => arr.forEach(([state, setStateCallback]) => setStateCallback(state));
@@ -61,16 +69,19 @@ export default function WriteBlog(props: Props) {
     } else {
       setEditorMode('default');
     }
+
+    axios(`/api/communityGuidelines`)
+    .then(({ data }) => {
+      console.log(data)
+      loadCommunityGuidelines(data.communityGuidelines)
+    })
+    .catch(err => console.error(err));
   }, []);
 
   useEffect(() => {
     if (editorMode) {
       if (editCommunityGuidelines && oldContent == '<p><br></p>') {
-        axios(`/api/communityGuidelines`)
-        .then(({ data }) => {
-          setMultiState([[data.communityGuidelines,loadContent], [editorMode, setOldEditorMode], ["updateGuidelines", setEditorMode]]);
-        })
-        .catch(err => console.error(err));
+        setMultiState([[communityGuidelines,setContent], [editorMode, setOldEditorMode], ["updateGuidelines", setEditorMode]]);
       } 
       else {
         setMultiState([[content, setOldContent], [oldContent, setContent], [editorMode, setOldEditorMode], [oldEditorMode, setEditorMode]]); 
