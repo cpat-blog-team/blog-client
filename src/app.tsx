@@ -11,12 +11,13 @@ import ViewBlog from "./components/ViewBlog";
 
 
 export default function App() {
-  const [userData, setUserData] = useState({ name: "", email: "" });
+  const [userData, setUserData] = useState({ name: "", email: "", roles: {} });
 
   useEffect(() => {
     const getUserData: any = async () => {
       const { data } = await axios.get("/user");
       setUserData(data);
+      console.log(data)
     };
     getUserData();
   }, []);
@@ -26,7 +27,7 @@ export default function App() {
       <NavBar />
       <div className="container">
         <Switch>
-          <Route path="/writeBlog/id=:_id" component={WriteBlog} /> 
+          <Route path="/writeBlog/id=:_id" component={WriteBlog} />
           <Route path="/writeBlog" component={WriteBlog} />
           <Route path="/viewBlog/id=:_id" component={ViewBlog} />
           <Route path="/blogList/:searchType/:searchValue" component={BlogList} />

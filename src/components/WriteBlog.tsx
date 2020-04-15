@@ -5,7 +5,7 @@ import axios from 'axios';
 import ReactQuill from 'react-quill';
 import 'quill/dist/quill.snow.css';
 import { useHistory, useParams } from 'react-router-dom';
-import { TextInput, Button, Modal } from "carbon-components-react";
+import { TextInput, Button, Modal, ToggleSmall } from "carbon-components-react";
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 import { communityGuidelines } from '../communityGuidelines';
 
@@ -224,6 +224,14 @@ export default function WriteBlog(props: Props) {
 
         <pre className="formatted-blog-content" data-testid="blogContent" dangerouslySetInnerHTML={{ __html: communityGuidelines }} />
       </Modal>
+
+      <br />
+
+      <ToggleSmall
+        aria-label="update community guidelines toggle button"
+        id="update-community-guidelines-toggle-1"
+        labelText="Update Community Guidelines"
+      />
     </form >
   );
 }
