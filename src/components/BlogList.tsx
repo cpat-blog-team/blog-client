@@ -4,7 +4,7 @@ import { useState, useEffect, useContext } from "react";
 import { BlogPostInterface } from "./exampleBlogPost";
 import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
-import { Link, Modal, Button } from "carbon-components-react";
+import { Link, Modal } from "carbon-components-react";
 
 interface Props { }
 

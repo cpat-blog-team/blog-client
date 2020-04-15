@@ -17,7 +17,6 @@ export default function App() {
     const getUserData: any = async () => {
       const { data } = await axios.get("/user");
       setUserData(data);
-      console.log(data)
     };
     getUserData();
   }, []);

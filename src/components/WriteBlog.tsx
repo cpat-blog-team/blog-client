@@ -29,6 +29,7 @@ export default function WriteBlog(props: Props) {
   const [openCommunityGuidelinesModal, setOpenCommunityGuidelinesModal] = useState(false);
 
   const { _id } = useParams();
+  const { roles } = useContext(userContext);
 
   const loadBlog = ({ blog }) => {
     let content = JSON.parse(blog.content);
@@ -227,11 +228,13 @@ export default function WriteBlog(props: Props) {
 
       <br />
 
-      <ToggleSmall
-        aria-label="update community guidelines toggle button"
-        id="update-community-guidelines-toggle-1"
-        labelText="Update Community Guidelines"
-      />
+      {roles.update_guidelines &&
+        <ToggleSmall
+          data-testid='update-community-guidelines-toggle-toggle'
+          aria-label="update community guidelines toggle toggle"
+          id="update-community-guidelines-toggle-1"
+          labelText="Update Community Guidelines"
+        />}
     </form >
   );
 }
