@@ -198,34 +198,39 @@ export default function WriteBlog(props: Props) {
         handleSubmit();
       }}
     >
-      <TextInput
-        id="blogTitle"
-        data-testid="writeTitle"
-        name="title"
-        labelText=""
-        hideLabel
-        onBlur={({ target }) => validateTitle(target.value)}
-        value={title}
-        placeholder="Blog Post Title"
-        invalid={invalidTitle ? true : false}
-        invalidText="Title is required"
-        onChange={handleChangeTitle}
-      />
+      {editorMode != "updateGuidelines" && 
+        <TextInput
+          id="blogTitle"
+          data-testid="writeTitle"
+          name="title"
+          labelText=""
+          hideLabel
+          onBlur={({ target }) => validateTitle(target.value)}
+          value={title}
+          placeholder="Blog Post Title"
+          invalid={invalidTitle ? true : false}
+          invalidText="Title is required"
+          onChange={handleChangeTitle}
+      />}
+      
       <br />
       <br />
-      <TextInput
-        id="blogSummary"
-        data-testid="writeSummary"
-        name="summary"
-        labelText=""
-        hideLabel
-        onBlur={({ target }) => validateSummary(target.value)}
-        value={summary}
-        placeholder="Summary"
-        invalid={invalidSummary ? true : false}
-        invalidText="Summary is required"
-        onChange={handleChangeSummary}
-      />
+
+      {editorMode != "updateGuidelines" && 
+        <TextInput
+          id="blogSummary"
+          data-testid="writeSummary"
+          name="summary"
+          labelText=""
+          hideLabel
+          onBlur={({ target }) => validateSummary(target.value)}
+          value={summary}
+          placeholder="Summary"
+          invalid={invalidSummary ? true : false}
+          invalidText="Summary is required"
+          onChange={handleChangeSummary}
+        />}
+      
       <div className="textEditorContainer" >
         <ReactQuill
           className={invalidContent ? "bx--text-input--invalid" : ""}
