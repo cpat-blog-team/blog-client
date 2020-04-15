@@ -20,7 +20,7 @@ export default function ViewBlog(props: Props) {
   }
 
   useEffect(() => {
-    axios(`/blogs/${_id}`)
+    axios(`/api/blogs/${_id}`)
       .then(({ data }) => loadBlog(data))
       .catch(err => console.error(err));
   }, []);

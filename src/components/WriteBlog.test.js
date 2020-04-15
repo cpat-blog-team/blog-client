@@ -78,7 +78,7 @@ describe("WriteBlog component", () => {
     expect(summary.value).toBe('');
   });
 
-  test('should make post request to route /blogs/add upon submit (body should include fields title, summary and content)', async () => {
+  test('should make post request to route /api/blogs/add upon submit (body should include fields title, summary and content)', async () => {
     const { getByTestId } = component;
     //adds text to title, summary and content inputs
     const title = getByTestId('writeTitle');
@@ -97,7 +97,7 @@ describe("WriteBlog component", () => {
 
     expect(postedData.title).toEqual(exampleBlogPost.title);
     expect(postedData.summary).toEqual(exampleBlogPost.summary);
-    expect(queriedRoute).toBe('/blogs/add');
+    expect(queriedRoute).toBe('/api/blogs/add');
   });
 
   test('should render not render update community guidelines switch when user does not have update_guidelines role', () => {

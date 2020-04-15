@@ -45,7 +45,7 @@ describe("ViewBlog component", () => {
   });
 
   test("should call api for blog post with passed down id from props", () => {
-    expect(queriedRoute).toBe(`/blogs/${exampleBlogPost._id}`);
+    expect(queriedRoute).toBe(`/api/blogs/${exampleBlogPost._id}`);
   });
 
   test("should render blog post", () => {

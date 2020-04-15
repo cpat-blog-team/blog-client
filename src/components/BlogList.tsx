@@ -17,8 +17,8 @@ export default function BlogList(props: Props) {
   const [deleteId, setDeleteId] = useState("");
 
   const getQuery = () => {
-    if (searchType) return `/blogs/search?${searchType}=${searchValue}`;
-    return "/blogs";
+    if (searchType) return `/api/blogs/search?${searchType}=${searchValue}`;
+    return "/api/blogs";
   };
 
   const getBlogs = () => {
@@ -30,7 +30,7 @@ export default function BlogList(props: Props) {
 
   const deleteBlog = async () => {
     console.log(`deleting blog ${deleteId}`);
-    await axios.delete(`/blogs/${deleteId}`);
+    await axios.delete(`/api/blogs/${deleteId}`);
     setDeleteId("");
     getBlogs();
   };

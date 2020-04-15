@@ -39,10 +39,13 @@ passport.use(new WebAppStrategy({
 }));
 
 app.use(
-  "/blogs",
+  "/api",
   proxy({
     target: "http://localhost:3000/",
     changeOrigin: true,
+    pathRewrite: {
+      '^/api': '',
+    },
     onProxyReq(proxyReq, req, res) {
       if (req.method === 'POST') {
         const { given_name, family_name, email } = req.user;
