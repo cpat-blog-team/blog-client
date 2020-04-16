@@ -49,9 +49,9 @@ describe('BlogList component', () => {
     expect(component.container).toBeInTheDocument();
   });
 
-  test('use effect should call api at endpoint /blogs and render response', () => {
+  test('use effect should call api at endpoint /api/blogs and render response', () => {
     const { getByTestId } = component;
-    expect(queriedRoute).toBe('/blogs')
+    expect(queriedRoute).toBe('/api/blogs')
     getByTestId('blogPost0');
     getByTestId('blogPost1');
     getByTestId('blogPost2');

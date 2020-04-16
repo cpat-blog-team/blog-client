@@ -5,9 +5,8 @@ import axios from 'axios';
 import ReactQuill from 'react-quill';
 import 'quill/dist/quill.snow.css';
 import { useHistory, useParams } from 'react-router-dom';
-import { TextInput, Button, Modal } from "carbon-components-react";
+import { TextInput, Button, Modal, ToggleSmall } from "carbon-components-react";
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
-import { communityGuidelines } from '../communityGuidelines';
 
 const Delta = require('quill-delta');
 
@@ -21,31 +20,74 @@ export default function WriteBlog(props: Props) {
   const [summary, setSummary] = useState('');
   const [invalidSummary, setInvalidSummary] = useState(false);
   const [content, setContent] = useState('<p><br></p>');
+  const [oldContent, setOldContent] = useState('<p><br></p>');
+  const [communityGuidelines, setCommunityGuidelines] = useState('<p><br></p>');
   const [invalidContent, setInvalidContent] = useState(false);
 
-  const [editorMode, setEditorMode] = useState('default');
+  const [oldEditorMode, setOldEditorMode] = useState('');
+  const [editorMode, setEditorMode] = useState('');
   const [delta, setDelta] = useState(new Delta());
   const [errorMessage, setErrorMessage] = useState('');
   const [openCommunityGuidelinesModal, setOpenCommunityGuidelinesModal] = useState(false);
+  const [editCommunityGuidelines, setEditCommunityGuidelines] = useState(false);
 
   const { _id } = useParams();
+  const { roles } = useContext(userContext);
 
   const loadBlog = ({ blog }) => {
-    let content = JSON.parse(blog.content);
-    const converter = new QuillDeltaToHtmlConverter(content.ops);
-    setContent(converter.convert());
+    loadContent(blog)
     setTitle(blog.title);
     setSummary(blog.summary);
   }
 
+  const loadContent = ({ content }) => {
+    let { ops } = JSON.parse(content);
+    const converter = new QuillDeltaToHtmlConverter(ops);
+    setContent(converter.convert());
+  };
+
+  const loadCommunityGuidelines = ({ content }) => {
+    let { ops } = JSON.parse(content);
+    const converter = new QuillDeltaToHtmlConverter(ops);
+    setCommunityGuidelines(converter.convert());
+  }
+
+
+  // This function takes an array of tuples where the first element of each tuple is the state 
+  // and the second is a callback function to set the given state
+  const setMultiState = (arr) => arr.forEach(([state, setStateCallback]) => setStateCallback(state));
+
   useEffect(() => {
     if (_id) {
       setEditorMode('update');
-      axios(`/blogs/${_id}`)
-        .then(({ data }) => loadBlog(data))
+      axios(`/api/blogs/${_id}`)
+        .then(({ data }) => {
+          loadBlog(data)
+        })
         .catch(err => console.error(err));
+    } else {
+      setEditorMode('default');
     }
+
+    axios(`/api/communityGuidelines`)
+      .then(({ data }) => {
+        loadCommunityGuidelines(data.communityGuidelines)
+      })
+      .catch(err => console.error(err));
   }, []);
+
+  useEffect(() => {
+    if (editorMode) {
+      if (editCommunityGuidelines && oldContent == '<p><br></p>') {
+        setMultiState([[communityGuidelines, setContent], [editorMode, setOldEditorMode], ["updateGuidelines", setEditorMode]]);
+      }
+      else {
+        setMultiState([[content, setOldContent], [oldContent, setContent], [editorMode, setOldEditorMode], [oldEditorMode, setEditorMode]]);
+      }
+
+      setOldContent(content);
+    }
+  }, [editCommunityGuidelines]);
 
   const formatPost = () => ({
     title,
@@ -75,12 +117,16 @@ export default function WriteBlog(props: Props) {
         ...blogPost,
         _id
       };
-      axios.post('/blogs/update', JSON.stringify(updateBlogPostBody), { headers: { 'Content-Type': 'application/json' } })
+      axios.post('/api/blogs/update', JSON.stringify(updateBlogPostBody), { headers: { 'Content-Type': 'application/json' } })
         .then(() => submitSuccess())
         .catch(({ response }) => submitFail(response))
 
+    } else if (editorMode === 'updateGuidelines') {
+      axios.post('/api/communityGuidelines', JSON.stringify({ content: blogPost.content }), { headers: { 'Content-Type': 'application/json' } })
+        .then(() => submitSuccess())
+        .catch(({ response }) => submitFail(response))
     } else {
-      axios.post('/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
+      axios.post('/api/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
         .then(() => submitSuccess())
         .catch(({ response }) => submitFail(response))
     }
@@ -149,34 +195,39 @@ export default function WriteBlog(props: Props) {
         handleSubmit();
       }}
     >
-      <TextInput
-        id="blogTitle"
-        data-testid="writeTitle"
-        name="title"
-        labelText=""
-        hideLabel
-        onBlur={({ target }) => validateTitle(target.value)}
-        value={title}
-        placeholder="Blog Post Title"
-        invalid={invalidTitle ? true : false}
-        invalidText="Title is required"
-        onChange={handleChangeTitle}
-      />
+      {editorMode != "updateGuidelines" &&
+        <TextInput
+          id="blogTitle"
+          data-testid="writeTitle"
+          name="title"
+          labelText=""
+          hideLabel
+          onBlur={({ target }) => validateTitle(target.value)}
+          value={title}
+          placeholder="Blog Post Title"
+          invalid={invalidTitle ? true : false}
+          invalidText="Title is required"
+          onChange={handleChangeTitle}
+        />}
+
       <br />
       <br />
-      <TextInput
-        id="blogSummary"
-        data-testid="writeSummary"
-        name="summary"
-        labelText=""
-        hideLabel
-        onBlur={({ target }) => validateSummary(target.value)}
-        value={summary}
-        placeholder="Summary"
-        invalid={invalidSummary ? true : false}
-        invalidText="Summary is required"
-        onChange={handleChangeSummary}
-      />
+
+      {editorMode != "updateGuidelines" &&
+        <TextInput
+          id="blogSummary"
+          data-testid="writeSummary"
+          name="summary"
+          labelText=""
+          hideLabel
+          onBlur={({ target }) => validateSummary(target.value)}
+          value={summary}
+          placeholder="Summary"
+          invalid={invalidSummary ? true : false}
+          invalidText="Summary is required"
+          onChange={handleChangeSummary}
+        />}
+
       <div className="textEditorContainer" >
         <ReactQuill
           className={invalidContent ? "bx--text-input--invalid" : ""}
@@ -224,6 +275,19 @@ export default function WriteBlog(props: Props) {
 
         <pre className="formatted-blog-content" data-testid="blogContent" dangerouslySetInnerHTML={{ __html: communityGuidelines }} />
       </Modal>
+
+      <br />
+
+      {roles.update_guidelines &&
+        <ToggleSmall
+          onToggle={() => {
+            setEditCommunityGuidelines(!editCommunityGuidelines);
+          }}
+          data-testid='update-community-guidelines-toggle-toggle'
+          aria-label="update community guidelines toggle toggle"
+          id="update-community-guidelines-toggle-1"
+          labelText="Update Community Guidelines"
+        />}
     </form >
   );
 }

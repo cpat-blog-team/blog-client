@@ -25,6 +25,8 @@ describe("WriteBlog component", () => {
       getRangeAt: () => { }
     })
 
+    mockAxios.mockImplementation(() => Promise.resolve({ data: { communityGuidelines: { content: JSON.stringify({ ops: [] }) } } }));
+
     mockAxios.post.mockImplementation((route, data) => {
       queriedRoute = route;
       postedData = JSON.parse(data);
@@ -32,8 +34,9 @@ describe("WriteBlog component", () => {
     });
   });
 
-  beforeEach(() => {
-    component = render(<WriteBlog />);
+  beforeEach(async (done) => {
+    await wait(() => component = render(<WriteBlog />));
+    done();
   });
 
   test("canary test", () => {
@@ -78,7 +81,7 @@ describe("WriteBlog component", () => {
     expect(summary.value).toBe('');
   });
 
-  test('should make post request to route /blogs/add upon submit (body should include fields title, summary and content)', async () => {
+  test('should make post request to route /api/blogs/add upon submit (body should include fields title, summary and content)', async () => {
     const { getByTestId } = component;
     //adds text to title, summary and content inputs
     const title = getByTestId('writeTitle');
@@ -97,6 +100,11 @@ describe("WriteBlog component", () => {
 
     expect(postedData.title).toEqual(exampleBlogPost.title);
     expect(postedData.summary).toEqual(exampleBlogPost.summary);
-    expect(queriedRoute).toBe('/blogs/add');
+    expect(queriedRoute).toBe('/api/blogs/add');
+  });
+
+  test('should render not render update community guidelines switch when user does not have update_guidelines role', () => {
+    const { queryByTestId } = component;
+    expect(queryByTestId('update-community-guidelines-toggle-toggle')).toBe(null);
   });
 });

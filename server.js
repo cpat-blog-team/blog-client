@@ -39,10 +39,13 @@ passport.use(new WebAppStrategy({
 }));
 
 app.use(
-  "/blogs",
+  "/api",
   proxy({
     target: "http://localhost:3000/",
     changeOrigin: true,
+    pathRewrite: {
+      '^/api': '',
+    },
     onProxyReq(proxyReq, req, res) {
       if (req.method === 'POST') {
         const { given_name, family_name, email } = req.user;
@@ -88,20 +91,27 @@ app.get('/appid/logout', function (req, res) {
   res.redirect('/');
 });
 
+// Return an object 'roles' of the user's permissions (App ID scopes)
+const getUserRoles = (req) => ({
+  update_guidelines: WebAppStrategy.hasScope(req, "update_guidelines")
+})
+
 // Handle Requests for App Id user credentials
 app.get('/user', function (req, res) {
   // If App Id is disabled for dev purposes send placeholder credentials
   if (process.env.AUTH_DISABLED) {
     res.json({
       email: 'ExampleUser@email.com',
-      name: 'Example User'
+      name: 'Example User',
+      roles: {}
     });
   }
   else {
     const { given_name, family_name, email } = req.user
     res.json({
       email,
-      name: `${given_name} ${family_name}`
+      name: `${given_name} ${family_name}`,
+      roles: getUserRoles(req)
     });
   }
 });

@@ -4,7 +4,7 @@ import { useState, useEffect, useContext } from "react";
 import { BlogPostInterface } from "./exampleBlogPost";
 import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
-import { Link, Modal, Button } from "carbon-components-react";
+import { Link, Modal } from "carbon-components-react";
 
 interface Props { }
 
@@ -17,20 +17,23 @@ export default function BlogList(props: Props) {
   const [deleteId, setDeleteId] = useState("");
 
   const getQuery = () => {
-    if (searchType) return `/blogs/search?${searchType}=${searchValue}`;
-    return "/blogs";
+    if (searchType) return `/api/blogs/search?${searchType}=${searchValue}`;
+    return "/api/blogs";
   };
 
-  const getBlogs = () => {
-    const query = getQuery();
-    axios(query)
-      .then(({ data }) => setList(data.blogs))
-      .catch(err => console.error(err));
+  const getBlogs = async () => {
+    try {
+      const query = getQuery();
+      const { data } = await axios(query);
+      setList(data.blogs);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const deleteBlog = async () => {
     console.log(`deleting blog ${deleteId}`);
-    await axios.delete(`/blogs/${deleteId}`);
+    await axios.delete(`/api/blogs/${deleteId}`);
     setDeleteId("");
     getBlogs();
   };
