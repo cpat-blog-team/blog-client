@@ -21,11 +21,14 @@ export default function BlogList(props: Props) {
     return "/api/blogs";
   };
 
-  const getBlogs = () => {
-    const query = getQuery();
-    axios(query)
-      .then(({ data }) => setList(data.blogs))
-      .catch(err => console.error(err));
+  const getBlogs = async () => {
+    try {
+      const query = getQuery();
+      const { data } = await axios(query);
+      setList(data.blogs);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const deleteBlog = async () => {

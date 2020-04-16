@@ -25,6 +25,8 @@ describe("WriteBlog component", () => {
       getRangeAt: () => { }
     })
 
+    mockAxios.mockImplementation(() => Promise.resolve({ data: { communityGuidelines: { content: JSON.stringify({ ops: [] }) } } }));
+
     mockAxios.post.mockImplementation((route, data) => {
       queriedRoute = route;
       postedData = JSON.parse(data);
@@ -32,8 +34,9 @@ describe("WriteBlog component", () => {
     });
   });
 
-  beforeEach(() => {
-    component = render(<WriteBlog />);
+  beforeEach(async (done) => {
+    await wait(() => component = render(<WriteBlog />));
+    done();
   });
 
   test("canary test", () => {

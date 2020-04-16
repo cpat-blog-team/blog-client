@@ -12,7 +12,7 @@ interface BlogPostInterface {
 
 const exampleBlogPost: BlogPostInterface = {
   title: 'Im Pickle Rick!!!',
-  content: JSON.stringify(new Delta([{ instert: 'Some content about Rick and Morty...' }])),
+  content: JSON.stringify(new Delta([{ insert: 'Some content about Rick and Morty...' }])),
   summary: 'Rick turns himself into a pickle.',
   name: 'Morty',
   updatedAt: 'Feb 5',

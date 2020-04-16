@@ -13,11 +13,16 @@ import ViewBlog from "./components/ViewBlog";
 export default function App() {
   const [userData, setUserData] = useState({ name: "", email: "", roles: {} });
 
-  useEffect(() => {
-    const getUserData: any = async () => {
-      const { data } = await axios.get("/user");
+  const getUserData: any = async () => {
+    try {
+      const { data } = await axios("/user");
       setUserData(data);
-    };
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
     getUserData();
   }, []);
 

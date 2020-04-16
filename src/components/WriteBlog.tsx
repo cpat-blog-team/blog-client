@@ -46,13 +46,12 @@ export default function WriteBlog(props: Props) {
     setContent(converter.convert());
   };
 
-  const loadCommunityGuidelines =  ({ content }) => { 
-      console.log(typeof content)
-      let { ops } = JSON.parse(content);
-      const converter = new QuillDeltaToHtmlConverter(ops);  
-      setCommunityGuidelines(converter.convert());
+  const loadCommunityGuidelines = ({ content }) => {
+    let { ops } = JSON.parse(content);
+    const converter = new QuillDeltaToHtmlConverter(ops);
+    setCommunityGuidelines(converter.convert());
   }
-  
+
 
   // This function takes an array of tuples where the first element of each tuple is the state 
   // and the second is a callback function to set the given state
@@ -71,20 +70,19 @@ export default function WriteBlog(props: Props) {
     }
 
     axios(`/api/communityGuidelines`)
-    .then(({ data }) => {
-      console.log(data)
-      loadCommunityGuidelines(data.communityGuidelines)
-    })
-    .catch(err => console.error(err));
+      .then(({ data }) => {
+        loadCommunityGuidelines(data.communityGuidelines)
+      })
+      .catch(err => console.error(err));
   }, []);
 
   useEffect(() => {
     if (editorMode) {
       if (editCommunityGuidelines && oldContent == '<p><br></p>') {
-        setMultiState([[communityGuidelines,setContent], [editorMode, setOldEditorMode], ["updateGuidelines", setEditorMode]]);
-      } 
+        setMultiState([[communityGuidelines, setContent], [editorMode, setOldEditorMode], ["updateGuidelines", setEditorMode]]);
+      }
       else {
-        setMultiState([[content, setOldContent], [oldContent, setContent], [editorMode, setOldEditorMode], [oldEditorMode, setEditorMode]]); 
+        setMultiState([[content, setOldContent], [oldContent, setContent], [editorMode, setOldEditorMode], [oldEditorMode, setEditorMode]]);
       }
 
       setOldContent(content);
@@ -113,7 +111,6 @@ export default function WriteBlog(props: Props) {
 
   const submit = () => {
     const blogPost = formatPost();
-    console.log(editorMode);
 
     if (editorMode === 'update') {
       const updateBlogPostBody = {
@@ -125,14 +122,14 @@ export default function WriteBlog(props: Props) {
         .catch(({ response }) => submitFail(response))
 
     } else if (editorMode === 'updateGuidelines') {
-      axios.post('/api/communityGuidelines', JSON.stringify({content : blogPost.content}), { headers: { 'Content-Type': 'application/json' } })
+      axios.post('/api/communityGuidelines', JSON.stringify({ content: blogPost.content }), { headers: { 'Content-Type': 'application/json' } })
         .then(() => submitSuccess())
         .catch(({ response }) => submitFail(response))
     } else {
       axios.post('/api/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
         .then(() => submitSuccess())
         .catch(({ response }) => submitFail(response))
-    } 
+    }
   }
 
   const submitSuccess = () => {
@@ -198,7 +195,7 @@ export default function WriteBlog(props: Props) {
         handleSubmit();
       }}
     >
-      {editorMode != "updateGuidelines" && 
+      {editorMode != "updateGuidelines" &&
         <TextInput
           id="blogTitle"
           data-testid="writeTitle"
@@ -211,12 +208,12 @@ export default function WriteBlog(props: Props) {
           invalid={invalidTitle ? true : false}
           invalidText="Title is required"
           onChange={handleChangeTitle}
-      />}
-      
+        />}
+
       <br />
       <br />
 
-      {editorMode != "updateGuidelines" && 
+      {editorMode != "updateGuidelines" &&
         <TextInput
           id="blogSummary"
           data-testid="writeSummary"
@@ -230,7 +227,7 @@ export default function WriteBlog(props: Props) {
           invalidText="Summary is required"
           onChange={handleChangeSummary}
         />}
-      
+
       <div className="textEditorContainer" >
         <ReactQuill
           className={invalidContent ? "bx--text-input--invalid" : ""}
