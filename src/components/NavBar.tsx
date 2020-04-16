@@ -30,6 +30,7 @@ export default function NavBar() {
       <HeaderGlobalBar>
         <SearchBlog />
         <HeaderGlobalAction
+          data-testid='nav-bar-write-blog-button'
           aria-label="Edit"
           onClick={() => history.push('/writeBlog')}
         >
@@ -45,12 +46,14 @@ export default function NavBar() {
       <HeaderPanel aria-label="Header Panel" expanded={sideNav}>
         <Switcher aria-label="Switcher Container">
           <SwitcherItem
+            data-testid='side-nav-my-blog-posts-button'
             onClick={() => history.push(`/blogList/username/${name}`)}
             aria-label="Link 2"
           >
             My Blog Posts
             </SwitcherItem>
           <SwitcherItem
+            data-testid='side-nav-write-a-blog-button'
             aria-label="Link 3"
             onClick={() => history.push('/writeBlog')}
           >
