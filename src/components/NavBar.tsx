@@ -16,6 +16,7 @@ import {
   SwitcherItem,
   SwitcherDivider,
 } from "carbon-components-react/lib/components/UIShell";
+import { Dropdown } from 'carbon-components-react';
 
 export default function NavBar() {
   const history = useHistory();
@@ -27,12 +28,25 @@ export default function NavBar() {
     <Header aria-label="IBM Platform Name" className="nav-box-shadow">
       <HeaderName href="/" prefix="IBM">CPAT Blog</HeaderName>
       <HeaderNavigation aria-label="IBM  CPAT Blog"></HeaderNavigation>
+
       <HeaderGlobalBar>
+        <Dropdown
+          type="inline"
+          ariaLabel="Admin Actions"
+          id="admin-actions"
+          items={[
+            'Community Guidelines',
+            'User Privileges',
+            'Blog Approval'
+          ]}
+          label="Select Mode"
+          titleText="Admin Access - "
+        />
         <SearchBlog />
         <HeaderGlobalAction
-          data-testid='nav-bar-write-blog-button'
+          data-testid="nav-bar-write-blog-button"
           aria-label="Edit"
-          onClick={() => history.push('/writeBlog')}
+          onClick={() => history.push("/writeBlog")}
         >
           <Edit20 fill="white" />
         </HeaderGlobalAction>
@@ -46,16 +60,16 @@ export default function NavBar() {
       <HeaderPanel aria-label="Header Panel" expanded={sideNav}>
         <Switcher aria-label="Switcher Container">
           <SwitcherItem
-            data-testid='side-nav-my-blog-posts-button'
+            data-testid="side-nav-my-blog-posts-button"
             onClick={() => history.push(`/blogList/username/${name}`)}
             aria-label="Link 2"
           >
             My Blog Posts
             </SwitcherItem>
           <SwitcherItem
-            data-testid='side-nav-write-a-blog-button'
+            data-testid="side-nav-write-a-blog-button"
             aria-label="Link 3"
-            onClick={() => history.push('/writeBlog')}
+            onClick={() => history.push("/writeBlog")}
           >
             Write A Blog
           </SwitcherItem>
@@ -65,6 +79,6 @@ export default function NavBar() {
           </SwitcherItem>
         </Switcher>
       </HeaderPanel>
-    </Header>
+    </Header >
   );
 }
