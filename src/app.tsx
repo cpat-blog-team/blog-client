@@ -21,7 +21,6 @@ export default function App() {
       console.error(err);
     }
   };
-
   useEffect(() => {
     getUserData();
   }, []);
