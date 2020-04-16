@@ -103,7 +103,7 @@ export default function WriteBlog(props: Props) {
     setDelta(new Delta());
   }
 
-  const validateForm = () => {
+  const validateFormUI = () => {
     validateTitle(title);
     validateSummary(summary);
     validateContent(content);
@@ -111,7 +111,6 @@ export default function WriteBlog(props: Props) {
 
   const submit = () => {
     const blogPost = formatPost();
-
     if (editorMode === 'update') {
       const updateBlogPostBody = {
         ...blogPost,
@@ -145,10 +144,9 @@ export default function WriteBlog(props: Props) {
   }
 
   const handleSubmit = () => {
-    if (title && summary && content) {
-      setOpenCommunityGuidelinesModal(true);
-    }
-    else validateForm();
+    if (editorMode === 'updateGuidelines' && content) setOpenCommunityGuidelinesModal(true);
+    else if (title && summary && content) setOpenCommunityGuidelinesModal(true);
+    else validateFormUI();
   }
 
   const validateTitle = (value) => value ? setInvalidTitle(false) : setInvalidTitle(true);
