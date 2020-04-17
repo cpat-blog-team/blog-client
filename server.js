@@ -25,8 +25,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 passport.serializeUser((user, cb) => {
   cb(null, user)
-}
-);
+});
 passport.deserializeUser((user, cb) => {
   cb(null, user)
 });
@@ -92,9 +91,11 @@ app.get('/appid/logout', function (req, res) {
 });
 
 // Return an object 'roles' of the user's permissions (App ID scopes)
-const getUserRoles = (req) => ({
-  update_guidelines: WebAppStrategy.hasScope(req, "update_guidelines")
-})
+const getUserScopes = (req) => ({
+  update_guidelines: WebAppStrategy.hasScope(req, "update_guidelines"),
+  manage_blogs: WebAppStrategy.hasScope(req, "manage_blogs"),
+  manage_appid: WebAppStrategy.hasScope(req, "manage_appid")
+});
 
 // Handle Requests for App Id user credentials
 app.get('/user', function (req, res) {
@@ -103,7 +104,7 @@ app.get('/user', function (req, res) {
     res.json({
       email: 'ExampleUser@email.com',
       name: 'Example User',
-      roles: {}
+      scopes: {}
     });
   }
   else {
@@ -111,7 +112,7 @@ app.get('/user', function (req, res) {
     res.json({
       email,
       name: `${given_name} ${family_name}`,
-      roles: getUserRoles(req)
+      scopes: getUserScopes(req)
     });
   }
 });

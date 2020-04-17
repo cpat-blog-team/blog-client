@@ -32,7 +32,7 @@ export default function WriteBlog(props: Props) {
   const [editCommunityGuidelines, setEditCommunityGuidelines] = useState(false);
 
   const { _id } = useParams();
-  const { roles } = useContext(userContext);
+  const { scopes } = useContext(userContext);
 
   const loadBlog = ({ blog }) => {
     loadContent(blog)
@@ -278,7 +278,7 @@ export default function WriteBlog(props: Props) {
 
       <br />
 
-      {roles.update_guidelines &&
+      {scopes.update_guidelines &&
         <ToggleSmall
           onToggle={() => {
             setEditCommunityGuidelines(!editCommunityGuidelines);
