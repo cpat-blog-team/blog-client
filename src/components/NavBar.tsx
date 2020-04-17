@@ -43,17 +43,21 @@ export default function NavBar() {
       <HeaderNavigation aria-label="IBM  CPAT Blog"></HeaderNavigation>
 
       <HeaderGlobalBar>
-
         {dropDownItems.length > 0 &&
           <HeaderMenu aria-label="Admin Actions" menuLinkName="Admin Actions">
             <span data-testid="nav-bar-admin-actions">
               {dropDownItems.map((action, i) => (
-                <HeaderMenuItem key={i} href="#" data-testid={`Nav Bar ${action} Button`}>{action}</HeaderMenuItem>
+                <HeaderMenuItem
+                  key={i}
+                  href="#"
+                  data-testid={`Nav Bar ${action} Button`}
+                >
+                  {action}
+                </HeaderMenuItem>
               ))}
             </span>
           </HeaderMenu>
         }
-
         <SearchBlog />
         <HeaderGlobalAction
           data-testid="nav-bar-write-blog-button"
@@ -91,6 +95,7 @@ export default function NavBar() {
           </SwitcherItem>
           <SwitcherDivider />
         </Switcher >
+
         {dropDownItems.length > 0 &&
           <span data-testid="side-nav-admin-actions">
             <Switcher aria-label="Admin Privileges Switcher">
@@ -99,27 +104,29 @@ export default function NavBar() {
                 <SwitcherItem
                   data-testid="side-nav-community-guidelines-button"
                   aria-label="Link 4"
-                // onClick={() => history.push("/writeBlog")}
-                >Community Guidelines</SwitcherItem>
+                >
+                  Community Guidelines
+                </SwitcherItem>
               }
               {scopes.manage_appid &&
                 <SwitcherItem
                   data-testid="side-nav-user-privileges-button"
                   aria-label="Link 5"
-                // onClick={() => history.push("/writeBlog")}
-                >User Privileges</SwitcherItem>
+                >
+                  User Privileges
+                </SwitcherItem>
               }
               {scopes.manage_blogs &&
                 <SwitcherItem
                   data-testid="side-nav-blog-approval-button"
                   aria-label="Link 6"
-                // onClick={() => history.push("/writeBlog")}
-                >Blog Approval</SwitcherItem>
+                >
+                  Blog Approval
+                </SwitcherItem>
               }
             </Switcher>
           </span>
         }
-
       </HeaderPanel>
     </Header >
   );
