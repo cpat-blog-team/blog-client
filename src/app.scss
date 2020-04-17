@@ -91,38 +91,3 @@
 .bx--list-box__field:focus {
   outline: none;
 }
-
-#dropdown-field-label-admin-actions {
-  color: rgb(172, 172, 172);
-}
-
-.bx--label {
-  color: white;
-}
-
-.bx--list-box__menu-icon > svg {
-  fill: white;
-}
-
-.bx--list-box {
-  max-height: unset;
-}
-
-.bx--list-box.bx--list-box--inline, .bx--list-box.bx--list-box--inline .bx--list-box__field {
-  height: 3rem;
-  width: 12rem;
-  background-color: #161616;
-}
-
-.bx--list-box.bx--list-box--inline:hover, .bx--list-box.bx--list-box--inline:hover .bx--list-box__field:hover {
-  background-color: #353535;
-}
-
-.bx--list-box.bx--list-box--inline:active, .bx--list-box.bx--list-box--inline:active .bx--list-box__field:active {
-  background-color: #393939;
-  color: #f4f4f4;
- }
-
-
-
-
