@@ -2,6 +2,7 @@ const dotenv = require("dotenv");
 const express = require("express");
 const path = require("path");
 const proxy = require("http-proxy-middleware");
+const bodyParser = require('body-parser');
 
 const app = express();
 
@@ -11,6 +12,8 @@ const log4js = require('log4js');
 const passport = require('passport');
 const WebAppStrategy = require('ibmcloud-appid').WebAppStrategy;
 const logger = log4js.getLogger('blog');
+
+app.use(bodyParser.json());
 
 app.use(session({
   secret: '123456',
@@ -36,8 +39,38 @@ passport.use(new WebAppStrategy({
 }));
 
 app.use(
-  "/blogs",
-  proxy({ target: "http://localhost:3000/", changeOrigin: true })
+  "/api",
+  proxy({
+    target: "http://localhost:3000/",
+    changeOrigin: true,
+    pathRewrite: {
+      '^/api': '',
+    },
+    onProxyReq(proxyReq, req, res) {
+      if (req.method === 'POST') {
+        const { given_name, family_name, email } = req.user;
+        const name = `${given_name} ${family_name}`;
+        // Make any needed POST parameter changes
+        let body = req.body;
+        body.name = name;
+        body.email = email;
+
+        // URI encode JSON object
+        body = Object.keys(body)
+          .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(body[key]))
+          .join('&');
+
+        // Update header
+        proxyReq.setHeader('content-type', 'application/x-www-form-urlencoded');
+        proxyReq.setHeader('content-length', body.length);
+
+        // Write out body changes to the proxyReq stream
+        proxyReq.write(body);
+        proxyReq.end();
+
+      }
+    }
+  })
 );
 
 if (process.env.NODE_ENV === "development") {
@@ -58,20 +91,27 @@ app.get('/appid/logout', function (req, res) {
   res.redirect('/');
 });
 
+// Return an object 'roles' of the user's permissions (App ID scopes)
+const getUserRoles = (req) => ({
+  update_guidelines: WebAppStrategy.hasScope(req, "update_guidelines")
+})
+
 // Handle Requests for App Id user credentials
 app.get('/user', function (req, res) {
   // If App Id is disabled for dev purposes send placeholder credentials
   if (process.env.AUTH_DISABLED) {
     res.json({
       email: 'ExampleUser@email.com',
-      name: 'Example User'
+      name: 'Example User',
+      roles: {}
     });
   }
   else {
     const { given_name, family_name, email } = req.user
     res.json({
       email,
-      name: `${given_name} ${family_name}`
+      name: `${given_name} ${family_name}`,
+      roles: getUserRoles(req)
     });
   }
 });
