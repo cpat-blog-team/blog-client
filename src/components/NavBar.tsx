@@ -15,6 +15,8 @@ import {
   Switcher,
   SwitcherItem,
   SwitcherDivider,
+  SideNavHeader,
+  SideNavHeaderProps
 } from "carbon-components-react/lib/components/UIShell";
 import { Dropdown } from 'carbon-components-react';
 
@@ -22,7 +24,7 @@ export default function NavBar() {
   const history = useHistory();
   const [sideNav, setSideNav] = useState(false);
 
-  const { name, email } = useContext(userContext);
+  const { name, roles } = useContext(userContext);
 
   return (
     <Header aria-label="IBM Platform Name" className="nav-box-shadow">
@@ -65,7 +67,7 @@ export default function NavBar() {
             aria-label="Link 2"
           >
             My Blog Posts
-            </SwitcherItem>
+          </SwitcherItem>
           <SwitcherItem
             data-testid="side-nav-write-a-blog-button"
             aria-label="Link 3"
@@ -76,6 +78,30 @@ export default function NavBar() {
           <SwitcherDivider />
           <SwitcherItem aria-label="Link 1" href="/appid/logout">
             Log out <ArrowRight20 fill="white" />
+          </SwitcherItem>
+
+          <SwitcherDivider />
+          <p> - Admin Access - </p>
+          <SwitcherItem
+            data-testid="side-nav-community-guidelines-button"
+            aria-label="Link 3"
+          // onClick={() => history.push("/writeBlog")}
+          >
+            Community Guidelines
+          </SwitcherItem>
+          <SwitcherItem
+            data-testid="side-nav-user-privileges-button"
+            aria-label="Link 3"
+          // onClick={() => history.push("/writeBlog")}
+          >
+            User Privileges
+          </SwitcherItem>
+          <SwitcherItem
+            data-testid="side-nav-blog-approval-button"
+            aria-label="Link 3"
+          // onClick={() => history.push("/writeBlog")}
+          >
+            Blog Approval
           </SwitcherItem>
         </Switcher>
       </HeaderPanel>
