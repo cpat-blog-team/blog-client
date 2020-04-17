@@ -18,7 +18,8 @@ describe('BlogList component', () => {
 
   const mockUserCtx = {
     name: exampleBlogPost.name,
-    email: exampleBlogPost.email
+    email: exampleBlogPost.email,
+    scopes: {}
   }
 
   beforeEach(() => {
@@ -55,5 +56,12 @@ describe('BlogList component', () => {
     const { getByTestId } = component;
     fireEvent.click(getByTestId('side-nav-my-blog-posts-button'));
     expect(pushedRoute).toBe(`/blogList/username/${mockUserCtx.name}`);
+  });
+
+  test('should not render admin actions in side nav when user does not have proper scopes', () => {
+    const { queryByTestId } = component;
+    expect(queryByTestId('side-nav-community-guidelines-button')).toBe(null);
+    expect(queryByTestId('side-nav-user-privileges-button')).toBe(null);
+    expect(queryByTestId('side-nav-blog-approval-button')).toBe(null);
   });
 });

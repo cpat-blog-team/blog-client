@@ -4,9 +4,18 @@ import App from "./app";
 import "@testing-library/jest-dom";
 import { BrowserRouter } from 'react-router-dom';
 import axios from 'axios';
+import userContext from "./userContext";
 
 jest.mock('axios');
-jest.mock('quill/dist/quill.snow.css', () => jest.fn())
+jest.mock('quill/dist/quill.snow.css', () => jest.fn());
+
+const mockUserCtx = {
+  name: '',
+  email: '',
+  scopes: {
+    community_guidelines: false
+  }
+}
 
 describe("App component", () => {
   beforeAll(async (done) => {
@@ -21,7 +30,12 @@ describe("App component", () => {
 
   test("expect app to render", async (done) => {
     let component;
-    await wait(() => component = render(<BrowserRouter><App /></BrowserRouter>));
+    await wait(() => component = render(
+      <BrowserRouter>
+        <userContext.Provider value={mockUserCtx} >
+          <App />
+        </userContext.Provider>
+      </BrowserRouter>));
     expect(component.container).toBeInTheDocument();
     done();
   });

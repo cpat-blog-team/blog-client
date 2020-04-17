@@ -103,7 +103,7 @@ describe("WriteBlog component", () => {
     expect(queriedRoute).toBe('/api/blogs/add');
   });
 
-  test('should render not render update community guidelines switch when user does not have update_guidelines role', () => {
+  test('should not render update community guidelines switch when user does not have update_guidelines role', () => {
     const { queryByTestId } = component;
     expect(queryByTestId('update-community-guidelines-toggle-toggle')).toBe(null);
   });

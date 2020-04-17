@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { User20, Edit20, ArrowRight20 } from '@carbon/icons-react';
 import { useHistory } from 'react-router-dom';
 import SearchBlog from './SearchBlog';
@@ -14,17 +14,28 @@ import {
   HeaderPanel,
   Switcher,
   SwitcherItem,
-  SwitcherDivider,
-  SideNavHeader,
-  SideNavHeaderProps
+  SwitcherDivider
 } from "carbon-components-react/lib/components/UIShell";
 import { Dropdown } from 'carbon-components-react';
 
 export default function NavBar() {
   const history = useHistory();
   const [sideNav, setSideNav] = useState(false);
+  const [dropDownItems, setDropDownItems] = useState<string[]>([]);
 
-  const { name, roles } = useContext(userContext);
+  const { name, scopes } = useContext(userContext);
+  const updateDropDownItems = async () => {
+    console.log('scopes', scopes)
+    const dropDownItems: string[] = [];
+    if (scopes.update_guidelines) dropDownItems.push('Community Guidelines');
+    if (scopes.manage_blogs) dropDownItems.push('Blog Approval');
+    if (scopes.manage_appid) dropDownItems.push('User Privileges');
+    await setDropDownItems(dropDownItems);
+  };
+
+  useEffect(() => {
+    updateDropDownItems()
+  }, [scopes]);
 
   return (
     <Header aria-label="IBM Platform Name" className="nav-box-shadow">
@@ -33,14 +44,11 @@ export default function NavBar() {
 
       <HeaderGlobalBar>
         <Dropdown
+          data-testid="admin-actions-dropDown"
           type="inline"
           ariaLabel="Admin Actions"
           id="admin-actions"
-          items={[
-            'Community Guidelines',
-            'User Privileges',
-            'Blog Approval'
-          ]}
+          items={dropDownItems}
           label="Select Mode"
           titleText="Admin Access - "
         />
@@ -82,27 +90,30 @@ export default function NavBar() {
 
           <SwitcherDivider />
           <p> - Admin Access - </p>
-          <SwitcherItem
-            data-testid="side-nav-community-guidelines-button"
-            aria-label="Link 3"
-          // onClick={() => history.push("/writeBlog")}
-          >
-            Community Guidelines
-          </SwitcherItem>
-          <SwitcherItem
-            data-testid="side-nav-user-privileges-button"
-            aria-label="Link 3"
-          // onClick={() => history.push("/writeBlog")}
-          >
-            User Privileges
-          </SwitcherItem>
-          <SwitcherItem
-            data-testid="side-nav-blog-approval-button"
-            aria-label="Link 3"
-          // onClick={() => history.push("/writeBlog")}
-          >
-            Blog Approval
-          </SwitcherItem>
+          {scopes.community_guidelines &&
+            <SwitcherItem
+              data-testid="side-nav-community-guidelines-button"
+              aria-label="Link 3"
+            // onClick={() => history.push("/writeBlog")}
+            >
+              Community Guidelines
+          </SwitcherItem>}
+          {scopes.manage_appid &&
+            <SwitcherItem
+              data-testid="side-nav-user-privileges-button"
+              aria-label="Link 3"
+            // onClick={() => history.push("/writeBlog")}
+            >
+              User Privileges
+          </SwitcherItem>}
+          {scopes.manage_blogs &&
+            <SwitcherItem
+              data-testid="side-nav-blog-approval-button"
+              aria-label="Link 3"
+            // onClick={() => history.push("/writeBlog")}
+            >
+              Blog Approval
+          </SwitcherItem>}
         </Switcher>
       </HeaderPanel>
     </Header >
