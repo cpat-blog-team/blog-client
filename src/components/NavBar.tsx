@@ -27,7 +27,7 @@ export default function NavBar() {
   const { name, scopes } = useContext(userContext);
   const updateDropDownItems = () => {
     const dropDownItems: any[] = [];
-    if (scopes.update_guidelines) dropDownItems.push({ 'text': 'Update Guidelines', 'route': '/writeBlog/' });
+    if (scopes.update_guidelines) dropDownItems.push({ 'text': 'Update Guidelines', 'route': '/communityGuidelines' });
     if (scopes.manage_blogs) dropDownItems.push({ 'text': 'Blog Approval', 'route': '/' });
     if (scopes.manage_appid) dropDownItems.push({ 'text': 'User Privileges', 'route': '/' });
     setDropDownItems(dropDownItems);
@@ -91,8 +91,9 @@ export default function NavBar() {
             Write A Blog
           </SwitcherItem>
           <SwitcherItem
+            data-testid="side-nav-community-guidelines-button"
             aria-label="Link 7"
-            onClick={() => history.push("/communityGuidelines/mode=communityGuidelines")}
+            onClick={() => history.push("/communityGuidelines")}
           >
             Community Guidelines
           </SwitcherItem>

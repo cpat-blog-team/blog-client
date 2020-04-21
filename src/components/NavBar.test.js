@@ -66,6 +66,12 @@ describe('BlogList component', () => {
 		expect(pushedRoute).toBe(`/blogList/username/${mockUserCtx().name}`);
 	});
 
+	test('clicking "Community Guidelines" button in side nav should push path /communityGuidelines to history', () => {
+		const { getByTestId } = component;
+		fireEvent.click(getByTestId('side-nav-community-guidelines-button'));
+		expect(pushedRoute).toBe(`/communityGuidelines`);
+	});
+
 	test('should not render admin actions in nav bar when user does not have proper scopes', () => {
 		const { queryByTestId } = component;
 		expect(queryByTestId('side-nav-admin-actions')).toBe(null);
