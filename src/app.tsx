@@ -5,6 +5,7 @@ import NavBar from './components/NavBar'
 import WriteBlog from "./components/WriteBlog";
 import BlogList from "./components/BlogList";
 import ViewBlog from "./components/ViewBlog";
+import communityGuidelines from "./components/CommunityGuidelines";
 
 
 export default function App() {
@@ -13,6 +14,7 @@ export default function App() {
       <NavBar />
       <div className="container">
         <Switch>
+          <Route path="/communityGuidelines" component={communityGuidelines} />
           <Route path="/writeBlog/id=:_id" component={WriteBlog} />
           <Route path="/writeBlog" component={WriteBlog} />
           <Route path="/viewBlog/id=:_id" component={ViewBlog} />
