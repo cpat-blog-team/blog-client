@@ -4,7 +4,7 @@ import userContext from '../userContext';
 import axios from 'axios';
 import ReactQuill from 'react-quill';
 import 'quill/dist/quill.snow.css';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Button, Modal, ToggleSmall } from "carbon-components-react";
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 
@@ -45,10 +45,6 @@ export default function CommunityGuidelines(props: Props) {
   const clearForm = () => {
     setContent('');
     setDelta(new Delta());
-  }
-
-  const validateForm = () => {
-    validateContent(content);
   }
 
   const submit = () => {

@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { useState, useContext, useEffect } from 'react';
-import userContext from '../userContext';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import ReactQuill from 'react-quill';
 import 'quill/dist/quill.snow.css';
 import { useHistory, useParams } from 'react-router-dom';
-import { TextInput, Button, Modal, ToggleSmall } from "carbon-components-react";
+import { TextInput, Button, Modal } from "carbon-components-react";
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 
 const Delta = require('quill-delta');
@@ -20,18 +19,15 @@ export default function WriteBlog(props: Props) {
   const [summary, setSummary] = useState('');
   const [invalidSummary, setInvalidSummary] = useState(false);
   const [content, setContent] = useState('<p><br></p>');
-  const [oldContent, setOldContent] = useState('<p><br></p>');
   const [communityGuidelines, setCommunityGuidelines] = useState('<p><br></p>');
   const [invalidContent, setInvalidContent] = useState(false);
 
-  const [oldEditorMode, setOldEditorMode] = useState('');
   const [editorMode, setEditorMode] = useState('');
   const [delta, setDelta] = useState(new Delta());
   const [errorMessage, setErrorMessage] = useState('');
   const [openCommunityGuidelinesModal, setOpenCommunityGuidelinesModal] = useState(false);
 
   const { _id } = useParams();
-  const { scopes } = useContext(userContext);
 
   const loadBlog = ({ blog }) => {
     loadContent(blog)
@@ -84,7 +80,7 @@ export default function WriteBlog(props: Props) {
     setDelta(new Delta());
   }
 
-  const validateForm = () => {
+  const validateFormUI = () => {
     validateTitle(title);
     validateSummary(summary);
     validateContent(content);
@@ -102,10 +98,6 @@ export default function WriteBlog(props: Props) {
         .then(() => submitSuccess())
         .catch(({ response }) => submitFail(response))
 
-    } else if (editorMode === 'updateGuidelines') {
-      axios.post('/api/communityGuidelines', JSON.stringify({ content: blogPost.content }), { headers: { 'Content-Type': 'application/json' } })
-        .then(() => submitSuccess())
-        .catch(({ response }) => submitFail(response))
     } else {
       axios.post('/api/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
         .then(() => submitSuccess())
@@ -125,16 +117,19 @@ export default function WriteBlog(props: Props) {
     else setErrorMessage(statusText);
   }
 
+  const removeHTMLTags = (value) => value.replace(/<[^>]*>/g, "");
+
   const handleSubmit = () => {
-    if (title && summary && content) {
+    if (title && summary && removeHTMLTags(content)) {
       setOpenCommunityGuidelinesModal(true);
+    } else {
+      validateFormUI();
     }
-    else validateForm();
   }
 
   const validateTitle = (value) => value ? setInvalidTitle(false) : setInvalidTitle(true);
   const validateSummary = (value) => value ? setInvalidSummary(false) : setInvalidSummary(true);
-  const validateContent = (value) => value !== '<p><br></p>' ? setInvalidContent(false) : setInvalidContent(true);
+  const validateContent = (value) => removeHTMLTags(value) ? setInvalidContent(false) : setInvalidContent(true);
   const validateContentOnBlur = () => content ? setInvalidContent(false) : setInvalidContent(true);
 
   const handleChangeTitle = ({ target }) => {
