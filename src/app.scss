@@ -71,11 +71,6 @@
   margin-top: 1.5rem;
 }
 
-#communityGuidelineSubmit {
-  margin-top: 1%;
-  float: right;
-}
-
 #blogSubmit {
   margin-top: 1%;
   float: right;
@@ -95,4 +90,14 @@
 
 .bx--list-box__field:focus {
   outline: none;
+}
+
+.row-content-to-right {
+  margin-bottom: 3rem;
+  margin-top: 3rem;
+}
+
+#communityGuidelineSubmit {
+  margin-top: 3rem;
+  float: right;
 }

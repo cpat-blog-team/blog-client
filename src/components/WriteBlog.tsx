@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { useState, useContext, useEffect } from 'react';
-import userContext from '../userContext';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import ReactQuill from 'react-quill';
 import 'quill/dist/quill.snow.css';
 import { useHistory, useParams } from 'react-router-dom';
-import { TextInput, Button, Modal, ToggleSmall } from "carbon-components-react";
+import { TextInput, Button, Modal } from "carbon-components-react";
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 
 const Delta = require('quill-delta');
@@ -20,19 +19,15 @@ export default function WriteBlog(props: Props) {
   const [summary, setSummary] = useState('');
   const [invalidSummary, setInvalidSummary] = useState(false);
   const [content, setContent] = useState('<p><br></p>');
-  const [oldContent, setOldContent] = useState('<p><br></p>');
-  const [communityGuidelines, setCommunityGuidelines] = useState('<p><br></p>');
+  const [communityGuidelines, setCommunityGuidelines] = useState({ content: '<p><br></p>', title: '' });
   const [invalidContent, setInvalidContent] = useState(false);
 
-  const [oldEditorMode, setOldEditorMode] = useState('');
   const [editorMode, setEditorMode] = useState('');
   const [delta, setDelta] = useState(new Delta());
   const [errorMessage, setErrorMessage] = useState('');
   const [openCommunityGuidelinesModal, setOpenCommunityGuidelinesModal] = useState(false);
-  const [editCommunityGuidelines, setEditCommunityGuidelines] = useState(false);
 
   const { _id } = useParams();
-  const { scopes } = useContext(userContext);
 
   const loadBlog = ({ blog }) => {
     loadContent(blog)
@@ -46,16 +41,14 @@ export default function WriteBlog(props: Props) {
     setContent(converter.convert());
   };
 
-  const loadCommunityGuidelines = ({ content }) => {
+  const loadCommunityGuidelines = ({ content, title }) => {
     let { ops } = JSON.parse(content);
     const converter = new QuillDeltaToHtmlConverter(ops);
-    setCommunityGuidelines(converter.convert());
+    setCommunityGuidelines({
+      content: converter.convert(),
+      title
+    });
   }
-
-
-  // This function takes an array of tuples where the first element of each tuple is the state 
-  // and the second is a callback function to set the given state
-  const setMultiState = (arr) => arr.forEach(([state, setStateCallback]) => setStateCallback(state));
 
   useEffect(() => {
     if (_id) {
@@ -76,19 +69,6 @@ export default function WriteBlog(props: Props) {
       .catch(err => console.error(err));
   }, []);
 
-  useEffect(() => {
-    if (editorMode) {
-      if (editCommunityGuidelines && oldContent == '<p><br></p>') {
-        setMultiState([[communityGuidelines, setContent], [editorMode, setOldEditorMode], ["updateGuidelines", setEditorMode]]);
-      }
-      else {
-        setMultiState([[content, setOldContent], [oldContent, setContent], [editorMode, setOldEditorMode], [oldEditorMode, setEditorMode]]);
-      }
-
-      setOldContent(content);
-    }
-  }, [editCommunityGuidelines]);
-
   const formatPost = () => ({
     title,
     summary,
@@ -103,7 +83,7 @@ export default function WriteBlog(props: Props) {
     setDelta(new Delta());
   }
 
-  const validateForm = () => {
+  const validateFormUI = () => {
     validateTitle(title);
     validateSummary(summary);
     validateContent(content);
@@ -121,10 +101,6 @@ export default function WriteBlog(props: Props) {
         .then(() => submitSuccess())
         .catch(({ response }) => submitFail(response))
 
-    } else if (editorMode === 'updateGuidelines') {
-      axios.post('/api/communityGuidelines', JSON.stringify({ content: blogPost.content }), { headers: { 'Content-Type': 'application/json' } })
-        .then(() => submitSuccess())
-        .catch(({ response }) => submitFail(response))
     } else {
       axios.post('/api/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
         .then(() => submitSuccess())
@@ -144,16 +120,19 @@ export default function WriteBlog(props: Props) {
     else setErrorMessage(statusText);
   }
 
+  const removeHTMLTags = (value) => value.replace(/<[^>]*>/g, "");
+
   const handleSubmit = () => {
-    if (title && summary && content) {
+    if (title && summary && removeHTMLTags(content)) {
       setOpenCommunityGuidelinesModal(true);
+    } else {
+      validateFormUI();
     }
-    else validateForm();
   }
 
   const validateTitle = (value) => value ? setInvalidTitle(false) : setInvalidTitle(true);
   const validateSummary = (value) => value ? setInvalidSummary(false) : setInvalidSummary(true);
-  const validateContent = (value) => value !== '<p><br></p>' ? setInvalidContent(false) : setInvalidContent(true);
+  const validateContent = (value) => removeHTMLTags(value) ? setInvalidContent(false) : setInvalidContent(true);
   const validateContentOnBlur = () => content ? setInvalidContent(false) : setInvalidContent(true);
 
   const handleChangeTitle = ({ target }) => {
@@ -263,7 +242,7 @@ export default function WriteBlog(props: Props) {
         modalLabel='Please Accept To Continue'
         open={openCommunityGuidelinesModal}
         onRequestClose={() => setOpenCommunityGuidelinesModal(false)}
-        modalHeading="Community Guidelines"
+        modalHeading={communityGuidelines.title}
         primaryButtonText="Accept"
         secondaryButtonText="Cancel"
         onSecondarySubmit={() => setOpenCommunityGuidelinesModal(false)}
@@ -272,22 +251,8 @@ export default function WriteBlog(props: Props) {
           submit()
         }}
       >
-
-        <pre className="formatted-blog-content" data-testid="blogContent" dangerouslySetInnerHTML={{ __html: communityGuidelines }} />
+        <pre className="formatted-blog-content" data-testid="community-guidelines" dangerouslySetInnerHTML={{ __html: communityGuidelines.content }} />
       </Modal>
-
-      <br />
-
-      {scopes.update_guidelines &&
-        <ToggleSmall
-          onToggle={() => {
-            setEditCommunityGuidelines(!editCommunityGuidelines);
-          }}
-          data-testid='update-community-guidelines-toggle-toggle'
-          aria-label="update community guidelines toggle toggle"
-          id="update-community-guidelines-toggle-1"
-          labelText="Update Community Guidelines"
-        />}
     </form >
   );
 }

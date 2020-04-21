@@ -16,10 +16,8 @@ import {
   SwitcherItem,
   SwitcherDivider,
   HeaderMenu,
-  HeaderMenuItem,
+  HeaderMenuItem
 } from "carbon-components-react/lib/components/UIShell";
-
-import Dropdown from "carbon-components-react/lib/components/Dropdown";
 
 export default function NavBar() {
   const history = useHistory();
@@ -29,9 +27,9 @@ export default function NavBar() {
   const { name, scopes } = useContext(userContext);
   const updateDropDownItems = () => {
     const dropDownItems: any[] = [];
-    if (scopes.update_guidelines) dropDownItems.push({'id' : dropDownItems.length + 1, 'text' : 'Community Guidelines', 'url' : '/communityGuidelines'});
-    if (scopes.manage_blogs) dropDownItems.push({'id' : dropDownItems.length + 1, 'text' : 'Blog Approval', 'url' : '/'});
-    if (scopes.manage_appid) dropDownItems.push({'id' : dropDownItems.length + 1, 'text' : 'User Privileges', 'url' : '/'});
+    if (scopes.update_guidelines) dropDownItems.push({ 'text': 'Update Guidelines', 'route': '/communityGuidelines' });
+    if (scopes.manage_blogs) dropDownItems.push({ 'text': 'Blog Approval', 'route': '/' });
+    if (scopes.manage_appid) dropDownItems.push({ 'text': 'User Privileges', 'route': '/' });
     setDropDownItems(dropDownItems);
   };
 
@@ -39,31 +37,38 @@ export default function NavBar() {
     updateDropDownItems()
   }, [scopes]);
 
+  const redirect = (url) => {
+    history.push(url);
+    setSideNav(false);
+  }
+
   return (
     <Header aria-label="IBM Platform Name" className="nav-box-shadow">
       <HeaderName href="/" prefix="IBM">CPAT Blog</HeaderName>
-      <HeaderNavigation aria-label="IBM  CPAT Blog"></HeaderNavigation>
+      <HeaderNavigation aria-label="IBM  CPAT Blog">
+        {dropDownItems.length > 0 &&
+          <HeaderMenu aria-label="Admin Actions" menuLinkName="Admin Actions">
+            <span data-testid="nav-bar-admin-actions">
+              {dropDownItems.map(({ text, route }, idx) => (
+                <HeaderMenuItem
+                  key={idx}
+                  href={route}
+                  data-testid={`Nav Bar ${text} Button`}
+                >
+                  {text}
+                </HeaderMenuItem>
+              ))}
+            </span>
+          </HeaderMenu>
+        }
+      </HeaderNavigation>
 
       <HeaderGlobalBar>
-        <div style={{ width: 300, margin: "5px" }}>
-          {dropDownItems.length > 0 &&
-            <Dropdown 
-            data-testid="nav-bar-admin-settings"
-            id="dropdown-top-nav"
-            label="Admin Settings"
-            ariaLabel="Admin-Dropdown"
-            titleText=""
-            items={dropDownItems}
-            itemToString={item => (item ? item.text : '')}
-            onChange={e => history.push(e.selectedItem.url)}
-            selectedItem={{'text' : 'Admin Settings'}}
-          />}
-        </div>
         <SearchBlog />
         <HeaderGlobalAction
           data-testid="nav-bar-write-blog-button"
           aria-label="Edit"
-          onClick={() => history.push("/writeBlog")}
+          onClick={() => redirect("/writeBlog")}
         >
           <Edit20 fill="white" />
         </HeaderGlobalAction>
@@ -78,7 +83,7 @@ export default function NavBar() {
         <Switcher aria-label="Switcher Container">
           <SwitcherItem
             data-testid="side-nav-my-blog-posts-button"
-            onClick={() => history.push(`/blogList/username/${name}`)}
+            onClick={() => redirect(`/blogList/username/${name}`)}
             aria-label="Link 2"
           >
             My Blog Posts
@@ -86,9 +91,16 @@ export default function NavBar() {
           <SwitcherItem
             data-testid="side-nav-write-a-blog-button"
             aria-label="Link 3"
-            onClick={() => history.push("/writeBlog")}
+            onClick={() => redirect("/writeBlog")}
           >
             Write A Blog
+          </SwitcherItem>
+          <SwitcherItem
+            data-testid="side-nav-community-guidelines-button"
+            aria-label="Link 7"
+            onClick={() => redirect("/communityGuidelines")}
+          >
+            Community Guidelines
           </SwitcherItem>
           <SwitcherItem aria-label="Link 1" href="/appid/logout">
             Log out <ArrowRight20 fill="white" />
@@ -96,26 +108,24 @@ export default function NavBar() {
           <SwitcherDivider />
         </Switcher >
 
-
         {dropDownItems.length > 0 &&
           <span data-testid="side-nav-admin-actions">
             <Switcher aria-label="Admin Privileges Switcher">
-              <h5>Admin Settings</h5>
+              <h6>Admin Actions</h6>
               <SwitcherDivider />
               {scopes.update_guidelines &&
                 <SwitcherItem
-                  data-testid="side-nav-community-guidelines-button"
+                  data-testid="side-nav-update-guidelines-button"
                   aria-label="Link 4"
-                  onClick={() => history.push("/communityGuidelines")}
+                  href="/communityGuidelines"
                 >
-                  Community Guidelines
+                  Update Guidelines
                 </SwitcherItem>
               }
               {scopes.manage_appid &&
                 <SwitcherItem
                   data-testid="side-nav-user-privileges-button"
                   aria-label="Link 5"
-                  onClick={() => history.push("/")}
                 >
                   User Privileges
                 </SwitcherItem>
@@ -124,7 +134,6 @@ export default function NavBar() {
                 <SwitcherItem
                   data-testid="side-nav-blog-approval-button"
                   aria-label="Link 6"
-                  onClick={() => history.push("/")}
                 >
                   Blog Approval
                 </SwitcherItem>

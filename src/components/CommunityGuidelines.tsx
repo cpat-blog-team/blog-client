@@ -4,8 +4,8 @@ import userContext from '../userContext';
 import axios from 'axios';
 import ReactQuill from 'react-quill';
 import 'quill/dist/quill.snow.css';
-import { useHistory, useParams } from 'react-router-dom';
-import { TextInput, Button, Modal, ToggleSmall } from "carbon-components-react";
+import { useHistory } from 'react-router-dom';
+import { Button, Modal, ToggleSmall } from "carbon-components-react";
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 
 const Delta = require('quill-delta');
@@ -18,26 +18,29 @@ export default function CommunityGuidelines(props: Props) {
   const [content, setContent] = useState('<p><br></p>');
   const [invalidContent, setInvalidContent] = useState(false);
 
+  const [name, setName] = useState('');
+  const [date, setDate] = useState('');
+  const [title, setTitle] = useState('');
+
   const [delta, setDelta] = useState(new Delta());
   const [errorMessage, setErrorMessage] = useState('');
-  const [openCommunityGuidelinesModal, setOpenCommunityGuidelinesModal] = useState(false);
+  const [editCommunityGuidelines, setEditCommunityGuidelines] = useState(false);
 
-  const { _id } = useParams();
   const { scopes } = useContext(userContext);
 
 
-  const loadCommunityGuidelines = ({ content }) => {
+  const loadCommunityGuidelines = ({ content, name, date, title }) => {
     let { ops } = JSON.parse(content);
     const converter = new QuillDeltaToHtmlConverter(ops);
     setContent(converter.convert());
+    setName(name);
+    setTitle(title);
+    setDate(date)
   }
 
   useEffect(() => {
     axios(`/api/communityGuidelines`)
-      .then(({ data }) => {
-          console.log(data.communityGuidelines)
-        loadCommunityGuidelines(data.communityGuidelines)
-      })
+      .then(({ data }) => loadCommunityGuidelines(data.communityGuidelines))
       .catch(err => console.error(err));
   }, []);
 
@@ -51,17 +54,11 @@ export default function CommunityGuidelines(props: Props) {
     setDelta(new Delta());
   }
 
-  const validateForm = () => {
-    validateContent(content);
-  }
-
   const submit = () => {
     const communityGuidelinesPost = formatPost();
-
     axios.post('/api/communityGuidelines', JSON.stringify({ content: communityGuidelinesPost.content }), { headers: { 'Content-Type': 'application/json' } })
-    .then(() => submitSuccess())
-    .catch(({ response }) => submitFail(response))
-    
+      .then(() => submitSuccess())
+      .catch(({ response }) => submitFail(response));
   }
 
   const submitSuccess = () => {
@@ -77,13 +74,10 @@ export default function CommunityGuidelines(props: Props) {
   }
 
   const handleSubmit = () => {
-    if (content) {
-      submit();
-    }
-    else validateForm();
+    if (!invalidContent) submit();
   }
 
-  const validateContent = (value) => value !== '<p><br></p>' ? setInvalidContent(false) : setInvalidContent(true);
+  const validateContent = (value) => value.replace(/<[^>]*>/g, "") !== '' ? setInvalidContent(false) : setInvalidContent(true);
   const validateContentOnBlur = () => content ? setInvalidContent(false) : setInvalidContent(true);
 
   const handleChangeContent = (content, delta, source, editor) => {
@@ -110,43 +104,70 @@ export default function CommunityGuidelines(props: Props) {
   ]
 
   return (
-    <form
-      className="writeCommunityGuidelines"
-      onSubmit={(e) => {
-        e.preventDefault()
-        handleSubmit();
-      }}
-    >
+    <div>
+      {editCommunityGuidelines
+        ? (
+          <form
+            className="writeCommunityGuidelines"
+            onSubmit={(e) => {
+              e.preventDefault()
+              handleSubmit();
+            }}
+          >
+            <div data-testid="writeContent" className="textEditorContainer" >
+              <ReactQuill
+                className={invalidContent ? "bx--text-input--invalid" : ""}
+                value={content}
+                onBlur={validateContentOnBlur}
+                onChange={handleChangeContent}
+                modules={modules}
+                formats={formats}
+              />
+            </div>
+            <br />
+            <Button
+              id="communityGuidelineSubmit"
+              data-testid="submit"
+              type="submit"
+              kind="primary"
+            >Submit</Button>
+            {/* Error Modal will open automatically when errorMessage state is set */}
+            <Modal
+              modalLabel='Error'
+              open={errorMessage ? true : false}
+              onRequestClose={() => setErrorMessage('')}
+              passiveModal
+              modalHeading="Sorry We Couldn't Submit Your Post!"
+            >
+              <p>{errorMessage}</p>
+            </Modal>
+          </form >
+        ) : (
+          <div className="container">
+            <h1 className="display-4" data-testid="blogTitle">{title}</h1>
+            <hr className="my-4"></hr>
+            <div className="callout callout-info">
+              <strong className="h4" data-testid="blogUsername">{name}</strong><br></br>
+              <small className="text-muted" data-testid="blogDate">{date}</small>
+            </div>
+            <pre className="formatted-blog-content" data-testid="blogContent" dangerouslySetInnerHTML={{ __html: content }} />
+          </div>
+        )
+      }
 
-      <div data-testid="writeContent" className="textEditorContainer" >
-        <ReactQuill
-          className={invalidContent ? "bx--text-input--invalid" : ""}
-          value={content}
-          onBlur={validateContentOnBlur}
-          onChange={handleChangeContent}
-          modules={modules}
-          formats={formats}
-        />
-      </div>
-      <br />
-      <Button
-        id="communityGuidelineSubmit"
-        data-testid="submit"
-        type="submit"
-        kind="primary"
-      >Submit</Button>
-
-      {/* Error Modal will open automatically when errorMessage state is set */}
-      <Modal
-        modalLabel='Error'
-        open={errorMessage ? true : false}
-        onRequestClose={() => setErrorMessage('')}
-        passiveModal
-        modalHeading="Sorry We Couldn't Submit Your Post!"
-      >
-        <p>{errorMessage}</p>
-      </Modal>
-
-    </form >
+      {scopes.update_guidelines &&
+        <div className="row-content-to-right">
+          <ToggleSmall
+            onToggle={() => {
+              setEditCommunityGuidelines(!editCommunityGuidelines);
+            }}
+            data-testid='update-community-guidelines-toggle-toggle'
+            aria-label="update community guidelines toggle toggle"
+            id="update-community-guidelines-toggle-1"
+            labelText="Update Community Guidelines"
+          />
+        </div>
+      }
+    </div>
   );
 }
