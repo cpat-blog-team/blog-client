@@ -1,4 +1,4 @@
-import React from 'react';
+ import React from 'react';
 import { render, fireEvent, wait } from '@testing-library/react';
 import { exampleBlogPost } from './exampleBlogPost'
 import userContext from "../userContext";
@@ -74,25 +74,19 @@ describe('BlogList component', () => {
     expect(queryByTestId('side-nav-user-privileges-button')).toBe(null);
   });
 
-  test('should not render admin actions in side nav when user does not have proper scopes', () => {
-    const { queryByTestId } = component;
-    expect(queryByTestId('nav-nav-admin-actions')).toBe(null);
-    expect(queryByTestId('Nav Bar Community Guidelines Button')).toBe(null);
-    expect(queryByTestId('Nav Bar Blog Approval Button')).toBe(null);
-    expect(queryByTestId('Nav Bar User Privileges Button')).toBe(null);
-  });
 
   test('should render "community guidelines" button in nav bar and side nav when user has scope "update_guidelines"', async (done) => {
+
     const scopes = {
       update_guidelines: true
     }
+
     await wait(() => {
       renderComponent(mockUserCtx(scopes))
     });
+
     const { getByTestId } = component;
-    getByTestId('nav-bar-admin-actions');
     getByTestId('side-nav-admin-actions');
-    getByTestId('Nav Bar Community Guidelines Button');
     getByTestId('side-nav-community-guidelines-button');
     done();
   });
@@ -105,25 +99,8 @@ describe('BlogList component', () => {
       renderComponent(mockUserCtx(scopes))
     });
     const { getByTestId } = component;
-    getByTestId('nav-bar-admin-actions');
     getByTestId('side-nav-admin-actions');
-    getByTestId('Nav Bar Blog Approval Button');
     getByTestId('side-nav-blog-approval-button');
-    done();
-  });
-
-  test('should render "user privileges" button in nav bar and side nav when user has scope "update_guidelines"', async (done) => {
-    const scopes = {
-      manage_appid: true
-    }
-    await wait(() => {
-      renderComponent(mockUserCtx(scopes))
-    });
-    const { getByTestId } = component;
-    getByTestId('nav-bar-admin-actions');
-    getByTestId('side-nav-admin-actions');
-    getByTestId('Nav Bar User Privileges Button');
-    getByTestId('side-nav-user-privileges-button');
     done();
   });
 });
