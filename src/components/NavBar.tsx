@@ -27,9 +27,9 @@ export default function NavBar() {
   const { name, scopes } = useContext(userContext);
   const updateDropDownItems = () => {
     const dropDownItems: any[] = [];
-    if (scopes.update_guidelines) dropDownItems.push({'id': 0, 'text' : 'Community Guidelines', 'route' : '/communityGuidelines' });
-    if (scopes.manage_blogs) dropDownItems.push({'id': 1, 'text' : 'Blog Approval', 'route' : '/' });
-    if (scopes.manage_appid) dropDownItems.push({'id': 2, 'text' : 'User Privileges', 'route' : '/' });
+    if (scopes.update_guidelines) dropDownItems.push({ 'id': 0, 'text': 'Community Guidelines', 'route': '/communityGuidelines' });
+    if (scopes.manage_blogs) dropDownItems.push({ 'id': 1, 'text': 'Blog Approval', 'route': '/' });
+    if (scopes.manage_appid) dropDownItems.push({ 'id': 2, 'text': 'User Privileges', 'route': '/' });
     setDropDownItems(dropDownItems);
   };
 
@@ -40,13 +40,11 @@ export default function NavBar() {
   return (
     <Header aria-label="IBM Platform Name" className="nav-box-shadow">
       <HeaderName href="/" prefix="IBM">CPAT Blog</HeaderName>
-      <HeaderNavigation aria-label="IBM  CPAT Blog"></HeaderNavigation>
-
-      <HeaderGlobalBar>
+      <HeaderNavigation aria-label="IBM  CPAT Blog">
         {dropDownItems.length > 0 &&
           <HeaderMenu aria-label="Admin Actions" menuLinkName="Admin Actions">
             <span data-testid="nav-bar-admin-actions">
-              {dropDownItems.map(({id, text, route}) => (
+              {dropDownItems.map(({ id, text, route }) => (
                 <HeaderMenuItem
                   key={id}
                   href={route}
@@ -58,6 +56,9 @@ export default function NavBar() {
             </span>
           </HeaderMenu>
         }
+      </HeaderNavigation>
+
+      <HeaderGlobalBar>
         <SearchBlog />
         <HeaderGlobalAction
           data-testid="nav-bar-write-blog-button"
@@ -89,7 +90,6 @@ export default function NavBar() {
           >
             Write A Blog
           </SwitcherItem>
-          <SwitcherDivider />
           <SwitcherItem aria-label="Link 1" href="/appid/logout">
             Log out <ArrowRight20 fill="white" />
           </SwitcherItem>
@@ -99,7 +99,8 @@ export default function NavBar() {
         {dropDownItems.length > 0 &&
           <span data-testid="side-nav-admin-actions">
             <Switcher aria-label="Admin Privileges Switcher">
-              <p>Admin Actions</p>
+              <h6>Admin Actions</h6>
+              <SwitcherDivider />
               {scopes.update_guidelines &&
                 <SwitcherItem
                   data-testid="side-nav-community-guidelines-button"
