@@ -27,9 +27,9 @@ export default function NavBar() {
   const { name, scopes } = useContext(userContext);
   const updateDropDownItems = () => {
     const dropDownItems: any[] = [];
-    if (scopes.update_guidelines) dropDownItems.push({ 'id': 0, 'text': 'Community Guidelines', 'route': '/communityGuidelines' });
-    if (scopes.manage_blogs) dropDownItems.push({ 'id': 1, 'text': 'Blog Approval', 'route': '/' });
-    if (scopes.manage_appid) dropDownItems.push({ 'id': 2, 'text': 'User Privileges', 'route': '/' });
+    if (scopes.update_guidelines) dropDownItems.push({ 'text': 'Update Guidelines', 'route': '/writeBlog/' });
+    if (scopes.manage_blogs) dropDownItems.push({ 'text': 'Blog Approval', 'route': '/' });
+    if (scopes.manage_appid) dropDownItems.push({ 'text': 'User Privileges', 'route': '/' });
     setDropDownItems(dropDownItems);
   };
 
@@ -44,9 +44,9 @@ export default function NavBar() {
         {dropDownItems.length > 0 &&
           <HeaderMenu aria-label="Admin Actions" menuLinkName="Admin Actions">
             <span data-testid="nav-bar-admin-actions">
-              {dropDownItems.map(({ id, text, route }) => (
+              {dropDownItems.map(({ text, route }, idx) => (
                 <HeaderMenuItem
-                  key={id}
+                  key={idx}
                   href={route}
                   data-testid={`Nav Bar ${text} Button`}
                 >
@@ -90,6 +90,12 @@ export default function NavBar() {
           >
             Write A Blog
           </SwitcherItem>
+          <SwitcherItem
+            aria-label="Link 7"
+            onClick={() => history.push("/communityGuidelines/mode=communityGuidelines")}
+          >
+            Community Guidelines
+          </SwitcherItem>
           <SwitcherItem aria-label="Link 1" href="/appid/logout">
             Log out <ArrowRight20 fill="white" />
           </SwitcherItem>
@@ -103,11 +109,11 @@ export default function NavBar() {
               <SwitcherDivider />
               {scopes.update_guidelines &&
                 <SwitcherItem
-                  data-testid="side-nav-community-guidelines-button"
+                  data-testid="side-nav-update-guidelines-button"
                   aria-label="Link 4"
                   onClick={() => history.push("/communityGuidelines")}
                 >
-                  Community Guidelines
+                  Update Guidelines
                 </SwitcherItem>
               }
               {scopes.manage_appid &&

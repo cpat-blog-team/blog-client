@@ -69,7 +69,7 @@ describe('BlogList component', () => {
 	test('should not render admin actions in nav bar when user does not have proper scopes', () => {
 		const { queryByTestId } = component;
 		expect(queryByTestId('side-nav-admin-actions')).toBe(null);
-		expect(queryByTestId('side-nav-community-guidelines-button')).toBe(null);
+		expect(queryByTestId('side-nav-update-guidelines-button')).toBe(null);
 		expect(queryByTestId('side-nav-blog-approval-button')).toBe(null);
 		expect(queryByTestId('side-nav-user-privileges-button')).toBe(null);
 	});
@@ -77,12 +77,12 @@ describe('BlogList component', () => {
 	test('should not render admin actions in side nav when user does not have proper scopes', () => {
 		const { queryByTestId } = component;
 		expect(queryByTestId('nav-nav-admin-actions')).toBe(null);
-		expect(queryByTestId('Nav Bar Community Guidelines Button')).toBe(null);
+		expect(queryByTestId('Nav Bar Update Guidelines Button')).toBe(null);
 		expect(queryByTestId('Nav Bar Blog Approval Button')).toBe(null);
 		expect(queryByTestId('Nav Bar User Privileges Button')).toBe(null);
 	});
 
-	test('should render "community guidelines" button in nav bar and side nav when user has scope "update_guidelines"', async (
+	test('should render "update guidelines" button in nav bar and side nav when user has scope "update_guidelines"', async (
 		done
 	) => {
 		const scopes = {
@@ -94,8 +94,8 @@ describe('BlogList component', () => {
 		const { getByTestId } = component;
 		getByTestId('nav-bar-admin-actions');
 		getByTestId('side-nav-admin-actions');
-		getByTestId('Nav Bar Community Guidelines Button');
-		getByTestId('side-nav-community-guidelines-button');
+		getByTestId('Nav Bar Update Guidelines Button');
+		getByTestId('side-nav-update-guidelines-button');
 		done();
 	});
 
