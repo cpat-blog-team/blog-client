@@ -33,10 +33,7 @@ export default function CommunityGuidelines(props: Props) {
 
   useEffect(() => {
     axios(`/api/communityGuidelines`)
-      .then(({ data }) => {
-        console.log(data.communityGuidelines)
-        loadCommunityGuidelines(data.communityGuidelines)
-      })
+      .then(({ data }) => loadCommunityGuidelines(data.communityGuidelines))
       .catch(err => console.error(err));
   }, []);
 
