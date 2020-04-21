@@ -29,7 +29,6 @@ export default function WriteBlog(props: Props) {
   const [delta, setDelta] = useState(new Delta());
   const [errorMessage, setErrorMessage] = useState('');
   const [openCommunityGuidelinesModal, setOpenCommunityGuidelinesModal] = useState(false);
-  const [editCommunityGuidelines, setEditCommunityGuidelines] = useState(false);
 
   const { _id } = useParams();
   const { scopes } = useContext(userContext);
@@ -52,11 +51,6 @@ export default function WriteBlog(props: Props) {
     setCommunityGuidelines(converter.convert());
   }
 
-
-  // This function takes an array of tuples where the first element of each tuple is the state 
-  // and the second is a callback function to set the given state
-  const setMultiState = (arr) => arr.forEach(([state, setStateCallback]) => setStateCallback(state));
-
   useEffect(() => {
     if (_id) {
       setEditorMode('update');
@@ -75,19 +69,6 @@ export default function WriteBlog(props: Props) {
       })
       .catch(err => console.error(err));
   }, []);
-
-  useEffect(() => {
-    if (editorMode) {
-      if (editCommunityGuidelines && oldContent == '<p><br></p>') {
-        setMultiState([[communityGuidelines, setContent], [editorMode, setOldEditorMode], ["updateGuidelines", setEditorMode]]);
-      }
-      else {
-        setMultiState([[content, setOldContent], [oldContent, setContent], [editorMode, setOldEditorMode], [oldEditorMode, setEditorMode]]);
-      }
-
-      setOldContent(content);
-    }
-  }, [editCommunityGuidelines]);
 
   const formatPost = () => ({
     title,
@@ -275,19 +256,6 @@ export default function WriteBlog(props: Props) {
 
         <pre className="formatted-blog-content" data-testid="blogContent" dangerouslySetInnerHTML={{ __html: communityGuidelines }} />
       </Modal>
-
-      <br />
-
-      {scopes.update_guidelines &&
-        <ToggleSmall
-          onToggle={() => {
-            setEditCommunityGuidelines(!editCommunityGuidelines);
-          }}
-          data-testid='update-community-guidelines-toggle-toggle'
-          aria-label="update community guidelines toggle toggle"
-          id="update-community-guidelines-toggle-1"
-          labelText="Update Community Guidelines"
-        />}
     </form >
   );
 }
