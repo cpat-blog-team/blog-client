@@ -22,14 +22,14 @@ import {
 export default function NavBar() {
   const history = useHistory();
   const [sideNav, setSideNav] = useState(false);
-  const [dropDownItems, setDropDownItems] = useState<string[]>([]);
+  const [dropDownItems, setDropDownItems] = useState<any[]>([]);
 
   const { name, scopes } = useContext(userContext);
   const updateDropDownItems = () => {
-    const dropDownItems: string[] = [];
-    if (scopes.update_guidelines) dropDownItems.push('Community Guidelines');
-    if (scopes.manage_blogs) dropDownItems.push('Blog Approval');
-    if (scopes.manage_appid) dropDownItems.push('User Privileges');
+    const dropDownItems: any[] = [];
+    if (scopes.update_guidelines) dropDownItems.push({'id': 0, 'text' : 'Community Guidelines', 'route' : '/communityGuidelines' });
+    if (scopes.manage_blogs) dropDownItems.push({'id': 1, 'text' : 'Blog Approval', 'route' : '/' });
+    if (scopes.manage_appid) dropDownItems.push({'id': 2, 'text' : 'User Privileges', 'route' : '/' });
     setDropDownItems(dropDownItems);
   };
 
@@ -46,13 +46,13 @@ export default function NavBar() {
         {dropDownItems.length > 0 &&
           <HeaderMenu aria-label="Admin Actions" menuLinkName="Admin Actions">
             <span data-testid="nav-bar-admin-actions">
-              {dropDownItems.map((action, i) => (
+              {dropDownItems.map(({id, text, route}) => (
                 <HeaderMenuItem
-                  key={i}
-                  href="#"
-                  data-testid={`Nav Bar ${action} Button`}
+                  key={id}
+                  href={route}
+                  data-testid={`Nav Bar ${text} Button`}
                 >
-                  {action}
+                  {text}
                 </HeaderMenuItem>
               ))}
             </span>
@@ -104,6 +104,7 @@ export default function NavBar() {
                 <SwitcherItem
                   data-testid="side-nav-community-guidelines-button"
                   aria-label="Link 4"
+                  onClick={() => history.push("/communityGuidelines")}
                 >
                   Community Guidelines
                 </SwitcherItem>
