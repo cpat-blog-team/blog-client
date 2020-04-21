@@ -37,6 +37,11 @@ export default function NavBar() {
     updateDropDownItems()
   }, [scopes]);
 
+  const redirect = (url) => {
+    history.push(url);
+    setSideNav(false);
+  }
+
   return (
     <Header aria-label="IBM Platform Name" className="nav-box-shadow">
       <HeaderName href="/" prefix="IBM">CPAT Blog</HeaderName>
@@ -63,7 +68,7 @@ export default function NavBar() {
         <HeaderGlobalAction
           data-testid="nav-bar-write-blog-button"
           aria-label="Edit"
-          onClick={() => history.push("/writeBlog")}
+          onClick={() => redirect("/writeBlog")}
         >
           <Edit20 fill="white" />
         </HeaderGlobalAction>
@@ -78,7 +83,7 @@ export default function NavBar() {
         <Switcher aria-label="Switcher Container">
           <SwitcherItem
             data-testid="side-nav-my-blog-posts-button"
-            onClick={() => history.push(`/blogList/username/${name}`)}
+            onClick={() => redirect(`/blogList/username/${name}`)}
             aria-label="Link 2"
           >
             My Blog Posts
@@ -86,14 +91,14 @@ export default function NavBar() {
           <SwitcherItem
             data-testid="side-nav-write-a-blog-button"
             aria-label="Link 3"
-            onClick={() => history.push("/writeBlog")}
+            onClick={() => redirect("/writeBlog")}
           >
             Write A Blog
           </SwitcherItem>
           <SwitcherItem
             data-testid="side-nav-community-guidelines-button"
             aria-label="Link 7"
-            onClick={() => history.push("/communityGuidelines")}
+            onClick={() => redirect("/communityGuidelines")}
           >
             Community Guidelines
           </SwitcherItem>
@@ -112,7 +117,7 @@ export default function NavBar() {
                 <SwitcherItem
                   data-testid="side-nav-update-guidelines-button"
                   aria-label="Link 4"
-                  onClick={() => history.push("/communityGuidelines")}
+                  href="/communityGuidelines"
                 >
                   Update Guidelines
                 </SwitcherItem>

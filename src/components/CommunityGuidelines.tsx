@@ -18,6 +18,10 @@ export default function CommunityGuidelines(props: Props) {
   const [content, setContent] = useState('<p><br></p>');
   const [invalidContent, setInvalidContent] = useState(false);
 
+  const [name, setName] = useState('');
+  const [date, setDate] = useState('');
+  const [title, setTitle] = useState('');
+
   const [delta, setDelta] = useState(new Delta());
   const [errorMessage, setErrorMessage] = useState('');
   const [editCommunityGuidelines, setEditCommunityGuidelines] = useState(false);
@@ -25,10 +29,13 @@ export default function CommunityGuidelines(props: Props) {
   const { scopes } = useContext(userContext);
 
 
-  const loadCommunityGuidelines = ({ content }) => {
+  const loadCommunityGuidelines = ({ content, name, date, title }) => {
     let { ops } = JSON.parse(content);
     const converter = new QuillDeltaToHtmlConverter(ops);
     setContent(converter.convert());
+    setName(name);
+    setTitle(title);
+    setDate(date)
   }
 
   useEffect(() => {
@@ -137,11 +144,11 @@ export default function CommunityGuidelines(props: Props) {
           </form >
         ) : (
           <div className="container">
-            <h1 className="display-4" data-testid="blogTitle">Community Guidelines</h1>
+            <h1 className="display-4" data-testid="blogTitle">{title}</h1>
             <hr className="my-4"></hr>
             <div className="callout callout-info">
-              <strong className="h4" data-testid="blogUsername">Placeholder Name</strong><br></br>
-              <small className="text-muted" data-testid="blogDate">0/0/0000</small>
+              <strong className="h4" data-testid="blogUsername">{name}</strong><br></br>
+              <small className="text-muted" data-testid="blogDate">{date}</small>
             </div>
             <pre className="formatted-blog-content" data-testid="blogContent" dangerouslySetInnerHTML={{ __html: content }} />
           </div>

@@ -19,7 +19,7 @@ export default function WriteBlog(props: Props) {
   const [summary, setSummary] = useState('');
   const [invalidSummary, setInvalidSummary] = useState(false);
   const [content, setContent] = useState('<p><br></p>');
-  const [communityGuidelines, setCommunityGuidelines] = useState('<p><br></p>');
+  const [communityGuidelines, setCommunityGuidelines] = useState({ content: '<p><br></p>', title: '' });
   const [invalidContent, setInvalidContent] = useState(false);
 
   const [editorMode, setEditorMode] = useState('');
@@ -41,10 +41,13 @@ export default function WriteBlog(props: Props) {
     setContent(converter.convert());
   };
 
-  const loadCommunityGuidelines = ({ content }) => {
+  const loadCommunityGuidelines = ({ content, title }) => {
     let { ops } = JSON.parse(content);
     const converter = new QuillDeltaToHtmlConverter(ops);
-    setCommunityGuidelines(converter.convert());
+    setCommunityGuidelines({
+      content: converter.convert(),
+      title
+    });
   }
 
   useEffect(() => {
@@ -239,7 +242,7 @@ export default function WriteBlog(props: Props) {
         modalLabel='Please Accept To Continue'
         open={openCommunityGuidelinesModal}
         onRequestClose={() => setOpenCommunityGuidelinesModal(false)}
-        modalHeading="Community Guidelines"
+        modalHeading={communityGuidelines.title}
         primaryButtonText="Accept"
         secondaryButtonText="Cancel"
         onSecondarySubmit={() => setOpenCommunityGuidelinesModal(false)}
@@ -248,8 +251,7 @@ export default function WriteBlog(props: Props) {
           submit()
         }}
       >
-
-        <pre className="formatted-blog-content" data-testid="blogContent" dangerouslySetInnerHTML={{ __html: communityGuidelines }} />
+        <pre className="formatted-blog-content" data-testid="community-guidelines" dangerouslySetInnerHTML={{ __html: communityGuidelines.content }} />
       </Modal>
     </form >
   );
