@@ -45,7 +45,7 @@ describe('BlogList component', () => {
     expect(true).toEqual(true);
   });
 
-  test('expect BlogList to render', () => {
+  test('BlogList should render', () => {
     expect(component.container).toBeInTheDocument();
   });
 

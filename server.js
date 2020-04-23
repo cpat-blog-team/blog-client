@@ -104,7 +104,11 @@ app.get('/user', function (req, res) {
     res.json({
       email: 'ExampleUser@email.com',
       name: 'Example User',
-      scopes: {}
+      scopes: {
+        "manage_blogs": true,
+        "manage_appid": true,
+        "update_guidelines": true,
+      }
     });
   }
   else {

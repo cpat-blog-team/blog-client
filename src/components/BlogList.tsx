@@ -65,16 +65,15 @@ export default function BlogList(props: Props) {
             </div>
 
             <div className="blog-list-component">
-              {currentUsername === name ? (
+              {currentUsername === name && (
                 <Link
-                  href="#"
+                  href={`/writeBlog/id=${_id}`}
                   data-testid={`updateLink${i}`}
-                  onClick={() => history.push(`/writeBlog/id=${_id}`)}
                 >
                   Update
                 </Link>
-              ) : null}
-              {currentUsername === name ? (
+              )}
+              {currentUsername === name && (
                 <Link
                   href="#"
                   data-testid={`deleteLink${i}`}
@@ -82,7 +81,15 @@ export default function BlogList(props: Props) {
                 >
                   Delete
                 </Link>
-              ) : null}
+              )}
+              {searchType === 'approved' && (
+                <Link
+                  href={`/approveBlog/id=${_id}`}
+                  data-testid={`reviewLink${i}`}
+                >
+                  Review
+                </Link>
+              )}
             </div>
           </div>
         </div>
