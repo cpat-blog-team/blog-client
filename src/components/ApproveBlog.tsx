@@ -47,11 +47,13 @@ export default function ApproveBlog(props: Props) {
         </div>
         <pre className="formatted-blog-content" data-testid="blogContent" dangerouslySetInnerHTML={{ __html: html }} />
       </div>
-      <Button
-        onClick={() => setOpenModal(true)}
-      >
-        Evaluate Post
+      <div className="row-content-to-right">
+        <Button
+          onClick={() => setOpenModal(true)}
+        >
+          Review
       </Button>
+      </div>
       {/* Approve Modal will open automatically when openModal state is set to true*/}
       <Modal
         open={openModal}
