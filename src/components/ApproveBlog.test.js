@@ -4,5 +4,5 @@ import { exampleList, exampleBlogPost } from './exampleBlogPost';
 import userContext from "../userContext";
 import ApproveBlog from './ApproveBlog';
 
-describe('ApproveBlog component', () => {
-})
+// describe('ApproveBlog component', () => {
+// })
