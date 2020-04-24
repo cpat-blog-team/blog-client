@@ -3,15 +3,15 @@ import { render, wait, fireEvent } from "@testing-library/react";
 import ApproveBlog from "./ApproveBlog";
 import "@testing-library/jest-dom";
 import { exampleBlogPost } from './exampleBlogPost';
-import mockAxios from 'axios';
+import axios from 'axios';
 
 jest.mock('axios');
 
-let pushedRoute;
+let pushedHistory;
 
 jest.mock('react-router-dom', () => ({
   useHistory: () => ({
-    push: (route) => pushedRoute = route,
+    push: (route) => pushedHistory = route,
   }),
   useParams: () => ({
     _id: 'G3J4K56M7J'
@@ -22,20 +22,14 @@ describe("ApproveBlog component", () => {
   let component;
   let queriedRoute;
 
-  const mockHistory = {
-    push: (route) => (pushedRoute = route),
-    location: {},
-    listen: jest.fn()
-  };
-
-
   beforeAll(() => {
     // mockAPI returns a mock blog and stores the queried route in the variable "queriedRoute" for testing
     const mockApi = (route) => {
       queriedRoute = route;
       return Promise.resolve({ data: { blog: exampleBlogPost } });
     };
-    mockAxios.mockImplementation(mockApi);
+    axios.mockImplementation(mockApi);
+    axios.patch.mockImplementation(mockApi);
   });
 
   beforeEach(async () => {
@@ -69,20 +63,20 @@ describe("ApproveBlog component", () => {
     getByTestId('review-modal');
   });
 
-  xtest('should make post request to endpoint "/blogs/update" and pass the id in the body', async (done) => {
-    const { getByTestId, getByText } = component;
+  test('should make patch request to endpoint "/blogs/:id" and pass the id in the body and push history to path "/blogList/approved/Pending"', async (done) => {
+    const { getByTestId, getByText, container } = component;
 
-    // updates valued for review modal select and comments
-    const reviewStatus = getByTestId('review-status');
-    fireEvent.change(reviewStatus, { target: { value: "Approved" } });
-    const reviewComments = getByTestId('review-comments');
-    fireEvent.change(reviewComments, { target: { value: "lgtm" } });
-
+    // select approve review status
+    const reviewStatusSelect = getByTestId('review-status');
+    fireEvent.change(reviewStatusSelect, { target: { value: 'Approve' } });
+    // reset queried route to test
+    queriedRoute = '';
     // clicks submit review button
     const submit = getByText('Submit');
     await wait(() => fireEvent.click(submit));
 
-    expect(queriedRoute).toBe('/blogs/update');
+    expect(queriedRoute).toBe('/api/blogs/G3J4K56M7J');
+    expect(pushedHistory).toBe('/blogList/approved/Pending');
     done();
   });
 });

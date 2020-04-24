@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { BlogPostInterface, emptyBlogPost } from './exampleBlogPost';
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 import axios from 'axios';
@@ -10,10 +10,12 @@ interface Props { }
 
 export default function ApproveBlog(props: Props) {
   const { _id } = useParams();
+  const history = useHistory();
+
   const [blog, setBlog] = useState<BlogPostInterface>(emptyBlogPost());
   const [html, setHtml] = useState('');
   const [openModal, setOpenModal] = useState(false);
-  const [comments, setComments] = useState('');
+  const [review, setReview] = useState('');
   const [approvalStatus, setApprovalStatus] = useState('');
   const [selectInvalid, setSelectInvalid] = useState(false);
 
@@ -30,21 +32,17 @@ export default function ApproveBlog(props: Props) {
       .catch(err => console.error(err));
   }, []);
 
-  // const formatReview = () => ({
+  const getFieldsToPatch = () => JSON.stringify({
+    approved: approvalStatus,
+    review
+  });
 
-  // });
-
-  const submitReview = () => {
+  const submitReview = async () => {
     if (!approvalStatus) setSelectInvalid(true);
-    // else {
-    //   axios.post(
-    //     '/api/blogs/update',
-    //     formatReview(),
-    //     {
-    //       headers: { 'Content-Type': 'application/json' }
-    //     }
-    //   )
-    // }
+    else {
+      await axios.patch(`/api/blogs/${_id}`, getFieldsToPatch(), { headers: { 'Content-Type': 'application/json' } });
+      history.push('/blogList/approved/Pending');
+    }
   };
 
   const handleChangeStatus = ({ value }) => {
@@ -52,7 +50,7 @@ export default function ApproveBlog(props: Props) {
     setApprovalStatus(value);
   }
 
-  const handleChangeComments = ({ value }) => setComments(value);
+  const handleChangeReview = ({ value }) => setReview(value);
 
   const { title, summary, name, date } = blog;
 
@@ -113,8 +111,8 @@ export default function ApproveBlog(props: Props) {
         <br></br>
         <TextArea
           data-testid="review-comments"
-          value={comments}
-          onChange={({ target }) => handleChangeComments(target)}
+          value={review}
+          onChange={({ target }) => handleChangeReview(target)}
           labelText="Comments"
         >
         </TextArea>
