@@ -66,7 +66,21 @@ app.use(
         // Write out body changes to the proxyReq stream
         proxyReq.write(body);
         proxyReq.end();
+      }
+      else if (req.method === 'PATCH') {
+        let body = req.body;
+        // URI encode JSON object
+        body = Object.keys(body)
+          .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(body[key]))
+          .join('&');
 
+        // Update header
+        proxyReq.setHeader('content-type', 'application/x-www-form-urlencoded');
+        proxyReq.setHeader('content-length', body.length);
+
+        // Write out body changes to the proxyReq stream
+        proxyReq.write(body);
+        proxyReq.end();
       }
     }
   })
@@ -104,7 +118,11 @@ app.get('/user', function (req, res) {
     res.json({
       email: 'ExampleUser@email.com',
       name: 'Example User',
-      scopes: {}
+      scopes: {
+        "manage_blogs": true,
+        "manage_appid": true,
+        "update_guidelines": true,
+      }
     });
   }
   else {

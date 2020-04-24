@@ -77,7 +77,7 @@
 }
 
 .formatted-blog-content {
-  white-space: normal;
+  overflow: hidden;
 }
 
 .background-white {
@@ -95,6 +95,7 @@
 .row-content-to-right {
   margin-bottom: 3rem;
   margin-top: 3rem;
+  float: right;
 }
 
 #communityGuidelineSubmit {

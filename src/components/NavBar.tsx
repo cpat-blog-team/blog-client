@@ -28,7 +28,7 @@ export default function NavBar() {
   const updateDropDownItems = () => {
     const dropDownItems: any[] = [];
     if (scopes.update_guidelines) dropDownItems.push({ 'text': 'Update Guidelines', 'route': '/communityGuidelines' });
-    if (scopes.manage_blogs) dropDownItems.push({ 'text': 'Blog Approval', 'route': '/' });
+    if (scopes.manage_blogs) dropDownItems.push({ 'text': 'Blog Approval', 'route': '/blogList/approved/Pending' });
     if (scopes.manage_appid) dropDownItems.push({ 'text': 'User Privileges', 'route': '/' });
     setDropDownItems(dropDownItems);
   };
@@ -134,6 +134,7 @@ export default function NavBar() {
                 <SwitcherItem
                   data-testid="side-nav-blog-approval-button"
                   aria-label="Link 6"
+                  href="/blogList/approved/Pending"
                 >
                   Blog Approval
                 </SwitcherItem>

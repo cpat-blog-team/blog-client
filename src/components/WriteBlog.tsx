@@ -93,18 +93,14 @@ export default function WriteBlog(props: Props) {
     const blogPost = formatPost();
 
     if (editorMode === 'update') {
-      const updateBlogPostBody = {
-        ...blogPost,
-        _id
-      };
-      axios.post('/api/blogs/update', JSON.stringify(updateBlogPostBody), { headers: { 'Content-Type': 'application/json' } })
+      axios.patch(`/api/blogs/${_id}`, JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
         .then(() => submitSuccess())
-        .catch(({ response }) => submitFail(response))
+        .catch((error) => console.error(error))
 
     } else {
       axios.post('/api/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
         .then(() => submitSuccess())
-        .catch(({ response }) => submitFail(response))
+        .catch((error) => submitFail(error))
     }
   }
 
@@ -113,11 +109,17 @@ export default function WriteBlog(props: Props) {
     history.push('/');
   }
 
-  const submitFail = ({ status, statusText }) => {
-    if (status === 413) {
-      setErrorMessage("Image too large. Please use different image!");
+  const submitFail = (error) => {
+    const { response } = error;
+    if (response) {
+      if (response.status === 413) {
+        setErrorMessage("Image too large. Please use different image!");
+      }
+      else if (response.statusText) setErrorMessage(response.statusText);
     }
-    else setErrorMessage(statusText);
+    else {
+      setErrorMessage(error);
+    }
   }
 
   const removeHTMLTags = (value) => value.replace(/<[^>]*>/g, "");

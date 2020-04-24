@@ -32,7 +32,7 @@ describe("ViewBlog component", () => {
   beforeEach(async () => {
     // component must be awaited because useEffect makes an api call upon first render
     await wait(() => {
-      component = render(<ViewBlog location={{ state: { _id: 'G3J4K56M7J' } }} />);
+      component = render(<ViewBlog />);
     });
   });
 
