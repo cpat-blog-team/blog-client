@@ -13,7 +13,9 @@ export default function ApproveBlog(props: Props) {
   const [blog, setBlog] = useState<BlogPostInterface>(emptyBlogPost());
   const [html, setHtml] = useState('');
   const [openModal, setOpenModal] = useState(false);
-  const [comment, setComment] = useState('');
+  const [comments, setComments] = useState('');
+  const [approvalStatus, setApprovalStatus] = useState('');
+  const [selectInvalid, setSelectInvalid] = useState(false);
 
   const loadBlog = ({ blog }) => {
     const content = JSON.parse(blog.content);
@@ -28,12 +30,31 @@ export default function ApproveBlog(props: Props) {
       .catch(err => console.error(err));
   }, []);
 
-  const submitReview = () => {
+  // const formatReview = () => ({
 
+  // });
+
+  const submitReview = () => {
+    if (!approvalStatus) setSelectInvalid(true);
+    // else {
+    //   axios.post(
+    //     '/api/blogs/update',
+    //     formatReview(),
+    //     {
+    //       headers: { 'Content-Type': 'application/json' }
+    //     }
+    //   )
+    // }
   };
 
+  const handleChangeStatus = ({ value }) => {
+    setSelectInvalid(false);
+    setApprovalStatus(value);
+  }
+
+  const handleChangeComments = ({ value }) => setComments(value);
+
   const { title, summary, name, date } = blog;
-  const items = ['Approve', 'Reject']
 
   return (
     <div className="jumbotron jumbotron-fluid background-white">
@@ -49,6 +70,7 @@ export default function ApproveBlog(props: Props) {
       </div>
       <div className="row-content-to-right">
         <Button
+          data-testid="review-button"
           onClick={() => setOpenModal(true)}
         >
           Review
@@ -56,6 +78,7 @@ export default function ApproveBlog(props: Props) {
       </div>
       {/* Approve Modal will open automatically when openModal state is set to true*/}
       <Modal
+        data-testid="review-modal"
         open={openModal}
         onRequestClose={() => setOpenModal(false)}
         modalHeading="Blog Approval"
@@ -64,17 +87,34 @@ export default function ApproveBlog(props: Props) {
         onSecondarySubmit={() => setOpenModal(false)}
         onRequestSubmit={() => submitReview()}
       >
-        <Select id="select-1" labelText="Status">
+        <Select
+          data-testid="review-status"
+          id="select-1"
+          value={approvalStatus}
+          labelText="Status"
+          invalid={selectInvalid}
+          invalidText="Review status is required"
+          onChange={({ target }) => handleChangeStatus(target)}
+        >
           <SelectItem
             hidden
             value="placeholder-item"
             text="Set approval status"
           />
-          <SelectItem value="option-1" text="Approve" />
-          <SelectItem value="option-2" text="Reject" />
+          <SelectItem
+            value="Approve"
+            text="Approve"
+          />
+          <SelectItem
+            value="Reject"
+            text="Reject"
+          />
         </Select>
         <br></br>
         <TextArea
+          data-testid="review-comments"
+          value={comments}
+          onChange={({ target }) => handleChangeComments(target)}
           labelText="Comments"
         >
         </TextArea>
