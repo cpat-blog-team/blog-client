@@ -2,7 +2,7 @@ import React from 'react';
 import { render, wait } from '@testing-library/react';
 import { exampleBlogPost } from './exampleBlogPost';
 import userContext from '../userContext';
-import NavBar from './NavBar';
+import ManageAppID from './ManageAppID';
 import '@testing-library/jest-dom';
 import { Router } from 'react-router-dom';
 import axios from 'axios';
@@ -11,10 +11,11 @@ jest.mock('axios');
 
 describe('BlogList component', () => {
   let component;
-  let pushedRoute;
+  let pushedHistory;
+  let queriedRoute;
 
   const mockHistory = {
-    push: (route) => (pushedRoute = route),
+    push: (path) => (pushedHistory = path),
     location: {},
     listen: jest.fn()
   };
@@ -28,19 +29,25 @@ describe('BlogList component', () => {
     return userCtx;
   };
 
-  const renderComponent = async (userCtx) => {
+  const renderManageAppID = async (userCtx) => {
     component = await render(
       <Router history={mockHistory}>
         <userContext.Provider value={userCtx}>
-          <NavBar />
+          <ManageAppID />
         </userContext.Provider>
       </Router>
     );
   };
 
+  beforeAll(() => {
+    axios.mockImplementation((route) => {
+      queriedRoute = route;
+      return Promise.resolve({ data: { users: [] } });
+    });
+  })
+
   beforeEach(async (done) => {
-    axios.mockImplementation(() => Promise.resolve());
-    await wait(() => renderComponent(mockUserCtx({ manage_appid: true })));
+    await wait(() => renderManageAppID(mockUserCtx({ manage_appid: true })));
     done();
   });
 
@@ -50,5 +57,10 @@ describe('BlogList component', () => {
 
   test('expect BlogList to render', () => {
     expect(component.container).toBeInTheDocument();
+  });
+
+  test('should make get request to endpoint "/api/appid/users"', async (done) => {
+    expect(queriedRoute).toBe('/api/appid/users');
+    done();
   });
 });
