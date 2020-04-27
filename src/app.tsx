@@ -7,7 +7,7 @@ import BlogList from "./components/BlogList";
 import ViewBlog from "./components/ViewBlog";
 import ApproveBlog from "./components/ApproveBlog";
 import communityGuidelines from "./components/CommunityGuidelines";
-
+import ManageAppID from './components/ManageAppID'
 
 export default function App() {
   return (
@@ -15,6 +15,7 @@ export default function App() {
       <NavBar />
       <div className="container">
         <Switch>
+          <Route path="/userPrivileges" component={ManageAppID} />
           <Route path="/communityGuidelines" component={communityGuidelines} />
           <Route path="/writeBlog/id=:_id" component={WriteBlog} />
           <Route path="/writeBlog" component={WriteBlog} />
