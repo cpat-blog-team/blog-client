@@ -46,29 +46,16 @@ app.use(
       '^/api': '',
     },
     onProxyReq(proxyReq, req, res) {
-      if (req.method === 'POST') {
+      if (req.method === 'POST' || req.method === 'PATCH' || req.method === 'PUT') {
+        // get name from app id passport middleware
         const { given_name, family_name, email } = req.user;
         const name = `${given_name} ${family_name}`;
+
         // Make any needed POST parameter changes
-        let body = req.body;
+        let { body } = req;
         body.name = name;
         body.email = email;
 
-        // URI encode JSON object
-        body = Object.keys(body)
-          .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(body[key]))
-          .join('&');
-
-        // Update header
-        proxyReq.setHeader('content-type', 'application/x-www-form-urlencoded');
-        proxyReq.setHeader('content-length', body.length);
-
-        // Write out body changes to the proxyReq stream
-        proxyReq.write(body);
-        proxyReq.end();
-      }
-      else if (req.method === 'PATCH') {
-        let body = req.body;
         // URI encode JSON object
         body = Object.keys(body)
           .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(body[key]))
