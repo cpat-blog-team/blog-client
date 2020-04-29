@@ -150,7 +150,7 @@ export default function CommunityGuidelines(props: Props) {
               <strong className="h4" data-testid="blogUsername">{name}</strong><br></br>
               <small className="text-muted" data-testid="blogDate">{date}</small>
             </div>
-            <pre className="formatted-blog-content" data-testid="blogContent" dangerouslySetInnerHTML={{ __html: content }} />
+            <div className="formatted-blog-content" data-testid="blogContent" dangerouslySetInnerHTML={{ __html: content }} />
           </div>
         )
       }

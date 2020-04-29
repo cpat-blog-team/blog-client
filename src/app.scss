@@ -16,6 +16,11 @@
   margin-bottom: 1rem;
 }
 
+.blog-list-wrapper {
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
 .blog-list-container {
   display: flex;
   justify-content: space-between;
@@ -41,6 +46,11 @@
   width: 10rem;
 }
 
+.writeBlogContainer {
+  margin-top: 5%;
+  padding: 5%;
+}
+
 .writePostNavLink, .writePostNavLink:hover {
   color: #c6c6c6;
 }
@@ -63,7 +73,7 @@
 }
 
 .container {
-  width: 100%;
+  width: 50%;
   padding-top: 3.75rem;
 }
 
@@ -77,7 +87,7 @@
 }
 
 .formatted-blog-content {
-  overflow: hidden;
+  overflow-wrap: break-word;
 }
 
 .background-white {
