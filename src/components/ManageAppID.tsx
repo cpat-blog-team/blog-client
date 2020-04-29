@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import {
 	StructuredListCell,
@@ -9,8 +8,8 @@ import {
 	StructuredListRow,
 	StructuredListWrapper,
 	Modal,
-	SelectItem,
-	Select
+	Select,
+	SelectItem
 } from 'carbon-components-react';
 
 export default function ManageAppID() {
@@ -26,9 +25,13 @@ export default function ManageAppID() {
 	};
 
 	const handleSubmit = async () => {
-		await axios.put(`/api/appid/roles/${selectedUser.id}`, JSON.stringify({ roles: { names: [ selectedRole ] } }), {
-			headers: { 'Content-Type': 'application/json' }
-		});
+		try {
+			await axios.put(`/api/appid/roles/${selectedUser.id}`, JSON.stringify({ role: selectedRole }), {
+				headers: { 'Content-Type': 'application/json' }
+			});
+		} catch (err) {
+			console.error(err);
+		}
 		setOpenModal(false);
 	};
 
@@ -47,9 +50,17 @@ export default function ManageAppID() {
 	}, []);
 
 	const getUserRoles = async () => {
-		const { data: roles } = await axios(`/api/appid/roles/${selectedUser.id}`);
-		setSelectedRole(roles[0]);
+		const { data } = await axios(`/api/appid/roles/${selectedUser.id}`);
+		const { roles, activeRole } = data;
+		setSelectedRole(activeRole);
 		setUserRoles(roles);
+	};
+
+	const closeModal = () => {
+		setOpenModal(false);
+		setSelectedRole('');
+		setUserRoles([]);
+		setSelectedUser({ id: '', email: '' });
 	};
 
 	useEffect(
@@ -87,23 +98,34 @@ export default function ManageAppID() {
 			</StructuredListWrapper>
 			<Modal
 				open={openModal}
-				onRequestClose={() => setOpenModal(false)}
+				onRequestClose={closeModal}
 				modalHeading={`Assign roles to ${selectedUser.email}`}
 				primaryButtonText="Submit"
 				secondaryButtonText="Cancel"
-				onSecondarySubmit={() => setOpenModal(false)}
+				onSecondarySubmit={closeModal}
 				onRequestSubmit={() => handleSubmit()}
 			>
-				<p>A user's role determines the actions that they're able to take within your app.</p>
-				<Select
-					id="select-1"
-					value={selectedRole}
-					labelText={`Assign roles to ${selectedUser.email}`}
-					onChange={({ target }) => handleSelectRole(target)}
-				>
-					<SelectItem hidden value="placeholder-item" text="Select Roles" />
-					{userRoles.map(({ name }) => <SelectItem value={name} text={name} key={name} />)}
-				</Select>
+				<p style={{ color: 'grey' }}>
+					A user's role determines the actions that they're able to take within your app.
+				</p>
+				<br />
+				{userRoles.length ? (
+					<div>
+						<div>
+							<Select
+								id="select-1"
+								value={selectedRole}
+								labelText="Current Role"
+								onChange={({ target }) => handleSelectRole(target)}
+							>
+								<SelectItem hidden value="placeholder-item" text={selectedRole} />
+								{userRoles.map((role) => <SelectItem value={role} text={role} key={role} />)}
+							</Select>
+						</div>
+					</div>
+				) : (
+					<div>...loading</div>
+				)}
 			</Modal>
 		</div>
 	);
