@@ -9,33 +9,47 @@ import {
 	StructuredListWrapper,
 	Modal,
 	Select,
-	SelectItem
+	SelectItem,
+	Loading,
+	InlineLoading
 } from 'carbon-components-react';
 
 export default function ManageAppID() {
-	const [ users, setUsers ] = useState([ { id: '', email: '' } ]);
+	interface User {
+		id: string;
+		email: string;
+	}
+	const [ users, setUsers ] = useState<User[]>([]);
 	const [ openModal, setOpenModal ] = useState(false);
 
 	const [ selectedUser, setSelectedUser ] = useState({ id: '', email: '' });
 	const [ userRoles, setUserRoles ] = useState([]);
 	const [ selectedRole, setSelectedRole ] = useState('');
 
+	const [ loadingDescription, setLoadingDescription ] = useState('...Loading');
+
 	const handleSelectRole = ({ value }) => {
 		setSelectedRole(value);
 	};
 
 	const handleSubmit = async () => {
+		const { id } = selectedUser;
+		const role = selectedRole;
+		setLoadingDescription('...Updating Role');
+		clearUserSelection();
+
 		try {
-			await axios.put(`/api/appid/roles/${selectedUser.id}`, JSON.stringify({ role: selectedRole }), {
+			await axios.put(`/api/appid/roles/${id}`, JSON.stringify({ role }), {
 				headers: { 'Content-Type': 'application/json' }
 			});
 		} catch (err) {
-			console.error(err);
+			alert('Error updating user role. Error: ' + err);
 		}
 		setOpenModal(false);
 	};
 
 	const handleClickUser = (user) => {
+		setLoadingDescription('...Loading Current Role');
 		setSelectedUser(user);
 		setOpenModal(true);
 	};
@@ -56,11 +70,15 @@ export default function ManageAppID() {
 		setUserRoles(roles);
 	};
 
-	const closeModal = () => {
-		setOpenModal(false);
+	const clearUserSelection = () => {
 		setSelectedRole('');
 		setUserRoles([]);
 		setSelectedUser({ id: '', email: '' });
+	};
+
+	const closeModal = () => {
+		setOpenModal(false);
+		clearUserSelection();
 	};
 
 	useEffect(
@@ -80,20 +98,24 @@ export default function ManageAppID() {
 					</StructuredListRow>
 				</StructuredListHead>
 				<StructuredListBody>
-					{users.map(({ id, email }, idx) => (
-						<StructuredListRow tabIndex={0} key={id}>
-							<StructuredListCell>
-								<a
-									href="#"
-									data-testid={`appid-email-${idx}`}
-									onClick={() => handleClickUser({ id, email })}
-								>
-									{email}
-								</a>
-							</StructuredListCell>
-							<StructuredListCell>{id}</StructuredListCell>
-						</StructuredListRow>
-					))}
+					{users.length ? (
+						users.map(({ id, email }) => (
+							<StructuredListRow tabIndex={0} key={id}>
+								<StructuredListCell>
+									<a
+										href="#"
+										data-testid={`appid-email-${email}`}
+										onClick={() => handleClickUser({ id, email })}
+									>
+										{email}
+									</a>
+								</StructuredListCell>
+								<StructuredListCell>{id}</StructuredListCell>
+							</StructuredListRow>
+						))
+					) : (
+						<Loading description="Active loading indicator" withOverlay={true} />
+					)}
 				</StructuredListBody>
 			</StructuredListWrapper>
 			<Modal
@@ -109,23 +131,23 @@ export default function ManageAppID() {
 					A user's role determines the actions that they're able to take within your app.
 				</p>
 				<br />
-				{userRoles.length ? (
+				<div>
 					<div>
-						<div>
+						{userRoles.length ? (
 							<Select
 								id="select-1"
 								value={selectedRole}
 								labelText="Current Role"
 								onChange={({ target }) => handleSelectRole(target)}
 							>
-								<SelectItem hidden value="placeholder-item" text={selectedRole} />
+								<SelectItem hidden value="placeholder-item" text={selectedRole || 'none'} />
 								{userRoles.map((role) => <SelectItem value={role} text={role} key={role} />)}
 							</Select>
-						</div>
+						) : (
+							<InlineLoading description={loadingDescription} />
+						)}
 					</div>
-				) : (
-					<div>...loading</div>
-				)}
+				</div>
 			</Modal>
 		</div>
 	);

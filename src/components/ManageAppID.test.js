@@ -39,12 +39,14 @@ describe('ManageAppID component', () => {
 		);
 	};
 
-	const exampleUsers = [ { name: 'bob', id: '123' }, { name: 'john', id: '456' } ];
+	const exampleUsers = [ { email: 'bob', id: '123' }, { email: 'john', id: '456' } ];
 
 	beforeAll(() => {
+		axios.put.mockImplementation((route) => (queriedRoute = route));
 		axios.mockImplementation((route) => {
 			queriedRoute = route;
-			return Promise.resolve({ data: exampleUsers });
+			if (route.includes('users')) return Promise.resolve({ data: exampleUsers });
+			else return Promise.resolve({ data: { roles: [ 'moderator' ], activeRole: 'moderator' } });
 		});
 	});
 
@@ -68,10 +70,23 @@ describe('ManageAppID component', () => {
 
 	test('should make get request to endpoint "/api/appid/roles/:id"', async (done) => {
 		const { getByTestId } = component;
-		const firstUserEmail = getByTestId('appid-email-0');
+		const firstUserEmail = getByTestId(`appid-email-${exampleUsers[0].email}`);
 		await wait(() => fireEvent.click(firstUserEmail));
 
-		expect(queriedRoute).toBe(`/api/appid/roles/${exampleUsers.shift().id}`);
+		expect(queriedRoute).toBe(`/api/appid/roles/${exampleUsers[0].id}`);
+		done();
+	});
+
+	test('should make put request to endpoint "/api/appid/roles/:id"', async (done) => {
+		const { getByText, getByTestId } = component;
+
+		const firstUserEmail = getByTestId(`appid-email-${exampleUsers[0].email}`);
+		await wait(() => fireEvent.click(firstUserEmail));
+
+		const submit = getByText('Submit');
+		await wait(() => fireEvent.click(submit));
+
+		expect(queriedRoute).toBe(`/api/appid/roles/${exampleUsers[0].id}`);
 		done();
 	});
 });
