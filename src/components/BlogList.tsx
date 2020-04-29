@@ -50,50 +50,53 @@ export default function BlogList(props: Props) {
       </div>
       <hr className="my-4"></hr>
 
-      {list.map(({ title, summary, date, name, _id }, i) => (
-        <div
-          className="list-group list-group-accent"
-          key={i}
-          data-testid={`blogPost${i}`}
-        >
-          <div className="list-group-item list-group-item-accent-dark blog-list-container">
-            <div onClick={() => history.push(`/viewBlog/id=${_id}`)}>
-              <h5>{title}</h5>
-              <p>{summary}</p>
-              <div>{name}</div>
-              <div>{date}</div>
-            </div>
+      <div className="blog-list-wrapper">
+        {list.map(({ title, summary, date, name, _id }, i) => (
+          <div
+            className="list-group list-group-accent"
+            key={i}
+            data-testid={`blogPost${i}`}
+          >
+            <div className="list-group-item list-group-item-accent-dark blog-list-container">
+              <div onClick={() => history.push(`/viewBlog/id=${_id}`)}>
+                <h5>{title}</h5>
+                <p>{summary}</p>
+                <div>{name}</div>
+                <div>{date}</div>
+              </div>
 
-            <div className="blog-list-component">
-              {currentUsername === name && (
-                <Link
-                  href={`/writeBlog/id=${_id}`}
-                  data-testid={`updateLink${i}`}
-                >
-                  Update
-                </Link>
-              )}
-              {currentUsername === name && (
-                <Link
-                  href="#"
-                  data-testid={`deleteLink${i}`}
-                  onClick={() => setDeleteId(_id)}
-                >
-                  Delete
-                </Link>
-              )}
-              {searchType === 'approved' && (
-                <Link
-                  href={`/approveBlog/id=${_id}`}
-                  data-testid={`reviewLink${i}`}
-                >
-                  Review
-                </Link>
-              )}
+              <div className="blog-list-component">
+                {currentUsername === name && (
+                  <Link
+                    href={`/writeBlog/id=${_id}`}
+                    data-testid={`updateLink${i}`}
+                  >
+                    Update
+                  </Link>
+                )}
+                {currentUsername === name && (
+                  <Link
+                    href="#"
+                    data-testid={`deleteLink${i}`}
+                    onClick={() => setDeleteId(_id)}
+                  >
+                    Delete
+                  </Link>
+                )}
+                {searchType === 'approved' && (
+                  <Link
+                    href={`/approveBlog/id=${_id}`}
+                    data-testid={`reviewLink${i}`}
+                  >
+                    Review
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
+      
       {/* Error Modal will open automatically when errorMessage state is set */}
       <Modal
         open={deleteId ? true : false}
