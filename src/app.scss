@@ -1,114 +1,116 @@
 .banner {
-  height: 18rem;
-  // background-color: #f4f4f4;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  color: #8f8b8b;
+	height: 18rem;
+	// background-color: #f4f4f4;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	color: #8f8b8b;
 }
 
 .banner-title {
-  color: black;
-  font-weight: bold;
-  font-size: 7rem;
-  text-align: center;
-  margin-bottom: 1rem;
+	color: black;
+	font-weight: bold;
+	font-size: 7rem;
+	text-align: center;
+	margin-bottom: 1rem;
 }
 
-.blog-list-wrapper {
-  padding-left: 5%;
-  padding-right: 5%;
+.container-wide {
+	padding-left: 15%;
+	padding-right: 15%;
 }
 
 .blog-list-container {
-  display: flex;
-  justify-content: space-between;
+	display: flex;
+	justify-content: space-between;
 }
 
 .blog-list-component {
-  display: flex;
-  align-items: center;
+	display: flex;
+	align-items: center;
 }
 
 .blog-list-container:hover {
-  background-color: #f2f4f8;
+	background-color: #f2f4f8;
 }
 
 .formated-blog-content {
-  font-size: 1rem;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  white-space: pre-wrap; 
-  word-break: break-word;
+	font-size: 1rem;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
+		'Helvetica Neue', sans-serif;
+	white-space: pre-wrap;
+	word-break: break-word;
 }
 
 .search-blog {
-  width: 10rem;
+	width: 10rem;
 }
 
 .writeBlogContainer {
-  margin-top: 5%;
-  padding: 5%;
+	margin-top: 5%;
+	padding: 5%;
 }
 
-.writePostNavLink, .writePostNavLink:hover {
-  color: #c6c6c6;
+.writePostNavLink,
+.writePostNavLink:hover {
+	color: #c6c6c6;
 }
 
 .bx--text-input {
-  font-size: 1.25rem;
-  height: 3rem;
-  border-bottom: none;
-  font-weight: 500;
+	font-size: 1.25rem;
+	height: 3rem;
+	border-bottom: none;
+	font-weight: 500;
 }
 
 #blogSummary {
-  height: 2.5rem;
-  font-size: 1.15rem;
-  font-weight: 200;
+	height: 2.5rem;
+	font-size: 1.15rem;
+	font-weight: 200;
 }
 
 .ql-container {
-  height: 65vh;
+	height: 65vh;
 }
 
 .container {
-  width: 50%;
-  padding-top: 3.75rem;
+	width: 50%;
+	padding-top: 3.75rem;
 }
 
 .textEditorContainer {
-  margin-top: 1.5rem;
+	margin-top: 1.5rem;
 }
 
 #blogSubmit {
-  margin-top: 1%;
-  float: right;
+	margin-top: 1%;
+	float: right;
 }
 
 .formatted-blog-content {
-  overflow-wrap: break-word;
+	overflow-wrap: break-word;
 }
 
 .background-white {
-  background-color: white;
+	background-color: white;
 }
 
 .nav-box-shadow {
-  box-shadow: 0px 5px 20px rgb(199, 199, 199);
+	box-shadow: 0px 5px 20px rgb(199, 199, 199);
 }
 
 .bx--list-box__field:focus {
-  outline: none;
+	outline: none;
 }
 
 .row-content-to-right {
-  margin-bottom: 3rem;
-  margin-top: 3rem;
-  float: right;
+	margin-bottom: 3rem;
+	margin-top: 3rem;
+	float: right;
 }
 
 #communityGuidelineSubmit {
-  margin-top: 3rem;
-  float: right;
+	margin-top: 3rem;
+	float: right;
 }
