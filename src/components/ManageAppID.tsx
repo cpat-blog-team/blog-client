@@ -160,7 +160,7 @@ export default function ManageAppID() {
                                 onClick={() => {
                                   handleClickUser({
                                     id: row.id,
-                                    email: row.email,
+                                    email: row.cells[0].value,
                                   });
                                 }}
                               >
