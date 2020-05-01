@@ -178,10 +178,11 @@ export default function ManageAppID() {
           )}
         />
       ) : (
-        <div>
+        <div style={{ paddingTop: '0.125rem', overflowX: 'auto' }}>
+          <br />
           <SearchSkeleton />
           <DataTableSkeleton
-            compact
+            compact={false}
             rowCount={10}
             columnCount={2}
             headers={[
