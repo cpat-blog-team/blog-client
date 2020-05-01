@@ -29,7 +29,7 @@ export default function NavBar() {
     const dropDownItems: any[] = [];
     if (scopes.update_guidelines) dropDownItems.push({ 'text': 'Update Guidelines', 'route': '/communityGuidelines' });
     if (scopes.manage_blogs) dropDownItems.push({ 'text': 'Blog Approval', 'route': '/blogList/approved/Pending' });
-    if (scopes.manage_appid) dropDownItems.push({ 'text': 'User Privileges', 'route': '/' });
+    if (scopes.manage_appid) dropDownItems.push({ 'text': 'User Privileges', 'route': '/userPrivileges' });
     setDropDownItems(dropDownItems);
   };
 
@@ -126,6 +126,7 @@ export default function NavBar() {
                 <SwitcherItem
                   data-testid="side-nav-user-privileges-button"
                   aria-label="Link 5"
+                  href="/userPrivileges"
                 >
                   User Privileges
                 </SwitcherItem>
