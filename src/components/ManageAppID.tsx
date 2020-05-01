@@ -129,7 +129,7 @@ export default function ManageAppID() {
             <TableContainer title="DataTable with expansion">
               <Search
                 id="search-1"
-                placeHolderText="Search blogs by title"
+                placeHolderText="Search users"
                 labelText="search"
                 type="search"
                 data-testid="search-input"
