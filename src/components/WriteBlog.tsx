@@ -4,7 +4,7 @@ import axios from 'axios';
 import ReactQuill from 'react-quill';
 import 'quill/dist/quill.snow.css';
 import { useHistory, useParams } from 'react-router-dom';
-import { TextInput, Button, Modal } from "carbon-components-react";
+import { TextInput, Button, Modal, FileUploaderDropContainer, FileUploaderItem } from "carbon-components-react";
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 
 const Delta = require('quill-delta');
@@ -14,6 +14,7 @@ interface Props { }
 export default function WriteBlog(props: Props) {
   const history = useHistory();
 
+  const [image, setImage] = useState({ name: '' });
   const [title, setTitle] = useState('');
   const [invalidTitle, setInvalidTitle] = useState(false);
   const [summary, setSummary] = useState('');
@@ -26,6 +27,7 @@ export default function WriteBlog(props: Props) {
   const [delta, setDelta] = useState(new Delta());
   const [errorMessage, setErrorMessage] = useState('');
   const [openCommunityGuidelinesModal, setOpenCommunityGuidelinesModal] = useState(false);
+  const [openThumbnailModal, setOpenThumbnailModal] = useState(false)
 
   const { _id } = useParams();
 
@@ -73,7 +75,7 @@ export default function WriteBlog(props: Props) {
     title,
     summary,
     content: JSON.stringify(delta),
-    version: 1
+    version: 1,
   });
 
   const clearForm = () => {
@@ -98,7 +100,7 @@ export default function WriteBlog(props: Props) {
         .catch((error) => console.error(error))
 
     } else {
-      axios.post('/api/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
+      axios.post('/api/blogs/add', blogPost, { headers: { 'Content-Type': 'application/json' } })
         .then(() => submitSuccess())
         .catch((error) => submitFail(error))
     }
@@ -126,7 +128,7 @@ export default function WriteBlog(props: Props) {
 
   const handleSubmit = () => {
     if (title && summary && removeHTMLTags(content)) {
-      setOpenCommunityGuidelinesModal(true);
+      setOpenThumbnailModal(true);
     } else {
       validateFormUI();
     }
@@ -237,7 +239,43 @@ export default function WriteBlog(props: Props) {
       >
         <p>{errorMessage}</p>
       </Modal>
-
+      
+      {/* Thumbnail Modal will when openThumbnailModal state is set to true */}
+      <Modal
+        data-testid='thumbnail-modal'
+        modalLabel='Please Upload A Thumbnail'
+        open={openThumbnailModal}
+        onRequestClose={() => setOpenThumbnailModal(false)}
+        modalHeading="Upload Image"
+        primaryButtonText="Next"
+        secondaryButtonText="Cancel"
+        onSecondarySubmit={() => setOpenThumbnailModal(false)}
+        onRequestSubmit={() => {
+          setOpenThumbnailModal(false);
+          setOpenCommunityGuidelinesModal(true);
+        }}
+      >
+        <FileUploaderDropContainer
+          labelText="Drag and drop files here or click to upload. Only .jpg, .png, .gif files accepted."
+          onChange={({target} : any) => {
+            setImage(target.files[0]);
+          }}
+          accept={['.jpg', '.png', '.gif', '.jpeg']}
+        >
+        </FileUploaderDropContainer>
+        
+        {image.name != "" &&
+        <FileUploaderItem
+          id="thumbnail-upload-item"
+          errorBody="500kb max file size. Select a new file and try again."
+          errorSubject="File size exceeds limit"
+          iconDescription="Clear file"
+          name={image.name}
+          onDelete={() => setImage({ name: '' })}
+          status="complete"
+        />}
+      
+      </Modal>
       {/* Community Guidelines Modal will when openCommunityGuidelinesModal state is set to true */}
       <Modal
         data-testid='community-guidelines-modal'
