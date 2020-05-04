@@ -100,7 +100,7 @@ export default function WriteBlog(props: Props) {
         .catch((error) => console.error(error))
 
     } else {
-      axios.post('/api/blogs/add', blogPost, { headers: { 'Content-Type': 'application/json' } })
+      axios.post('/api/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
         .then(() => submitSuccess())
         .catch((error) => submitFail(error))
     }
