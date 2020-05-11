@@ -1,20 +1,20 @@
 const dotenv = require("dotenv");
 const express = require("express");
 const path = require("path");
-const proxy = require("http-proxy-middleware");
+const { createProxyMiddleware } = require("http-proxy-middleware");
 const bodyParser = require("body-parser");
-
 const app = express();
-
 const result = dotenv.config();
 const session = require("express-session");
 const log4js = require("log4js");
 const passport = require("passport");
 const WebAppStrategy = require("ibmcloud-appid").WebAppStrategy;
 const logger = log4js.getLogger("blog");
+const multer = require("multer");
 
+const upload = multer();
 app.use(bodyParser.json());
-
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
   session({
     secret: "123456",
@@ -41,46 +41,60 @@ passport.use(
   })
 );
 
+const restream = async (proxyReq, req, res, options) => {
+  if (req.user) {
+    if (
+      req.headers["content-type"] &&
+      req.headers["content-type"].match(/^multipart\/form-data/)
+    ) {
+      proxyReq.socket.pause();
+      // build a string in multipart/form-data format with the data you need
+      const formdataUser =
+        `--${req.headers["content-type"].replace(
+          /^.*boundary=(.*)$/,
+          "$1"
+        )}\r\n` +
+        `Content-Disposition: form-data; name="reqUser"\r\n` +
+        `\r\n` +
+        `${JSON.stringify(req.user)}\r\n`;
+
+      // set the new content length
+      await proxyReq.setHeader(
+        "Content-Length",
+        parseInt(req.headers["content-length"]) + formdataUser.length
+      );
+
+      await proxyReq.write(formdataUser);
+      proxyReq.socket.resume();
+      // await proxyReq.end();
+    }
+  }
+};
+
+// proxy middleware options
+const proxyOptions = {
+  target: "http://localhost:3000", // target host
+  changeOrigin: true, // needed for virtual hosted sites
+  pathRewrite: {
+    "^/api": "",
+  },
+};
+
+// create the proxy (without context)
+const apiProxy = createProxyMiddleware(proxyOptions);
 app.use(
   "/api",
-  proxy({
-    target: "http://localhost:3000/",
-    changeOrigin: true,
-    pathRewrite: {
-      "^/api": "",
-    },
-    onProxyReq(proxyReq, req, res) {
-      if (
-        req.method === "POST" ||
-        req.method === "PATCH" ||
-        req.method === "PUT"
-      ) {
-        // get name from app id passport middleware
-        const { given_name, family_name, email } = req.user;
-        const name = `${given_name} ${family_name}`;
-
-        // Make any needed POST parameter changes
-        let { body } = req;
-        body.name = name;
-        body.email = email;
-
-        // URI encode JSON object
-        body = Object.keys(body)
-          .map(
-            (key) =>
-              encodeURIComponent(key) + "=" + encodeURIComponent(body[key])
-          )
-          .join("&");
-
-        // Update header
-        proxyReq.setHeader("content-type", "application/x-www-form-urlencoded");
-        proxyReq.setHeader("content-length", body.length);
-        // Write out body changes to the proxyReq stream
-        proxyReq.write(body);
-        proxyReq.end();
-      }
-    },
-  })
+  upload.single("file"),
+  // (req, res, next) => {
+  //   console.log(req.user, req.body.email);
+  //   if (req.body.email === req.user.email) {
+  //     next();
+  //   } else {
+  //     res.status(432).send("invalid user");
+  //     res.end();
+  //   }
+  // },
+  apiProxy
 );
 
 if (process.env.NODE_ENV === "development") {

@@ -6,6 +6,7 @@ import 'quill/dist/quill.snow.css';
 import { useHistory, useParams } from 'react-router-dom';
 import { TextInput, Button, Modal, FileUploaderDropContainer, FileUploaderItem } from "carbon-components-react";
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
+import BlogList from './BlogList';
 
 const Delta = require('quill-delta');
 
@@ -71,12 +72,28 @@ export default function WriteBlog(props: Props) {
       .catch(err => console.error(err));
   }, []);
 
-  const formatPost = () => ({
-    title,
-    summary,
-    content: JSON.stringify(delta),
-    version: 1,
-  });
+  // const formatPost = () => ({
+  //   title,
+  //   summary,
+  //   content: JSON.stringify(delta),
+  //   version: 1,
+  //   file: image,
+  // });
+
+  const formatPost = () => {
+    const blogPost = new FormData();
+    
+    blogPost.append("version", "1");
+    // @ts-ignore
+    blogPost.append("name", "asdfadfasdf");
+    blogPost.append("email", "Esther.Baek@ibm.com");
+    // @ts-ignore
+    blogPost.append("file", image, "file");
+    blogPost.append("title", title);
+    blogPost.append("content", JSON.stringify(delta));
+    blogPost.append("summary", summary);
+    return blogPost;
+  }
 
   const clearForm = () => {
     setTitle('');
@@ -100,7 +117,7 @@ export default function WriteBlog(props: Props) {
         .catch((error) => console.error(error))
 
     } else {
-      axios.post('/api/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
+      axios.post('/api/blogs/add', blogPost, { headers: { 'Content-Type': 'multipart/form-data' } })
         .then(() => submitSuccess())
         .catch((error) => submitFail(error))
     }
