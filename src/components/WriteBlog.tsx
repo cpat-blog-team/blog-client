@@ -98,24 +98,13 @@ export default function WriteBlog() {
 	};
 
 	const submit = async () => {
-		const blogPost = await formatPost();
-
-		if (editorMode === 'update') {
-			try {
-				await axios.patch(`/api/blogs/${_id}`, JSON.stringify(blogPost), {
-					headers: { 'Content-Type': 'application/json' }
-				});
-				submitSuccess();
-			} catch (err) {
-				console.error(err);
-			}
-		} else {
-			try {
-				axios.post('/api/blogs/add', blogPost, { headers: { 'Content-Type': 'multipart/form-data' } });
-				submitSuccess();
-			} catch (err) {
-				submitFail(err);
-			}
+		const formData = await formatPost();
+		const route = editorMode === 'update' ? `/api/blogs/${_id}` : '/api/blogs/add';
+		try {
+			axios.post(route, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+			submitSuccess();
+		} catch (err) {
+			submitFail(err);
 		}
 	};
 
