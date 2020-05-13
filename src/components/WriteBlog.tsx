@@ -13,6 +13,7 @@ export default function WriteBlog() {
 	const history = useHistory();
 
 	const [ thumbnail, setThumbnail ] = useState({ name: '' });
+	const [ thumbnailRequired, setThumbnailRequired ] = useState(false);
 	const [ title, setTitle ] = useState('');
 	const [ invalidTitle, setInvalidTitle ] = useState(false);
 	const [ summary, setSummary ] = useState('');
@@ -305,8 +306,12 @@ export default function WriteBlog() {
 				secondaryButtonText="Cancel"
 				onSecondarySubmit={() => setOpenThumbnailModal(false)}
 				onRequestSubmit={() => {
-					setOpenThumbnailModal(false);
-					setOpenCommunityGuidelinesModal(true);
+					if (thumbnail.name !== '') {
+						setOpenThumbnailModal(false);
+						setOpenCommunityGuidelinesModal(true);
+					} else {
+						setThumbnailRequired(true);
+					}
 				}}
 			>
 				<FileUploaderDropContainer
@@ -316,7 +321,7 @@ export default function WriteBlog() {
 					}}
 					accept={[ '.jpg', '.png', '.gif', '.jpeg' ]}
 				/>
-
+				{thumbnailRequired && <p style={{ color: 'red' }}>Thumbnail is required</p>}
 				{thumbnail.name != '' && (
 					<FileUploaderItem
 						id="thumbnail-upload-item"
