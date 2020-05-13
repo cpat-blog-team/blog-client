@@ -84,6 +84,11 @@ export default function BlogList(props: Props) {
 						</div>
 					</div>
 				))}
+				{list.length === 0 && (
+					<div className="banner">
+						<h4>...No Blogs Available</h4>
+					</div>
+				)}
 			</div>
 
 			{/* Error Modal will open automatically when errorMessage state is set */}

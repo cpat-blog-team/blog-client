@@ -106,8 +106,8 @@ export default function ApproveBlog(props: Props) {
 					onChange={({ target }) => handleChangeStatus(target)}
 				>
 					<SelectItem hidden value="placeholder-item" text="Set approval status" />
-					<SelectItem value="Approve" text="Approve" />
-					<SelectItem value="Reject" text="Reject" />
+					<SelectItem value="Approved" text="Approve" />
+					<SelectItem value="Rejected" text="Reject" />
 				</Select>
 				<br />
 				<TextArea
