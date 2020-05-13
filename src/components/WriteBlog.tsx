@@ -307,6 +307,7 @@ export default function WriteBlog() {
 				onSecondarySubmit={() => setOpenThumbnailModal(false)}
 				onRequestSubmit={() => {
 					if (thumbnail.name !== '') {
+						setThumbnailRequired(false);
 						setOpenThumbnailModal(false);
 						setOpenCommunityGuidelinesModal(true);
 					} else {
