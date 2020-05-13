@@ -12,7 +12,7 @@ const Delta = require('quill-delta');
 export default function WriteBlog() {
 	const history = useHistory();
 
-	const [ image, setImage ] = useState({ name: '' });
+	const [ thumbnail, setThumbnail ] = useState({ name: '' });
 	const [ title, setTitle ] = useState('');
 	const [ invalidTitle, setInvalidTitle ] = useState(false);
 	const [ summary, setSummary ] = useState('');
@@ -26,6 +26,7 @@ export default function WriteBlog() {
 	const [ errorMessage, setErrorMessage ] = useState('');
 	const [ openCommunityGuidelinesModal, setOpenCommunityGuidelinesModal ] = useState(false);
 	const [ openThumbnailModal, setOpenThumbnailModal ] = useState(false);
+	const [ quillRef, setQuillRef ] = useState<any>(null);
 
 	const { _id } = useParams();
 
@@ -69,18 +70,55 @@ export default function WriteBlog() {
 			.catch((err) => console.error(err));
 	}, []);
 
+	const b64toBlob = (dataURI) => {
+		var byteString = atob(dataURI.split(',')[1]);
+		var ab = new ArrayBuffer(byteString.length);
+		var ia = new Uint8Array(ab);
+		for (var i = 0; i < byteString.length; i++) {
+			ia[i] = byteString.charCodeAt(i);
+		}
+		return new Blob([ ab ], { type: 'image/jpeg' });
+	};
+
+	const formatDelta = async (delta) => {
+		const formattedDelta: any = { ...delta };
+
+		// upload images to db and replace base64 with urls to images
+		for await (let field of formattedDelta.ops) {
+			if (typeof field.insert === 'object') {
+				if (field.insert.image) {
+					// convert image from base 64 to blob
+					const image = b64toBlob(field.insert.image);
+
+					// await upload of image to mongo
+					const formData = new FormData();
+					formData.append('file', image);
+					const { data } = await axios.post('/api/uploads', formData, {
+						headers: { 'Content-Type': 'multipart/form-data' }
+					});
+
+					// replace value of image to be url to db
+					field.insert.image = data.url;
+				}
+			}
+		}
+		console.log(formattedDelta);
+		return formattedDelta;
+	};
+
 	const formatPost = async () => {
 		const blogPost = new FormData();
+		const formattedDelta = await formatDelta(delta);
 		const { data } = await axios.get('/user');
 
 		blogPost.append('version', '1');
 		blogPost.append('name', data.name);
 		blogPost.append('email', data.email);
 		blogPost.append('title', title);
-		blogPost.append('content', JSON.stringify(delta));
+		blogPost.append('content', JSON.stringify(formattedDelta));
 		blogPost.append('summary', summary);
 		// @ts-ignore
-		blogPost.append('file', image);
+		blogPost.append('file', thumbnail);
 		return blogPost;
 	};
 
@@ -155,13 +193,15 @@ export default function WriteBlog() {
 	};
 
 	const modules = {
-		toolbar: [
-			[ { header: [ 1, 2, false ] } ],
-			[ 'bold', 'italic', 'underline', 'strike', 'blockquote' ],
-			[ { list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' } ],
-			[ 'link', 'image' ],
-			[ 'clean' ]
-		]
+		toolbar: {
+			container: [
+				[ { header: [ 1, 2, false ] } ],
+				[ 'bold', 'italic', 'underline', 'strike', 'blockquote' ],
+				[ { list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' } ],
+				[ 'link', 'image' ],
+				[ 'clean' ]
+			]
+		}
 	};
 
 	const formats = [
@@ -223,6 +263,7 @@ export default function WriteBlog() {
 
 			<div className="textEditorContainer">
 				<ReactQuill
+					ref={(ref: any) => setQuillRef(ref)}
 					className={invalidContent ? 'bx--text-input--invalid' : ''}
 					value={content}
 					onBlur={validateContentOnBlur}
@@ -271,19 +312,19 @@ export default function WriteBlog() {
 				<FileUploaderDropContainer
 					labelText="Drag and drop files here or click to upload. Only .jpg, .png, .gif files accepted."
 					onChange={({ target }: any) => {
-						setImage(target.files[0]);
+						setThumbnail(target.files[0]);
 					}}
 					accept={[ '.jpg', '.png', '.gif', '.jpeg' ]}
 				/>
 
-				{image.name != '' && (
+				{thumbnail.name != '' && (
 					<FileUploaderItem
 						id="thumbnail-upload-item"
 						errorBody="500kb max file size. Select a new file and try again."
 						errorSubject="File size exceeds limit"
 						iconDescription="Clear file"
-						name={image.name}
-						onDelete={() => setImage({ name: '' })}
+						name={thumbnail.name}
+						onDelete={() => setThumbnail({ name: '' })}
 						status="complete"
 					/>
 				)}
