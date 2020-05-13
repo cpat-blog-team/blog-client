@@ -11,9 +11,6 @@ const passport = require('passport');
 const WebAppStrategy = require('ibmcloud-appid').WebAppStrategy;
 const logger = log4js.getLogger('blog');
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(
 	session({
 		secret: '123456',
@@ -49,16 +46,10 @@ const apiProxy = createProxyMiddleware({
 	}
 });
 
-const appendUserToBody = (req, res, next) => {
-	if (!req.body) req.body = {};
-	const { given_name, family_name, email } = req.user;
-	req.body.name = `${given_name} ${family_name}`;
-	req.body.email = email;
-	next();
-};
+app.use('/api', apiProxy);
 
-app.use('/api/blogs/add', apiProxy);
-app.use('/api', appendUserToBody, apiProxy);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 if (process.env.NODE_ENV === 'development') {
 	const morgan = require('morgan');
