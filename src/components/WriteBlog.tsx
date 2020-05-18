@@ -4,257 +4,358 @@ import axios from 'axios';
 import ReactQuill from 'react-quill';
 import 'quill/dist/quill.snow.css';
 import { useHistory, useParams } from 'react-router-dom';
-import { TextInput, Button, Modal } from "carbon-components-react";
+import { TextInput, Button, Modal, FileUploaderDropContainer, FileUploaderItem } from 'carbon-components-react';
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 
 const Delta = require('quill-delta');
 
-interface Props { }
+export default function WriteBlog() {
+	const history = useHistory();
 
-export default function WriteBlog(props: Props) {
-  const history = useHistory();
+	const [ thumbnail, setThumbnail ] = useState({ name: '' });
+	const [ thumbnailRequired, setThumbnailRequired ] = useState(false);
+	const [ title, setTitle ] = useState('');
+	const [ invalidTitle, setInvalidTitle ] = useState(false);
+	const [ summary, setSummary ] = useState('');
+	const [ invalidSummary, setInvalidSummary ] = useState(false);
+	const [ content, setContent ] = useState('<p><br></p>');
+	const [ communityGuidelines, setCommunityGuidelines ] = useState({ content: '<p><br></p>', title: '' });
+	const [ invalidContent, setInvalidContent ] = useState(false);
 
-  const [title, setTitle] = useState('');
-  const [invalidTitle, setInvalidTitle] = useState(false);
-  const [summary, setSummary] = useState('');
-  const [invalidSummary, setInvalidSummary] = useState(false);
-  const [content, setContent] = useState('<p><br></p>');
-  const [communityGuidelines, setCommunityGuidelines] = useState({ content: '<p><br></p>', title: '' });
-  const [invalidContent, setInvalidContent] = useState(false);
+	const [ editorMode, setEditorMode ] = useState('');
+	const [ delta, setDelta ] = useState(new Delta());
+	const [ errorMessage, setErrorMessage ] = useState('');
+	const [ openCommunityGuidelinesModal, setOpenCommunityGuidelinesModal ] = useState(false);
+	const [ openThumbnailModal, setOpenThumbnailModal ] = useState(false);
+	const [ quillRef, setQuillRef ] = useState<any>(null);
 
-  const [editorMode, setEditorMode] = useState('');
-  const [delta, setDelta] = useState(new Delta());
-  const [errorMessage, setErrorMessage] = useState('');
-  const [openCommunityGuidelinesModal, setOpenCommunityGuidelinesModal] = useState(false);
+	const { _id } = useParams();
 
-  const { _id } = useParams();
+	const loadBlog = ({ blog }) => {
+		loadContent(blog);
+		setTitle(blog.title);
+		setSummary(blog.summary);
+	};
 
-  const loadBlog = ({ blog }) => {
-    loadContent(blog)
-    setTitle(blog.title);
-    setSummary(blog.summary);
-  }
+	const loadContent = ({ content }) => {
+		let { ops } = JSON.parse(content);
+		const converter = new QuillDeltaToHtmlConverter(ops);
+		setContent(converter.convert());
+	};
 
-  const loadContent = ({ content }) => {
-    let { ops } = JSON.parse(content);
-    const converter = new QuillDeltaToHtmlConverter(ops);
-    setContent(converter.convert());
-  };
+	const loadCommunityGuidelines = ({ content, title }) => {
+		let { ops } = JSON.parse(content);
+		const converter = new QuillDeltaToHtmlConverter(ops);
+		setCommunityGuidelines({
+			content: converter.convert(),
+			title
+		});
+	};
 
-  const loadCommunityGuidelines = ({ content, title }) => {
-    let { ops } = JSON.parse(content);
-    const converter = new QuillDeltaToHtmlConverter(ops);
-    setCommunityGuidelines({
-      content: converter.convert(),
-      title
-    });
-  }
+	useEffect(() => {
+		if (_id) {
+			setEditorMode('update');
+			axios(`/api/blogs/${_id}`)
+				.then(({ data }) => {
+					loadBlog(data);
+				})
+				.catch((err) => console.error(err));
+		} else {
+			setEditorMode('default');
+		}
 
-  useEffect(() => {
-    if (_id) {
-      setEditorMode('update');
-      axios(`/api/blogs/${_id}`)
-        .then(({ data }) => {
-          loadBlog(data)
-        })
-        .catch(err => console.error(err));
-    } else {
-      setEditorMode('default');
-    }
+		axios(`/api/communityGuidelines`)
+			.then(({ data }) => {
+				loadCommunityGuidelines(data.communityGuidelines);
+			})
+			.catch((err) => console.error(err));
+	}, []);
 
-    axios(`/api/communityGuidelines`)
-      .then(({ data }) => {
-        loadCommunityGuidelines(data.communityGuidelines)
-      })
-      .catch(err => console.error(err));
-  }, []);
+	const b64toBlob = (dataURI) => {
+		var byteString = atob(dataURI.split(',')[1]);
+		var ab = new ArrayBuffer(byteString.length);
+		var ia = new Uint8Array(ab);
+		for (var i = 0; i < byteString.length; i++) {
+			ia[i] = byteString.charCodeAt(i);
+		}
+		return new Blob([ ab ], { type: 'image/jpeg' });
+	};
 
-  const formatPost = () => ({
-    title,
-    summary,
-    content: JSON.stringify(delta),
-    version: 1
-  });
+	const formatDelta = async (delta) => {
+		const formattedDelta: any = { ...delta };
 
-  const clearForm = () => {
-    setTitle('');
-    setSummary('');
-    setContent('');
-    setDelta(new Delta());
-  }
+		// upload images to db and replace base64 with urls to images
+		for await (let field of formattedDelta.ops) {
+			if (typeof field.insert === 'object') {
+				if (field.insert.image) {
+					// convert image from base 64 to blob
+					const image = b64toBlob(field.insert.image);
 
-  const validateFormUI = () => {
-    validateTitle(title);
-    validateSummary(summary);
-    validateContent(content);
-  }
+					// await upload of image to mongo
+					const formData = new FormData();
+					formData.append('file', image);
+					const { data } = await axios.post('/api/uploads', formData, {
+						headers: { 'Content-Type': 'multipart/form-data' }
+					});
 
-  const submit = () => {
-    const blogPost = formatPost();
+					// replace value of image to be url to db
+					field.insert.image = `/api/${data.url}`;
+				}
+			}
+		}
+		console.log(formattedDelta);
+		return formattedDelta;
+	};
 
-    if (editorMode === 'update') {
-      axios.patch(`/api/blogs/${_id}`, JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
-        .then(() => submitSuccess())
-        .catch((error) => console.error(error))
+	const formatPost = async () => {
+		const blogPost = new FormData();
+		const formattedDelta = await formatDelta(delta);
+		const { data } = await axios.get('/user');
 
-    } else {
-      axios.post('/api/blogs/add', JSON.stringify(blogPost), { headers: { 'Content-Type': 'application/json' } })
-        .then(() => submitSuccess())
-        .catch((error) => submitFail(error))
-    }
-  }
+		blogPost.append('version', '1');
+		blogPost.append('name', data.name);
+		blogPost.append('email', data.email);
+		blogPost.append('title', title);
+		blogPost.append('content', JSON.stringify(formattedDelta));
+		blogPost.append('summary', summary);
+		// @ts-ignore
+		blogPost.append('file', thumbnail);
+		return blogPost;
+	};
 
-  const submitSuccess = () => {
-    clearForm();
-    history.push('/');
-  }
+	const clearForm = () => {
+		setTitle('');
+		setSummary('');
+		setContent('');
+		setDelta(new Delta());
+	};
 
-  const submitFail = (error) => {
-    const { response } = error;
-    if (response) {
-      if (response.status === 413) {
-        setErrorMessage("Image too large. Please use different image!");
-      }
-      else if (response.statusText) setErrorMessage(response.statusText);
-    }
-    else {
-      setErrorMessage(error);
-    }
-  }
+	const validateFormUI = () => {
+		validateTitle(title);
+		validateSummary(summary);
+		validateContent(content);
+	};
 
-  const removeHTMLTags = (value) => value.replace(/<[^>]*>/g, "");
+	const submit = async () => {
+		const formData = await formatPost();
+		const route = editorMode === 'update' ? `/api/blogs/${_id}` : '/api/blogs/add';
+		try {
+			axios.post(route, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+			submitSuccess();
+		} catch (err) {
+			submitFail(err);
+		}
+	};
 
-  const handleSubmit = () => {
-    if (title && summary && removeHTMLTags(content)) {
-      setOpenCommunityGuidelinesModal(true);
-    } else {
-      validateFormUI();
-    }
-  }
+	const submitSuccess = () => {
+		clearForm();
+		history.push('/');
+	};
 
-  const validateTitle = (value) => value ? setInvalidTitle(false) : setInvalidTitle(true);
-  const validateSummary = (value) => value ? setInvalidSummary(false) : setInvalidSummary(true);
-  const validateContent = (value) => removeHTMLTags(value) ? setInvalidContent(false) : setInvalidContent(true);
-  const validateContentOnBlur = () => content ? setInvalidContent(false) : setInvalidContent(true);
+	const submitFail = (error) => {
+		const { response } = error;
+		if (response) {
+			if (response.status === 413) {
+				setErrorMessage('Image too large. Please use different image!');
+			} else if (response.statusText) setErrorMessage(response.statusText);
+		} else {
+			console.error(error);
+			setErrorMessage('Error: Submission Failed');
+		}
+	};
 
-  const handleChangeTitle = ({ target }) => {
-    setTitle(target.value);
-    validateTitle(target.value);
-  }
-  const handleChangeSummary = ({ target }) => {
-    setSummary(target.value);
-    validateSummary(target.value);
-  }
-  const handleChangeContent = (content, delta, source, editor) => {
-    setContent(content);
-    validateContent(content);
-    setDelta(editor.getContents());
-  }
+	const removeHTMLTags = (value) => value.replace(/<[^>]*>/g, '');
 
-  const modules = {
-    toolbar: [
-      [{ 'header': [1, 2, false] }],
-      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
-      ['link', 'image'],
-      ['clean']
-    ],
-  }
+	const handleSubmit = () => {
+		if (title && summary && removeHTMLTags(content)) {
+			setOpenThumbnailModal(true);
+		} else {
+			validateFormUI();
+		}
+	};
 
-  const formats = [
-    'header',
-    'bold', 'italic', 'underline', 'strike', 'blockquote',
-    'list', 'bullet', 'indent',
-    'link', 'image'
-  ]
+	const validateTitle = (value) => (value ? setInvalidTitle(false) : setInvalidTitle(true));
+	const validateSummary = (value) => (value ? setInvalidSummary(false) : setInvalidSummary(true));
+	const validateContent = (value) => (removeHTMLTags(value) ? setInvalidContent(false) : setInvalidContent(true));
+	const validateContentOnBlur = () => (content ? setInvalidContent(false) : setInvalidContent(true));
 
-  return (
-    <form
-      className="writeBlogContainer"
-      onSubmit={(e) => {
-        e.preventDefault()
-        handleSubmit();
-      }}
-    >
-      {editorMode != "updateGuidelines" &&
-        <TextInput
-          id="blogTitle"
-          data-testid="writeTitle"
-          name="title"
-          labelText=""
-          hideLabel
-          onBlur={({ target }) => validateTitle(target.value)}
-          value={title}
-          placeholder="Blog Post Title"
-          invalid={invalidTitle ? true : false}
-          invalidText="Title is required"
-          onChange={handleChangeTitle}
-        />}
+	const handleChangeTitle = ({ target }) => {
+		setTitle(target.value);
+		validateTitle(target.value);
+	};
+	const handleChangeSummary = ({ target }) => {
+		setSummary(target.value);
+		validateSummary(target.value);
+	};
+	const handleChangeContent = (content, delta, source, editor) => {
+		setContent(content);
+		validateContent(content);
+		setDelta(editor.getContents());
+	};
 
-      <br />
-      <br />
+	const modules = {
+		toolbar: {
+			container: [
+				[ { header: [ 1, 2, false ] } ],
+				[ 'bold', 'italic', 'underline', 'strike', 'blockquote' ],
+				[ { list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' } ],
+				[ 'link', 'image' ],
+				[ 'clean' ]
+			]
+		}
+	};
 
-      {editorMode != "updateGuidelines" &&
-        <TextInput
-          id="blogSummary"
-          data-testid="writeSummary"
-          name="summary"
-          labelText=""
-          hideLabel
-          onBlur={({ target }) => validateSummary(target.value)}
-          value={summary}
-          placeholder="Summary"
-          invalid={invalidSummary ? true : false}
-          invalidText="Summary is required"
-          onChange={handleChangeSummary}
-        />}
+	const formats = [
+		'header',
+		'bold',
+		'italic',
+		'underline',
+		'strike',
+		'blockquote',
+		'list',
+		'bullet',
+		'indent',
+		'link',
+		'image'
+	];
 
-      <div className="textEditorContainer" >
-        <ReactQuill
-          className={invalidContent ? "bx--text-input--invalid" : ""}
-          value={content}
-          onBlur={validateContentOnBlur}
-          onChange={handleChangeContent}
-          modules={modules}
-          formats={formats}
-        />
-        <div style={{ visibility: invalidContent ? 'visible' : 'hidden' }} className="bx--form-requirement" id="blogSummary-error-msg">Body is required</div>
-      </div>
-      <Button
-        id="blogSubmit"
-        data-testid="submit"
-        type="submit"
-        kind="primary"
-      >Submit</Button>
+	return (
+		<form
+			className="writeBlogContainer"
+			onSubmit={(e) => {
+				e.preventDefault();
+				handleSubmit();
+			}}
+		>
+			{editorMode != 'updateGuidelines' && (
+				<TextInput
+					id="blogTitle"
+					data-testid="writeTitle"
+					name="title"
+					labelText=""
+					hideLabel
+					onBlur={({ target }) => validateTitle(target.value)}
+					value={title}
+					placeholder="Blog Post Title"
+					invalid={invalidTitle ? true : false}
+					invalidText="Title is required"
+					onChange={handleChangeTitle}
+				/>
+			)}
 
-      {/* Error Modal will open automatically when errorMessage state is set */}
-      <Modal
-        modalLabel='Error'
-        open={errorMessage ? true : false}
-        onRequestClose={() => setErrorMessage('')}
-        passiveModal
-        modalHeading="Sorry We Couldn't Submit Your Post!"
-      >
-        <p>{errorMessage}</p>
-      </Modal>
+			<br />
+			<br />
 
-      {/* Community Guidelines Modal will when openCommunityGuidelinesModal state is set to true */}
-      <Modal
-        data-testid='community-guidelines-modal'
-        modalLabel='Please Accept To Continue'
-        open={openCommunityGuidelinesModal}
-        onRequestClose={() => setOpenCommunityGuidelinesModal(false)}
-        modalHeading={communityGuidelines.title}
-        primaryButtonText="Accept"
-        secondaryButtonText="Cancel"
-        onSecondarySubmit={() => setOpenCommunityGuidelinesModal(false)}
-        onRequestSubmit={() => {
-          setOpenCommunityGuidelinesModal(false);
-          submit()
-        }}
-      >
-        <div className="formatted-blog-content" data-testid="community-guidelines" dangerouslySetInnerHTML={{ __html: communityGuidelines.content }} />
-      </Modal>
-    </form >
-  );
+			{editorMode != 'updateGuidelines' && (
+				<TextInput
+					id="blogSummary"
+					data-testid="writeSummary"
+					name="summary"
+					labelText=""
+					hideLabel
+					onBlur={({ target }) => validateSummary(target.value)}
+					value={summary}
+					placeholder="Summary"
+					invalid={invalidSummary ? true : false}
+					invalidText="Summary is required"
+					onChange={handleChangeSummary}
+				/>
+			)}
+
+			<div className="textEditorContainer">
+				<ReactQuill
+					ref={(ref: any) => setQuillRef(ref)}
+					className={invalidContent ? 'bx--text-input--invalid' : ''}
+					value={content}
+					onBlur={validateContentOnBlur}
+					onChange={handleChangeContent}
+					modules={modules}
+					formats={formats}
+				/>
+				<div
+					style={{ visibility: invalidContent ? 'visible' : 'hidden' }}
+					className="bx--form-requirement"
+					id="blogSummary-error-msg"
+				>
+					Body is required
+				</div>
+			</div>
+			<Button id="blogSubmit" data-testid="submit" type="submit" kind="primary">
+				Submit
+			</Button>
+
+			{/* Error Modal will open automatically when errorMessage state is set */}
+			<Modal
+				modalLabel="Error"
+				open={errorMessage ? true : false}
+				onRequestClose={() => setErrorMessage('')}
+				passiveModal
+				modalHeading="Sorry We Couldn't Submit Your Post!"
+			>
+				<p>{errorMessage}</p>
+			</Modal>
+
+			{/* Thumbnail Modal will when openThumbnailModal state is set to true */}
+			<Modal
+				data-testid="thumbnail-modal"
+				modalLabel="Please Upload A Thumbnail"
+				open={openThumbnailModal}
+				onRequestClose={() => setOpenThumbnailModal(false)}
+				modalHeading="Upload Image"
+				primaryButtonText="Next"
+				secondaryButtonText="Cancel"
+				onSecondarySubmit={() => setOpenThumbnailModal(false)}
+				onRequestSubmit={() => {
+					if (thumbnail.name !== '') {
+						setThumbnailRequired(false);
+						setOpenThumbnailModal(false);
+						setOpenCommunityGuidelinesModal(true);
+					} else {
+						setThumbnailRequired(true);
+					}
+				}}
+			>
+				<FileUploaderDropContainer
+					labelText="Drag and drop files here or click to upload. Only .jpg, .png, .gif files accepted."
+					onChange={({ target }: any) => {
+						setThumbnail(target.files[0]);
+					}}
+					accept={[ '.jpg', '.png', '.gif', '.jpeg' ]}
+				/>
+				{thumbnailRequired && <p style={{ color: 'red' }}>Thumbnail is required</p>}
+				{thumbnail.name != '' && (
+					<FileUploaderItem
+						id="thumbnail-upload-item"
+						errorBody="500kb max file size. Select a new file and try again."
+						errorSubject="File size exceeds limit"
+						iconDescription="Clear file"
+						name={thumbnail.name}
+						onDelete={() => setThumbnail({ name: '' })}
+						status="complete"
+					/>
+				)}
+			</Modal>
+			{/* Community Guidelines Modal will when openCommunityGuidelinesModal state is set to true */}
+			<Modal
+				data-testid="community-guidelines-modal"
+				modalLabel="Please Accept To Continue"
+				open={openCommunityGuidelinesModal}
+				onRequestClose={() => setOpenCommunityGuidelinesModal(false)}
+				modalHeading={communityGuidelines.title}
+				primaryButtonText="Accept"
+				secondaryButtonText="Cancel"
+				onSecondarySubmit={() => setOpenCommunityGuidelinesModal(false)}
+				onRequestSubmit={() => {
+					setOpenCommunityGuidelinesModal(false);
+					submit();
+				}}
+			>
+				<div
+					className="formatted-blog-content"
+					data-testid="community-guidelines"
+					dangerouslySetInnerHTML={{ __html: communityGuidelines.content }}
+				/>
+			</Modal>
+		</form>
+	);
 }

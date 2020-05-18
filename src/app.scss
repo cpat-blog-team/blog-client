@@ -28,7 +28,8 @@
 
 .blog-list-component {
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+	justify-content: center;
 }
 
 .blog-list-container:hover {
@@ -79,8 +80,18 @@
 	padding-top: 3.75rem;
 }
 
+.container img {
+	max-height: 100%;
+	max-width: 100%;
+}
+
 .textEditorContainer {
 	margin-top: 1.5rem;
+}
+
+#thumbnail-upload-item {
+	background-color: #393939;
+	color: #f4f4f4;
 }
 
 #blogSubmit {
@@ -113,4 +124,17 @@
 #communityGuidelineSubmit {
 	margin-top: 3rem;
 	float: right;
+}
+
+.content-row {
+	display: flex;
+}
+
+.content-item {
+	margin-left: .5rem;
+	margin-right: .5rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 85%;
 }
