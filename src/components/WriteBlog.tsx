@@ -99,7 +99,7 @@ export default function WriteBlog() {
 					});
 
 					// replace value of image to be url to db
-					field.insert.image = data.url;
+					field.insert.image = `/api/${data.url}`;
 				}
 			}
 		}
