@@ -23,7 +23,7 @@ export default function ViewBlog(props: Props) {
 		axios(`/api/blogs/${_id}`).then(({ data }) => loadBlog(data)).catch((err) => console.error(err));
 	}, []);
 
-	const { title, summary, name, date } = blog;
+	const { title, summary, name, date, filename } = blog;
 
 	return (
 		<div className="jumbotron jumbotron-fluid background-white">
@@ -44,6 +44,10 @@ export default function ViewBlog(props: Props) {
 						{date}
 					</small>
 				</div>
+				<img
+					style={{ height: '100%', width: '100%', marginTop: '2rem', marginBottom: '2rem' }}
+					src={`/api/images/${filename}`}
+				/>
 				<div
 					className="formatted-blog-content"
 					data-testid="blogContent"
