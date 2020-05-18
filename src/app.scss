@@ -28,7 +28,8 @@
 
 .blog-list-component {
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+	justify-content: center;
 }
 
 .blog-list-container:hover {
@@ -85,7 +86,7 @@
 
 #thumbnail-upload-item {
 	background-color: #393939;
-	color: #F4F4F4;
+	color: #f4f4f4;
 }
 
 #blogSubmit {
@@ -118,4 +119,17 @@
 #communityGuidelineSubmit {
 	margin-top: 3rem;
 	float: right;
+}
+
+.content-row {
+	display: flex;
+}
+
+.content-item {
+	margin-left: .5rem;
+	margin-right: .5rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 85%;
 }
