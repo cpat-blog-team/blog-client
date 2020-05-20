@@ -4,8 +4,9 @@ import { useState, useEffect, useContext } from 'react';
 import { BlogPostInterface } from './exampleBlogPost';
 import { useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Link, Modal } from 'carbon-components-react';
+import { Link, Modal, ToastNotification } from 'carbon-components-react';
 import Thumbnail from './Thumbnail';
+import { useCookies } from 'react-cookie';
 
 interface Props {}
 
@@ -33,7 +34,6 @@ export default function BlogList(props: Props) {
 	};
 
 	const deleteBlog = async () => {
-		console.log(`deleting blog ${deleteId}`);
 		await axios.delete(`/api/blogs/${deleteId}`);
 		setDeleteId('');
 		getBlogs();
@@ -45,6 +45,9 @@ export default function BlogList(props: Props) {
 		},
 		[ searchValue ]
 	);
+
+	const [ cookies, setCookie, removeCookie ] = useCookies();
+
 	return (
 		<div>
 			<div className="banner">
@@ -52,8 +55,33 @@ export default function BlogList(props: Props) {
 				<h3>Bringing fellow cpat'ers together</h3>
 			</div>
 
+			{cookies.cpat_blog_posted && (
+				<ToastNotification
+					kind="success"
+					caption=""
+					iconDescription="describes the close button"
+					subtitle={
+						<span>
+							Your post has been submitted for review.
+							<br />
+							<a href="#">Click here</a> to learn more about the approval process.
+						</span>
+					}
+					timeout={0}
+					title="Post Success"
+					style={{
+						position: 'fixed',
+						top: '6rem',
+						left: '3rem',
+						zIndex: 2
+					}}
+					onCloseButtonClick={() => removeCookie('cpat_blog_posted')}
+				/>
+			)}
+
 			<div className="container-wide">
 				<hr className="my-4" />
+				<div />
 				{list.map(({ title, summary, date, name, _id, filename }, i) => (
 					<div key={i} data-testid={`blogPost${i}`}>
 						<div className="blog-list-row">
@@ -92,6 +120,86 @@ export default function BlogList(props: Props) {
 						</div>
 					</div>
 				))}
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
+				<p>asasdf</p>
 				{list.length === 0 && (
 					<div className="banner">
 						<h4>...No Blogs Available</h4>

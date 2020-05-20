@@ -6,11 +6,13 @@ import 'quill/dist/quill.snow.css';
 import { useHistory, useParams } from 'react-router-dom';
 import { TextInput, Button, Modal, FileUploaderDropContainer, FileUploaderItem } from 'carbon-components-react';
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
+import { useCookies } from 'react-cookie';
 
 const Delta = require('quill-delta');
 
 export default function WriteBlog() {
 	const history = useHistory();
+	const [ cookie, setCookie ] = useCookies();
 
 	const [ thumbnail, setThumbnail ] = useState({ name: '' });
 	const [ thumbnailRequired, setThumbnailRequired ] = useState(false);
@@ -28,7 +30,6 @@ export default function WriteBlog() {
 	const [ errorMessage, setErrorMessage ] = useState('');
 	const [ openCommunityGuidelinesModal, setOpenCommunityGuidelinesModal ] = useState(false);
 	const [ openThumbnailModal, setOpenThumbnailModal ] = useState(false);
-	const [ quillRef, setQuillRef ] = useState<any>(null);
 
 	const { _id } = useParams();
 
@@ -151,6 +152,7 @@ export default function WriteBlog() {
 
 	const submitSuccess = () => {
 		clearForm();
+		setCookie('cpat_blog_posted', true, { path: '/', maxAge: 60 });
 		history.push('/');
 	};
 
@@ -270,7 +272,6 @@ export default function WriteBlog() {
 
 			<div className="textEditorContainer">
 				<ReactQuill
-					ref={(ref: any) => setQuillRef(ref)}
 					className={invalidContent ? 'bx--text-input--invalid' : ''}
 					value={content}
 					onBlur={validateContentOnBlur}
