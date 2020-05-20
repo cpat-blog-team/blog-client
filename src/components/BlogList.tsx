@@ -47,6 +47,7 @@ export default function BlogList(props: Props) {
 	);
 
 	const [ cookies, setCookie, removeCookie ] = useCookies();
+	const [ notificationClassName, setNotificationClassName ] = useState('slide-in');
 
 	return (
 		<div>
@@ -55,10 +56,21 @@ export default function BlogList(props: Props) {
 				<h3>Bringing fellow cpat'ers together</h3>
 			</div>
 
+			{/* Render Notification if user has cookie indicating they have posted a blog within the last 60 seconds */}
 			{cookies.cpat_blog_posted && (
 				<ToastNotification
 					kind="success"
-					caption=""
+					caption={
+						<a
+							href="#"
+							onClick={() => {
+								setNotificationClassName('slide-out');
+								removeCookie('cpat_blog_posted');
+							}}
+						>
+							Dismiss
+						</a>
+					}
 					iconDescription="describes the close button"
 					subtitle={
 						<span>
@@ -67,7 +79,7 @@ export default function BlogList(props: Props) {
 							<a href="#">Click here</a> to learn more about the approval process.
 						</span>
 					}
-					timeout={0}
+					timeout={10000}
 					title="Post Success"
 					style={{
 						position: 'fixed',
@@ -75,7 +87,8 @@ export default function BlogList(props: Props) {
 						left: '3rem',
 						zIndex: 2
 					}}
-					onCloseButtonClick={() => removeCookie('cpat_blog_posted')}
+					className={notificationClassName}
+					hideCloseButton={true}
 				/>
 			)}
 
@@ -120,93 +133,13 @@ export default function BlogList(props: Props) {
 						</div>
 					</div>
 				))}
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
-				<p>asasdf</p>
+
 				{list.length === 0 && (
 					<div className="banner">
 						<h4>...No Blogs Available</h4>
 					</div>
 				)}
 			</div>
-
 			{/* Error Modal will open automatically when errorMessage state is set */}
 			<Modal
 				open={deleteId ? true : false}
