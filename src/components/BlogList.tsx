@@ -65,24 +65,24 @@ export default function BlogList(props: Props) {
 									<div>{name}</div>
 									<div>{date}</div>
 								</div>
-							</div>
 
-							<div className="blog-list-component">
-								{currentUsername === name && (
-									<Link href={`/writeBlog/id=${_id}`} data-testid={`updateLink${i}`}>
-										Update
-									</Link>
-								)}
-								{currentUsername === name && (
-									<Link href="#" data-testid={`deleteLink${i}`} onClick={() => setDeleteId(_id)}>
-										Delete
-									</Link>
-								)}
-								{searchType === 'approved' && (
-									<Link href={`/approveBlog/id=${_id}`} data-testid={`reviewLink${i}`}>
-										Review
-									</Link>
-								)}
+								<div className="blog-list-component">
+									{currentUsername === name && (
+										<Link href={`/writeBlog/id=${_id}`} data-testid={`updateLink${i}`}>
+											Update
+										</Link>
+									)}
+									{currentUsername === name && (
+										<Link href="#" data-testid={`deleteLink${i}`} onClick={() => setDeleteId(_id)}>
+											Delete
+										</Link>
+									)}
+									{searchType === 'approved' && (
+										<Link href={`/approveBlog/id=${_id}`} data-testid={`reviewLink${i}`}>
+											Review
+										</Link>
+									)}
+								</div>
 							</div>
 						</div>
 					</div>

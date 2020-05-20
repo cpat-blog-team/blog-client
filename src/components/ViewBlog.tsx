@@ -35,7 +35,7 @@ export default function ViewBlog(props: Props) {
 					{summary}
 				</p>
 				<hr className="my-4" />
-				<div className="callout callout-info">
+				<div>
 					<strong className="h4" data-testid="blogUsername">
 						{name}
 					</strong>
