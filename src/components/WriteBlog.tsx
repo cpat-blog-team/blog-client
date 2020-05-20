@@ -17,6 +17,7 @@ export default function WriteBlog() {
 	const [ title, setTitle ] = useState('');
 	const [ invalidTitle, setInvalidTitle ] = useState(false);
 	const [ summary, setSummary ] = useState('');
+	const [ filename, setFilename ] = useState('');
 	const [ invalidSummary, setInvalidSummary ] = useState(false);
 	const [ content, setContent ] = useState('<p><br></p>');
 	const [ communityGuidelines, setCommunityGuidelines ] = useState({ content: '<p><br></p>', title: '' });
@@ -35,6 +36,7 @@ export default function WriteBlog() {
 		loadContent(blog);
 		setTitle(blog.title);
 		setSummary(blog.summary);
+		setFilename(blog.filename);
 	};
 
 	const loadContent = ({ content }) => {
@@ -167,10 +169,14 @@ export default function WriteBlog() {
 	const removeHTMLTags = (value) => value.replace(/<[^>]*>/g, '');
 
 	const handleSubmit = () => {
-		if (title && summary && removeHTMLTags(content)) {
-			setOpenThumbnailModal(true);
+		if (!filename) {
+			if (title && summary && removeHTMLTags(content)) {
+				setOpenThumbnailModal(true);
+			} else {
+				validateFormUI();
+			}
 		} else {
-			validateFormUI();
+			setOpenCommunityGuidelinesModal(true);
 		}
 	};
 
