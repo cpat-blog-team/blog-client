@@ -55,8 +55,8 @@ export default function BlogList(props: Props) {
 			<div className="container-wide">
 				<hr className="my-4" />
 				{list.map(({ title, summary, date, name, _id, filename }, i) => (
-					<div className="list-group list-group-accent" key={i} data-testid={`blogPost${i}`}>
-						<div className="list-group-item list-group-item-accent-dark blog-list-container">
+					<div key={i} data-testid={`blogPost${i}`}>
+						<div className="blog-list-row">
 							<div onClick={() => history.push(`/viewBlog/id=${_id}`)} className="content-row">
 								<img src={`/api/images/${filename}`} height="150" width="150" />
 								<div className="content-item">
