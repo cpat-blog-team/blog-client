@@ -81,6 +81,7 @@ export default function NavBar() {
 
       <HeaderPanel aria-label="Header Panel" expanded={sideNav}>
         <Switcher aria-label="Switcher Container">
+          <SwitcherDivider />
           <SwitcherItem
             data-testid="side-nav-my-blog-posts-button"
             onClick={() => redirect(`/blogList/username/${name}`)}
@@ -102,9 +103,6 @@ export default function NavBar() {
           >
             Community Guidelines
           </SwitcherItem>
-          <SwitcherItem aria-label="Link 1" href="/appid/logout">
-            Log out <ArrowRight20 fill="white" />
-          </SwitcherItem>
           <SwitcherDivider />
         </Switcher >
 
@@ -113,13 +111,13 @@ export default function NavBar() {
             <Switcher aria-label="Admin Privileges Switcher">
               <h6>Admin Actions</h6>
               <SwitcherDivider />
-              {scopes.update_guidelines &&
+              {scopes.manage_blogs &&
                 <SwitcherItem
-                  data-testid="side-nav-update-guidelines-button"
-                  aria-label="Link 4"
-                  href="/communityGuidelines"
+                  data-testid="side-nav-blog-approval-button"
+                  aria-label="Link 6"
+                  href="/blogList/approved/Pending"
                 >
-                  Update Guidelines
+                  Blog Approval
                 </SwitcherItem>
               }
               {scopes.manage_appid &&
@@ -131,18 +129,25 @@ export default function NavBar() {
                   User Privileges
                 </SwitcherItem>
               }
-              {scopes.manage_blogs &&
+              {scopes.update_guidelines &&
                 <SwitcherItem
-                  data-testid="side-nav-blog-approval-button"
-                  aria-label="Link 6"
-                  href="/blogList/approved/Pending"
+                  data-testid="side-nav-update-guidelines-button"
+                  aria-label="Link 4"
+                  href="/communityGuidelines"
                 >
-                  Blog Approval
+                  Update Guidelines
                 </SwitcherItem>
               }
             </Switcher>
           </span>
         }
+
+        <Switcher>
+          <SwitcherDivider />
+          <SwitcherItem aria-label="Link 1" href="/appid/logout">
+            Log out <ArrowRight20 fill="white" />
+          </SwitcherItem>
+        </Switcher>
       </HeaderPanel>
     </Header >
   );
