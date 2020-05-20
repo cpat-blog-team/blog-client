@@ -5,7 +5,7 @@ import axios from 'axios';
 import ReactQuill from 'react-quill';
 import 'quill/dist/quill.snow.css';
 import { useHistory } from 'react-router-dom';
-import { Button, Modal, ToggleSmall } from "carbon-components-react";
+import { Button, Modal } from "carbon-components-react";
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 
 const Delta = require('quill-delta');
@@ -108,7 +108,7 @@ export default function CommunityGuidelines(props: Props) {
       {editCommunityGuidelines
         ? (
           <form
-            className="writeCommunityGuidelines"
+            className="textEditorWrapper"
             onSubmit={(e) => {
               e.preventDefault()
               handleSubmit();
@@ -146,27 +146,20 @@ export default function CommunityGuidelines(props: Props) {
           <div className="container">
             <h1 className="display-4" data-testid="blogTitle">{title}</h1>
             <hr className="my-4"></hr>
-            <div className="callout callout-info">
-              <strong className="h4" data-testid="blogUsername">{name}</strong><br></br>
-              <small className="text-muted" data-testid="blogDate">{date}</small>
-            </div>
             <div className="formatted-blog-content" data-testid="blogContent" dangerouslySetInnerHTML={{ __html: content }} />
+            {scopes.update_guidelines &&
+            <div className="row-content-to-right">
+              <Button kind='tertiary'
+                onClick={() => {
+                  setEditCommunityGuidelines(!editCommunityGuidelines);
+                }}
+                data-testid='update-community-guidelines-toggle-toggle'
+                aria-label="update community guidelines toggle toggle"
+                id="update-community-guidelines-toggle-1"
+              >Update</Button>
+            </div>}
           </div>
         )
-      }
-
-      {scopes.update_guidelines &&
-        <div className="row-content-to-right">
-          <ToggleSmall
-            onToggle={() => {
-              setEditCommunityGuidelines(!editCommunityGuidelines);
-            }}
-            data-testid='update-community-guidelines-toggle-toggle'
-            aria-label="update community guidelines toggle toggle"
-            id="update-community-guidelines-toggle-1"
-            labelText="Update Community Guidelines"
-          />
-        </div>
       }
     </div>
   );

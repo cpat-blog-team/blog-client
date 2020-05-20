@@ -5,6 +5,7 @@ import { BlogPostInterface } from './exampleBlogPost';
 import { useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link, Modal } from 'carbon-components-react';
+import Thumbnail from './Thumbnail';
 
 interface Props {}
 
@@ -44,7 +45,6 @@ export default function BlogList(props: Props) {
 		},
 		[ searchValue ]
 	);
-
 	return (
 		<div>
 			<div className="banner">
@@ -55,34 +55,39 @@ export default function BlogList(props: Props) {
 			<div className="container-wide">
 				<hr className="my-4" />
 				{list.map(({ title, summary, date, name, _id, filename }, i) => (
-					<div className="list-group list-group-accent" key={i} data-testid={`blogPost${i}`}>
-						<div className="list-group-item list-group-item-accent-dark blog-list-container">
-							<div onClick={() => history.push(`/viewBlog/id=${_id}`)} className="content-row">
-								<img src={`/api/images/${filename}`} height="150" width="150" />
-								<div className="content-item">
-									<h5>{title}</h5>
-									<p>{summary}</p>
-									<div>{name}</div>
-									<div>{date}</div>
+					<div key={i} data-testid={`blogPost${i}`}>
+						<div className="blog-list-row">
+							<div className="blog-list-row-left">
+								<div onClick={() => history.push(`/viewBlog/id=${_id}`)} className="content-row">
+									<Thumbnail filename={filename} />
+
+									<div className="content-item">
+										<h5>{title}</h5>
+										<p>{summary}</p>
+										<div>{name}</div>
+										<div>{date}</div>
+									</div>
 								</div>
 							</div>
 
-							<div className="blog-list-component">
-								{currentUsername === name && (
-									<Link href={`/writeBlog/id=${_id}`} data-testid={`updateLink${i}`}>
-										Update
-									</Link>
-								)}
-								{currentUsername === name && (
-									<Link href="#" data-testid={`deleteLink${i}`} onClick={() => setDeleteId(_id)}>
-										Delete
-									</Link>
-								)}
-								{searchType === 'approved' && (
-									<Link href={`/approveBlog/id=${_id}`} data-testid={`reviewLink${i}`}>
-										Review
-									</Link>
-								)}
+							<div className="blog-list-row-right">
+								<div className="blog-list-component">
+									{currentUsername === name && (
+										<Link href={`/writeBlog/id=${_id}`} data-testid={`updateLink${i}`}>
+											Update
+										</Link>
+									)}
+									{currentUsername === name && (
+										<Link href="#" data-testid={`deleteLink${i}`} onClick={() => setDeleteId(_id)}>
+											Delete
+										</Link>
+									)}
+									{searchType === 'approved' && (
+										<Link href={`/approveBlog/id=${_id}`} data-testid={`reviewLink${i}`}>
+											Review
+										</Link>
+									)}
+								</div>
 							</div>
 						</div>
 					</div>
