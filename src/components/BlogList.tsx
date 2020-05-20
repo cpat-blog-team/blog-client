@@ -57,16 +57,20 @@ export default function BlogList(props: Props) {
 				{list.map(({ title, summary, date, name, _id, filename }, i) => (
 					<div key={i} data-testid={`blogPost${i}`}>
 						<div className="blog-list-row">
-							<div onClick={() => history.push(`/viewBlog/id=${_id}`)} className="content-row">
-								<Thumbnail filename={filename} />
+							<div className="blog-list-row-left">
+								<div onClick={() => history.push(`/viewBlog/id=${_id}`)} className="content-row">
+									<Thumbnail filename={filename} />
 
-								<div className="content-item">
-									<h5>{title}</h5>
-									<p>{summary}</p>
-									<div>{name}</div>
-									<div>{date}</div>
+									<div className="content-item">
+										<h5>{title}</h5>
+										<p>{summary}</p>
+										<div>{name}</div>
+										<div>{date}</div>
+									</div>
 								</div>
+							</div>
 
+							<div className="blog-list-row-right">
 								<div className="blog-list-component">
 									{currentUsername === name && (
 										<Link href={`/writeBlog/id=${_id}`} data-testid={`updateLink${i}`}>

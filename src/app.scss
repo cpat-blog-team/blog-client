@@ -37,7 +37,21 @@
 }
 
 .blog-list-row {
+	display: flex;
+	width: 100%;
+	flex-direction: row;
 	margin-bottom: 2%;
+}
+
+.blog-list-row-left {
+	width: 90%;
+}
+
+.blog-list-row-right {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	width: 10%;
 }
 
 .thumbnail-container {
