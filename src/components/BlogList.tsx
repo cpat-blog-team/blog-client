@@ -4,9 +4,10 @@ import { useState, useEffect, useContext } from 'react';
 import { BlogPostInterface } from './exampleBlogPost';
 import { useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Link, Modal, ToastNotification } from 'carbon-components-react';
+import { Link, Modal } from 'carbon-components-react';
 import Thumbnail from './Thumbnail';
 import { useCookies } from 'react-cookie';
+import Notification from './Notification';
 
 interface Props {}
 
@@ -47,7 +48,6 @@ export default function BlogList(props: Props) {
 	);
 
 	const [ cookies, setCookie, removeCookie ] = useCookies();
-	const [ notificationClassName, setNotificationClassName ] = useState('slide-in');
 
 	return (
 		<div>
@@ -55,23 +55,11 @@ export default function BlogList(props: Props) {
 				<div className="banner-title">cpat blog</div>
 				<h3>Bringing fellow cpat'ers together</h3>
 			</div>
-
-			{/* Render Notification if user has cookie indicating they have posted a blog within the last 60 seconds */}
 			{cookies.cpat_blog_posted && (
-				<ToastNotification
+				<Notification
 					kind="success"
-					caption={
-						<a
-							href="#"
-							onClick={() => {
-								setNotificationClassName('slide-out');
-								removeCookie('cpat_blog_posted');
-							}}
-						>
-							Dismiss
-						</a>
-					}
-					iconDescription="describes the close button"
+					handleClose={() => removeCookie('cpat_blog_posted')}
+					title="Post Success"
 					subtitle={
 						<span>
 							Your post has been submitted for review.
@@ -79,19 +67,8 @@ export default function BlogList(props: Props) {
 							<a href="#">Click here</a> to learn more about the approval process.
 						</span>
 					}
-					timeout={10000}
-					title="Post Success"
-					style={{
-						position: 'fixed',
-						top: '6rem',
-						left: '3rem',
-						zIndex: 2
-					}}
-					className={notificationClassName}
-					hideCloseButton={true}
 				/>
 			)}
-
 			<div className="container-wide">
 				<hr className="my-4" />
 				<div />
