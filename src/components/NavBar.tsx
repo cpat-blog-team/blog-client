@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useContext, useEffect } from 'react';
-import { User20, Edit20, ArrowRight20 } from '@carbon/icons-react';
+import { Menu20, Close20, Edit20, ArrowRight20 } from '@carbon/icons-react';
 import { useHistory } from 'react-router-dom';
 import SearchBlog from './SearchBlog';
 import userContext from '../userContext';
@@ -41,7 +41,6 @@ export default function NavBar() {
     history.push(url);
     setSideNav(false);
   }
-
   return (
     <Header aria-label="IBM Platform Name" className="nav-box-shadow">
       <HeaderName href="/" prefix="IBM">CPAT Blog</HeaderName>
@@ -75,7 +74,8 @@ export default function NavBar() {
         <HeaderGlobalAction
           aria-label="User"
           onClick={() => setSideNav(sideNav ? false : true)}>
-          <User20 />
+          {!sideNav && <Menu20 />}
+          {sideNav && <Close20 />}
         </HeaderGlobalAction>
       </HeaderGlobalBar>
 
