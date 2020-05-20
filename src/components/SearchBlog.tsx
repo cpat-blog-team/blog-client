@@ -28,7 +28,7 @@ export default function BlogList() {
         id="search-1"
         placeHolderText="Search blogs by title"
         labelText="search"
-        type="search"
+        type="text"
         data-testid="search-input"
         onChange={handleChange}
         value={searchInput}

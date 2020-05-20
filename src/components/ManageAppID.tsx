@@ -131,7 +131,7 @@ export default function ManageAppID() {
                 id="search-1"
                 placeHolderText="Search users"
                 labelText="search"
-                type="search"
+                type="text"
                 data-testid="search-input"
                 onChange={(e) => handleSearchInputChange(e)}
                 value={searchInput}

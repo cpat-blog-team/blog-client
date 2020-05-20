@@ -221,7 +221,7 @@ export default function WriteBlog() {
 
 	return (
 		<form
-			className="writeBlogContainer"
+			className="textEditorWrapper"
 			onSubmit={(e) => {
 				e.preventDefault();
 				handleSubmit();
