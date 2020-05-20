@@ -142,7 +142,7 @@ export default function NavBar() {
           </span>
         }
 
-        <Switcher>
+        <Switcher aria-label="Switcher Container">
           <SwitcherDivider />
           <SwitcherItem aria-label="Link 1" href="/appid/logout">
             Log out <ArrowRight20 fill="white" />

@@ -5,6 +5,7 @@ import { BlogPostInterface } from './exampleBlogPost';
 import { useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link, Modal } from 'carbon-components-react';
+import Thumbnail from './Thumbnail';
 
 interface Props {}
 
@@ -44,7 +45,6 @@ export default function BlogList(props: Props) {
 		},
 		[ searchValue ]
 	);
-
 	return (
 		<div>
 			<div className="banner">
@@ -58,7 +58,8 @@ export default function BlogList(props: Props) {
 					<div key={i} data-testid={`blogPost${i}`}>
 						<div className="blog-list-row">
 							<div onClick={() => history.push(`/viewBlog/id=${_id}`)} className="content-row">
-								<img src={`/api/images/${filename}`} height="150" width="150" />
+								<Thumbnail filename={filename} />
+
 								<div className="content-item">
 									<h5>{title}</h5>
 									<p>{summary}</p>
