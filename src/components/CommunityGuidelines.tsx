@@ -146,10 +146,6 @@ export default function CommunityGuidelines(props: Props) {
           <div className="container">
             <h1 className="display-4" data-testid="blogTitle">{title}</h1>
             <hr className="my-4"></hr>
-            <div className="callout callout-info">
-              <strong className="h4" data-testid="blogUsername">{name}</strong><br></br>
-              <small className="text-muted" data-testid="blogDate">{date}</small>
-            </div>
             <div className="formatted-blog-content" data-testid="blogContent" dangerouslySetInnerHTML={{ __html: content }} />
             {scopes.update_guidelines &&
             <div className="row-content-to-right">
