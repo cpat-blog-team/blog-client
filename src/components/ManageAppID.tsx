@@ -126,7 +126,7 @@ export default function ManageAppID() {
             getRowProps,
             getTableProps,
           }) => (
-            <TableContainer title="DataTable with expansion">
+            <TableContainer title="User Privileges">
               <Search
                 id="search-1"
                 placeHolderText="Search users"
