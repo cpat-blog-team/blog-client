@@ -6,6 +6,8 @@ import { useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link, Modal } from 'carbon-components-react';
 import Thumbnail from './Thumbnail';
+import { useCookies } from 'react-cookie';
+import Notification from './Notification';
 
 interface Props {}
 
@@ -33,7 +35,6 @@ export default function BlogList(props: Props) {
 	};
 
 	const deleteBlog = async () => {
-		console.log(`deleting blog ${deleteId}`);
 		await axios.delete(`/api/blogs/${deleteId}`);
 		setDeleteId('');
 		getBlogs();
@@ -45,15 +46,32 @@ export default function BlogList(props: Props) {
 		},
 		[ searchValue ]
 	);
+
+	const [ cookies, setCookie, removeCookie ] = useCookies();
+
 	return (
 		<div>
 			<div className="banner">
 				<div className="banner-title">cpat blog</div>
 				<h3>Bringing fellow cpat'ers together</h3>
 			</div>
-
+			{cookies.cpat_blog_posted && (
+				<Notification
+					kind="success"
+					handleClose={() => removeCookie('cpat_blog_posted')}
+					title="Post Success"
+					subtitle={
+						<span>
+							Your post has been submitted for review.
+							<br />
+							<a href="#">Click here</a> to learn more about the approval process.
+						</span>
+					}
+				/>
+			)}
 			<div className="container-wide">
 				<hr className="my-4" />
+				<div />
 				{list.map(({ title, summary, date, name, _id, filename }, i) => (
 					<div key={i} data-testid={`blogPost${i}`}>
 						<div className="blog-list-row">
@@ -92,13 +110,13 @@ export default function BlogList(props: Props) {
 						</div>
 					</div>
 				))}
+
 				{list.length === 0 && (
 					<div className="banner">
 						<h4>...No Blogs Available</h4>
 					</div>
 				)}
 			</div>
-
 			{/* Error Modal will open automatically when errorMessage state is set */}
 			<Modal
 				open={deleteId ? true : false}
