@@ -1,8 +1,8 @@
 import React from 'react';
-import { render, wait, queryAllByRole, getAllByTestId } from '@testing-library/react';
+import { render, wait } from '@testing-library/react';
 import { exampleList, exampleBlogPost } from './exampleBlogPost';
 import userContext from '../userContext';
-import BlogList from './BlogList';
+import MyBlogList from './MyBlogList';
 import '@testing-library/jest-dom';
 import axios from 'axios';
 
@@ -15,7 +15,7 @@ jest.mock('react-router-dom', () => ({
 	useParams: () => ({})
 }));
 
-describe('BlogList component', () => {
+describe('MyBlogList component', () => {
 	let component;
 	let queriedRoute;
 
@@ -32,7 +32,7 @@ describe('BlogList component', () => {
 		await wait(() => {
 			component = render(
 				<userContext.Provider value={{ name: exampleBlogPost.name }}>
-					<BlogList />
+					<MyBlogList />
 				</userContext.Provider>
 			);
 		});
@@ -55,6 +55,6 @@ describe('BlogList component', () => {
 
 	test('render the update and delete more info wrapper if the blog post is the post of the user', () => {
 		const { getAllByTestId } = component;
-		getAllByTestId('more-info-wrapper');
+		getAllByTestId('more-info-wrapper')
 	});
 });

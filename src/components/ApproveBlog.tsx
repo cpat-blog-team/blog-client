@@ -42,7 +42,7 @@ export default function ApproveBlog(props: Props) {
 			await axios.patch(`/api/blogs/${_id}`, getFieldsToPatch(), {
 				headers: { 'Content-Type': 'application/json' }
 			});
-			history.push('/blogList/approved/Pending');
+			history.push('/blogStatus/approved/Pending');
 		}
 	};
 

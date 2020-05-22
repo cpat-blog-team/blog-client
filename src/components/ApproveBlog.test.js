@@ -61,7 +61,7 @@ describe('ApproveBlog component', () => {
 		getByTestId('review-modal');
 	});
 
-	test('should make patch request to endpoint "/blogs/:id" and pass the id in the body and push history to path "/blogList/approved/Pending"', async (
+	test('should make patch request to endpoint "/blogs/:id" and pass the id in the body and push history to path "/blogStatus/approved/Pending"', async (
 		done
 	) => {
 		const { getByTestId, getByText } = component;
@@ -76,7 +76,7 @@ describe('ApproveBlog component', () => {
 		await wait(() => fireEvent.click(submit));
 
 		expect(queriedRoute).toBe('/api/blogs/G3J4K56M7J');
-		expect(pushedHistory).toBe('/blogList/approved/Pending');
+		expect(pushedHistory).toBe('/blogStatus/approved/Pending');
 		done();
 	});
 });
