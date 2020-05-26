@@ -4,6 +4,7 @@ import { render } from 'node-sass';
 
 interface Props {
     filename: string;
+    size: string;
 }
 
 export default function Thumbnail(props: Props) {
@@ -18,7 +19,7 @@ export default function Thumbnail(props: Props) {
     }
 
     return (
-        <div className="thumbnail-container">
+        <div className={props.size}>
             <img
             className={thumbnailClass}
             src={`/api/images/${props.filename}`}

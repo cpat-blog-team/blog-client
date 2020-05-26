@@ -8,12 +8,12 @@ import { Modal } from 'carbon-components-react';
 import Thumbnail from './Thumbnail';
 import { useCookies } from 'react-cookie';
 import Notification from './Notification';
-import { OverflowMenu, OverflowMenuItem } from 'carbon-components-react';
+import { OverflowMenu, OverflowMenuItem, ClickableTile } from 'carbon-components-react';
 
 
 interface Props {}
 
-export default function BlogList(props: Props) {
+export default function PendingList(props: Props) {
 	const history = useHistory();
 	const { searchType, searchValue } = useParams();
 	const { name: currentUsername } = useContext(userContext);
@@ -36,19 +36,17 @@ export default function BlogList(props: Props) {
 		}
 	};
 
-	const formatBlogs = (list, bannerBlog=false) => {
+	const formatBlogs = (list) => {
 		let size = "thumbnail-container";
 		let direction = "content-row";
 
-		if (bannerBlog) {
-			size = "thumbnail-container-large";
-			direction = "content-col";
-		}
-
 		return(list.map(({ title, summary, date, name, _id, filename }, i) => (
 			<div key={i} data-testid="blogPost" className="blog-row-wrapper">
-				<div className="blog-list-row">
-					<div className="blog-list-row-left">
+				<ClickableTile
+					className="blog-list-row my-blog-row"
+					handleClick={() => history.push(`/approveBlog/id=${_id}`)}
+				>
+					<div className="blog-list-row">
 						<div className={direction}>
 							<div onClick={() => history.push(`/viewBlog/id=${_id}`)}><Thumbnail size={size} filename={filename} /></div>
 
@@ -63,43 +61,11 @@ export default function BlogList(props: Props) {
 										<div className="blog-author">{name}</div>
 										<div className="blog-date">{date}</div>
 									</div>
-									<div className="blog-list-component">
-										{ (currentUsername === name || searchType === 'approved') && (
-											<OverflowMenu data-testid="more-info-wrapper">
-											{currentUsername === name && (
-												<OverflowMenuItem
-													data-testid={`updateLink${i}`}
-													itemText="Update"
-													onClick={() => history.push(`/writeBlog/id=${_id}`)}
-													primaryFocus
-												/>
-											)}
-											
-											{searchType === 'approved' && (
-												<OverflowMenuItem
-													data-testid={`reviewLink${i}`}
-													itemText="Review"
-													onClick={() => history.push(`/approveBlog/id=${_id}`)}
-												/>
-											)}
-
-											{currentUsername === name && (
-												<OverflowMenuItem
-												data-testid={`deleteLink${i}`}
-												itemText="Delete"
-												onClick={() => setDeleteId(_id)}
-												isDelete
-												hasDivider
-											/>
-											)}
-										</OverflowMenu>
-										)}
-									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
+				</ClickableTile>
 			</div>
 		)));
 	}
@@ -121,15 +87,6 @@ export default function BlogList(props: Props) {
 
 	return (
 		<div>
-			<div className="banner">
-				<div className="left-banner">
-					{formatBlogs(list.slice(2,4))}
-				</div>
-
-				<div className="right-banner">
-					{formatBlogs(list.slice(0,2), true)}
-				</div>
-			</div>
 			{cookies.cpat_blog_posted && (
 				<Notification
 					kind="success"
@@ -145,9 +102,10 @@ export default function BlogList(props: Props) {
 				/>
 			)}
 			<div className="container-wide">
-				<hr className="my-4" />
-			<div/>
-				{formatBlogs(list.slice(4))}
+                <div className="header-wrapper">
+                    <h1 className="header-text">Pending blogs</h1>
+                </div>
+				{formatBlogs(list)}
 
 				{list.length === 0 && (
 					<div className="banner">
