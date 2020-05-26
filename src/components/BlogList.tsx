@@ -46,7 +46,7 @@ export default function BlogList(props: Props) {
 		}
 
 		return(list.map(({ title, summary, date, name, _id, filename }, i) => (
-			<div key={i} data-testid="blogPost">
+			<div key={i} data-testid="blogPost" className="blog-row-wrapper">
 				<div className="blog-list-row">
 					<div className="blog-list-row-left">
 						<div className={direction}>

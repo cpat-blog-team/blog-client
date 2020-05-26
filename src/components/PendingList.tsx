@@ -8,7 +8,7 @@ import { Modal } from 'carbon-components-react';
 import Thumbnail from './Thumbnail';
 import { useCookies } from 'react-cookie';
 import Notification from './Notification';
-import { OverflowMenu, OverflowMenuItem } from 'carbon-components-react';
+import { OverflowMenu, OverflowMenuItem, ClickableTile } from 'carbon-components-react';
 
 
 interface Props {}
@@ -41,58 +41,31 @@ export default function PendingList(props: Props) {
 		let direction = "content-row";
 
 		return(list.map(({ title, summary, date, name, _id, filename }, i) => (
-			<div key={i} data-testid="blogPost">
-				<div className="blog-list-row">
-                    <div className={direction}>
-                        <div onClick={() => history.push(`/viewBlog/id=${_id}`)}><Thumbnail size={size} filename={filename} /></div>
+			<div key={i} data-testid="blogPost" className="blog-row-wrapper">
+				<ClickableTile
+					className="blog-list-row my-blog-row"
+					handleClick={() => history.push(`/approveBlog/id=${_id}`)}
+				>
+					<div className="blog-list-row">
+						<div className={direction}>
+							<div onClick={() => history.push(`/viewBlog/id=${_id}`)}><Thumbnail size={size} filename={filename} /></div>
 
-                        <div className="content-item">
-                            <div className="title-summary" onClick={() => history.push(`/viewBlog/id=${_id}`)}>
-                                <h4 className="blog-title">{title}</h4>
-                                <p className="blog-summary">{summary}</p>
-                            </div>
-                            
-                            <div className="content-bottom">
-                                <div className="blog-author-date" onClick={() => history.push(`/viewBlog/id=${_id}`)}>
-                                    <div className="blog-author">{name}</div>
-                                    <div className="blog-date">{date}</div>
-                                </div>
-                                <div className="blog-list-component" data-testid="more-info-wrapper">
-                                    { (currentUsername === name || searchType === 'approved') && (
-                                        <OverflowMenu>
-                                        {currentUsername === name && (
-                                            <OverflowMenuItem
-                                                data-testid={`updateLink${i}`}
-                                                itemText="Update"
-                                                onClick={() => history.push(`/writeBlog/id=${_id}`)}
-                                                primaryFocus
-                                            />
-                                        )}
-                                        
-                                        {searchType === 'approved' && (
-                                            <OverflowMenuItem
-                                                data-testid={`reviewLink${i}`}
-                                                itemText="Review"
-                                                onClick={() => history.push(`/approveBlog/id=${_id}`)}
-                                            />
-                                        )}
-
-                                        {currentUsername === name && (
-                                            <OverflowMenuItem
-                                            data-testid={`deleteLink${i}`}
-                                            itemText="Delete"
-                                            onClick={() => setDeleteId(_id)}
-                                            isDelete
-                                            hasDivider
-                                        />
-                                        )}
-                                    </OverflowMenu>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
+							<div className="content-item">
+								<div className="title-summary" onClick={() => history.push(`/viewBlog/id=${_id}`)}>
+									<h4 className="blog-title">{title}</h4>
+									<p className="blog-summary">{summary}</p>
+								</div>
+								
+								<div className="content-bottom">
+									<div className="blog-author-date" onClick={() => history.push(`/viewBlog/id=${_id}`)}>
+										<div className="blog-author">{name}</div>
+										<div className="blog-date">{date}</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
-				</div>
+				</ClickableTile>
 			</div>
 		)));
 	}

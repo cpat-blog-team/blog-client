@@ -52,9 +52,4 @@ describe('PendingList component', () => {
 		expect(queriedRoute).toBe('/api/blogs');
 		getAllByTestId('blogPost');
 	});
-
-	test('render the update and delete more info wrapper if the blog post is the post of the user', () => {
-		const { getAllByTestId } = component;
-		getAllByTestId('more-info-wrapper')
-	});
 });
