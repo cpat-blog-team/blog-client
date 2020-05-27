@@ -326,6 +326,7 @@ export default function WriteBlog() {
 					labelText="Drag and drop files here or click to upload. Only .jpg, .png, .gif files accepted."
 					onChange={({ target }: any) => {
 						setThumbnail(target.files[0]);
+						setThumbnailRequired(false);
 					}}
 					accept={[ '.jpg', '.png', '.gif', '.jpeg' ]}
 				/>

@@ -6,17 +6,13 @@ import { useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Modal } from 'carbon-components-react';
 import Thumbnail from './Thumbnail';
-import { useCookies } from 'react-cookie';
-import Notification from './Notification';
-import { OverflowMenu, OverflowMenuItem, ClickableTile } from 'carbon-components-react';
-
+import { ClickableTile } from 'carbon-components-react';
 
 interface Props {}
 
 export default function PendingList(props: Props) {
 	const history = useHistory();
 	const { searchType, searchValue } = useParams();
-	const { name: currentUsername } = useContext(userContext);
 
 	const [ list, setList ] = useState<BlogPostInterface[]>([]);
 	const [ deleteId, setDeleteId ] = useState('');
@@ -37,27 +33,33 @@ export default function PendingList(props: Props) {
 	};
 
 	const formatBlogs = (list) => {
-		let size = "thumbnail-container";
-		let direction = "content-row";
+		let size = 'thumbnail-container';
+		let direction = 'content-row';
 
-		return(list.map(({ title, summary, date, name, _id, filename }, i) => (
+		return list.map(({ title, summary, date, name, _id, filename }, i) => (
 			<div key={i} data-testid="blogPost" className="blog-row-wrapper">
 				<ClickableTile
 					className="blog-list-row my-blog-row"
+					// @ts-ignore
 					handleClick={() => history.push(`/approveBlog/id=${_id}`)}
 				>
 					<div className="blog-list-row">
 						<div className={direction}>
-							<div onClick={() => history.push(`/viewBlog/id=${_id}`)}><Thumbnail size={size} filename={filename} /></div>
+							<div onClick={() => history.push(`/approveBlog/id=${_id}`)}>
+								<Thumbnail size={size} filename={filename} />
+							</div>
 
 							<div className="content-item">
-								<div className="title-summary" onClick={() => history.push(`/viewBlog/id=${_id}`)}>
+								<div className="title-summary" onClick={() => history.push(`/approveBlog/id=${_id}`)}>
 									<h4 className="blog-title">{title}</h4>
 									<p className="blog-summary">{summary}</p>
 								</div>
-								
+
 								<div className="content-bottom">
-									<div className="blog-author-date" onClick={() => history.push(`/viewBlog/id=${_id}`)}>
+									<div
+										className="blog-author-date"
+										onClick={() => history.push(`/approveBlog/id=${_id}`)}
+									>
 										<div className="blog-author">{name}</div>
 										<div className="blog-date">{date}</div>
 									</div>
@@ -67,8 +69,8 @@ export default function PendingList(props: Props) {
 					</div>
 				</ClickableTile>
 			</div>
-		)));
-	}
+		));
+	};
 
 	const deleteBlog = async () => {
 		await axios.delete(`/api/blogs/${deleteId}`);
@@ -83,28 +85,12 @@ export default function PendingList(props: Props) {
 		[ searchValue ]
 	);
 
-	const [ cookies, setCookie, removeCookie ] = useCookies();
-
 	return (
 		<div>
-			{cookies.cpat_blog_posted && (
-				<Notification
-					kind="success"
-					handleClose={() => removeCookie('cpat_blog_posted')}
-					title="Post Success"
-					subtitle={
-						<span>
-							Your post has been submitted for review.
-							<br />
-							<a href="#">Click here</a> to learn more about the approval process.
-						</span>
-					}
-				/>
-			)}
 			<div className="container-wide">
-                <div className="header-wrapper">
-                    <h1 className="header-text">Pending blogs</h1>
-                </div>
+				<div className="header-wrapper">
+					<h1 className="header-text">Pending blogs</h1>
+				</div>
 				{formatBlogs(list)}
 
 				{list.length === 0 && (
