@@ -110,13 +110,22 @@ export default function WriteBlog() {
 		return new Blob([ ab ], { type: 'image/jpeg' });
 	};
 
+	const isBase64 = (str) => {
+		if (str ==='' || str.trim() ===''){ return false; }
+		try {
+			return btoa(atob(str)) == str;
+		} catch (err) {
+			return false;
+		}
+	}
+
 	const formatDelta = async (delta) => {
 		const formattedDelta: any = { ...delta };
 
 		// upload images to db and replace base64 with urls to images
 		for await (let field of formattedDelta.ops) {
 			if (typeof field.insert === 'object') {
-				if (field.insert.image) {
+				if (isBase64(field.insert.image)) {
 					// convert image from base 64 to blob
 					const image = b64toBlob(field.insert.image);
 
@@ -167,9 +176,12 @@ export default function WriteBlog() {
 
 	const submit = async () => {
 		const formData = await formatPost();
-		const route = editorMode === 'update' ? `/api/blogs/${_id}` : '/api/blogs/add';
 		try {
-			axios.post(route, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+			if(editorMode === 'update') {
+				axios.patch(`/api/blogs/${_id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+			} else {
+				axios.post('/api/blogs/add', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+			}
 			submitSuccess();
 		} catch (err) {
 			submitFail(err);

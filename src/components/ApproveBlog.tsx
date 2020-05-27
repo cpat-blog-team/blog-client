@@ -39,7 +39,7 @@ export default function ApproveBlog(props: Props) {
 	const submitReview = async () => {
 		if (!approvalStatus) setSelectInvalid(true);
 		else {
-			await axios.patch(`/api/blogs/${_id}`, getFieldsToPatch(), {
+			await axios.patch(`/api/blogs/updateApprovalStatus/${_id}`, getFieldsToPatch(), {
 				headers: { 'Content-Type': 'application/json' }
 			});
 			history.push('/blogStatus/approved/Pending');
