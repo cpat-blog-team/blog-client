@@ -8,6 +8,32 @@ import { TextInput, Button, Modal, FileUploaderDropContainer, FileUploaderItem }
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 import { useCookies } from 'react-cookie';
 
+const modules = {
+	toolbar: {
+		container: [
+			[ { header: [ 1, 2, false ] } ],
+			[ 'bold', 'italic', 'underline', 'strike', 'blockquote' ],
+			[ { list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' } ],
+			[ 'link', 'image' ],
+			[ 'clean' ]
+		]
+	}
+};
+
+const formats = [
+	'header',
+	'bold',
+	'italic',
+	'underline',
+	'strike',
+	'blockquote',
+	'list',
+	'bullet',
+	'indent',
+	'link',
+	'image'
+];
+
 const Delta = require('quill-delta');
 
 export default function WriteBlog() {
@@ -200,32 +226,6 @@ export default function WriteBlog() {
 		validateContent(content);
 		setDelta(editor.getContents());
 	};
-
-	const modules = {
-		toolbar: {
-			container: [
-				[ { header: [ 1, 2, false ] } ],
-				[ 'bold', 'italic', 'underline', 'strike', 'blockquote' ],
-				[ { list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' } ],
-				[ 'link', 'image' ],
-				[ 'clean' ]
-			]
-		}
-	};
-
-	const formats = [
-		'header',
-		'bold',
-		'italic',
-		'underline',
-		'strike',
-		'blockquote',
-		'list',
-		'bullet',
-		'indent',
-		'link',
-		'image'
-	];
 
 	return (
 		<form
