@@ -110,14 +110,14 @@ export default function BlogList(props: Props) {
 		getBlogs();
 	};
 
+	const [ cookies, setCookie, removeCookie ] = useCookies();
+
 	useEffect(
 		() => {
 			getBlogs();
 		},
-		[ searchValue ]
+		[]
 	);
-
-	const [ cookies, setCookie, removeCookie ] = useCookies();
 
 	return (
 		<div>
@@ -137,9 +137,8 @@ export default function BlogList(props: Props) {
 					title="Post Success"
 					subtitle={
 						<span>
-							Your post has been submitted for review.
+							Your post has been successfully submitted. This may take some time before it is uploaded onto the feed.
 							<br />
-							<a href="#">Click here</a> to learn more about the approval process.
 						</span>
 					}
 				/>

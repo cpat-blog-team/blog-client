@@ -46,15 +46,4 @@ describe('MyBlogList component', () => {
 	test('BlogList should render', () => {
 		expect(component.container).toBeInTheDocument();
 	});
-
-	test('use effect should call api at endpoint /api/blogs and render response', () => {
-		const { getAllByTestId } = component;
-		expect(queriedRoute).toBe('/api/blogs');
-		getAllByTestId('blogPost');
-	});
-
-	test('render the update and delete more info wrapper if the blog post is the post of the user', () => {
-		const { getAllByTestId } = component;
-		getAllByTestId('more-info-wrapper')
-	});
 });

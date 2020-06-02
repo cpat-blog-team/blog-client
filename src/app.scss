@@ -67,12 +67,18 @@
 	flex-direction: row;
 }
 
+.blog-more-info {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
 .my-blog-row {
 	border-bottom: 1px solid rgba(0,0,0,.1);
 	padding-bottom: 1rem; 
 }
 
-.admin-review-wrapper {
+.report-info-wrapper {
 	max-height: 10rem;
 	width: 100%;
 	overflow: scroll;
@@ -93,12 +99,12 @@
 	box-shadow: 0 0 1px rgba(255, 255, 255, .5);
 }
 
-.admin-review-wrapper p {
+.report-info-wrapper p {
 	font-size: 0.9rem;
 	line-height: 1.3rem;
 }
 
-.admin-review-wrapper h4 {
+.report-info-wrapper h4 {
 	font-size: 1.1rem;
 	font-weight: 600;
 }
