@@ -111,13 +111,15 @@ export default function WriteBlog() {
 	};
 
 	const isBase64 = (str) => {
-		if (str ==='' || str.trim() ===''){ return false; }
+		if (str === '' || str.trim() === '') {
+			return false;
+		}
 		try {
 			return btoa(atob(str)) == str;
 		} catch (err) {
 			return false;
 		}
-	}
+	};
 
 	const formatDelta = async (delta) => {
 		const formattedDelta: any = { ...delta };
@@ -177,7 +179,7 @@ export default function WriteBlog() {
 	const submit = async () => {
 		const formData = await formatPost();
 		try {
-			if(editorMode === 'update') {
+			if (editorMode === 'update') {
 				axios.patch(`/api/blogs/${_id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
 			} else {
 				axios.post('/api/blogs/add', formData, { headers: { 'Content-Type': 'multipart/form-data' } });

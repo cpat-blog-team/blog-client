@@ -28,7 +28,7 @@
 .header-wrapper {
 	padding-top: 2.5rem;
 	padding-bottom: 3rem;
-	border-bottom: 1px solid rgba(0,0,0,.1);
+	border-bottom: 1px solid rgba(0, 0, 0, .1);
 	margin-bottom: 5rem;
 }
 
@@ -65,6 +65,7 @@
 	display: flex;
 	width: 100%;
 	flex-direction: row;
+	margin-bottom: 1rem;
 }
 
 .blog-more-info {
@@ -74,8 +75,8 @@
 }
 
 .my-blog-row {
-	border-bottom: 1px solid rgba(0,0,0,.1);
-	padding-bottom: 1rem; 
+	border-bottom: 1px solid rgba(0, 0, 0, .1);
+	padding-bottom: 1rem;
 }
 
 .report-info-wrapper {
@@ -92,7 +93,7 @@
 	-webkit-appearance: none;
 	width: 4px;
 }
-  
+
 ::-webkit-scrollbar-thumb {
 	border-radius: 4px;
 	background-color: rgba(0, 0, 0, .5);
@@ -110,7 +111,7 @@
 }
 
 .bx--tab-content {
-    padding: 0;
+	padding: 0;
 }
 
 .tabs-placeholder {
@@ -251,7 +252,8 @@
 	flex-direction: column;
 }
 
-.content-row:hover, content-col:hover {
+.content-row:hover,
+content-col:hover {
 	cursor: pointer;
 }
 

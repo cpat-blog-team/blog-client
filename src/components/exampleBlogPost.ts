@@ -9,6 +9,7 @@ interface BlogPostInterface {
 	_id: string;
 	date: string;
 	filename: string;
+	approved: string;
 }
 
 const exampleBlogPost: BlogPostInterface = {
@@ -19,7 +20,8 @@ const exampleBlogPost: BlogPostInterface = {
 	updatedAt: 'Feb 5',
 	_id: 'G3J4K56M7J',
 	date: new Date().toDateString(),
-	filename: '7821357235896034570'
+	filename: '7821357235896034570',
+	approved: 'Approved'
 };
 
 const emptyBlogPost = (): BlogPostInterface => ({
@@ -30,7 +32,8 @@ const emptyBlogPost = (): BlogPostInterface => ({
 	updatedAt: '',
 	_id: '',
 	date: new Date().toDateString(),
-	filename: ''
+	filename: '',
+	approved: 'Approved'
 });
 
 const exampleList = (numberOfPosts: number) => {

@@ -46,6 +46,7 @@ export default function MyBlogList(props: Props) {
 			);
 		} else {
 			return new_list.map(({ title, summary, date, name, _id, filename, approved }, i) => (
+				//@ts-ignore
 				<div key={i} data-testid="blogPost" className="blog-row-wrapper">
 					<Tile className="blog-list-row my-blog-row">
 						<div className={direction}>
@@ -68,7 +69,8 @@ export default function MyBlogList(props: Props) {
 										<div className="blog-date">{date}</div>
 									</div>
 									<div className="blog-list-component" data-testid="more-info-wrapper">
-										{(currentUsername === name && status != "Rejected") && (
+										{currentUsername === name &&
+										status != 'Rejected' && (
 											<OverflowMenu>
 												{currentUsername === name && (
 													<OverflowMenuItem
@@ -137,6 +139,7 @@ export default function MyBlogList(props: Props) {
 					selected={0}
 					tabContentClassName="user-blog-tabs"
 					triggerHref="#"
+					//@ts-ignore
 					type="container"
 				>
 					<Tab

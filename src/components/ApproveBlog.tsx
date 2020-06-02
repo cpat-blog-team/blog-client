@@ -4,7 +4,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import { BlogPostInterface, emptyBlogPost } from './exampleBlogPost';
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 import axios from 'axios';
-import { Modal, Select, SelectItem, TextArea, Button } from 'carbon-components-react';
+import { Modal, Select, SelectItem, Button } from 'carbon-components-react';
 
 interface Props {}
 
@@ -31,7 +31,7 @@ export default function ApproveBlog(props: Props) {
 
 	const getFieldsToPatch = () =>
 		JSON.stringify({
-			approved: approvalStatus,
+			approved: approvalStatus
 		});
 
 	const submitReview = async () => {
