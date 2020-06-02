@@ -15,7 +15,6 @@ export default function ApproveBlog(props: Props) {
 	const [ blog, setBlog ] = useState<BlogPostInterface>(emptyBlogPost());
 	const [ html, setHtml ] = useState('');
 	const [ openModal, setOpenModal ] = useState(false);
-	const [ review, setReview ] = useState('');
 	const [ approvalStatus, setApprovalStatus ] = useState('');
 	const [ selectInvalid, setSelectInvalid ] = useState(false);
 
@@ -33,13 +32,12 @@ export default function ApproveBlog(props: Props) {
 	const getFieldsToPatch = () =>
 		JSON.stringify({
 			approved: approvalStatus,
-			review
 		});
 
 	const submitReview = async () => {
 		if (!approvalStatus) setSelectInvalid(true);
 		else {
-			await axios.patch(`/api/blogs/updateApprovalStatus/${_id}`, getFieldsToPatch(), {
+			await axios.patch(`/api/blogs/${_id}`, getFieldsToPatch(), {
 				headers: { 'Content-Type': 'application/json' }
 			});
 			history.push('/blogStatus/approved/Pending');
@@ -50,8 +48,6 @@ export default function ApproveBlog(props: Props) {
 		setSelectInvalid(false);
 		setApprovalStatus(value);
 	};
-
-	const handleChangeReview = ({ value }) => setReview(value);
 
 	const { title, summary, name, date } = blog;
 
@@ -110,12 +106,6 @@ export default function ApproveBlog(props: Props) {
 					<SelectItem value="Rejected" text="Reject" />
 				</Select>
 				<br />
-				<TextArea
-					data-testid="review-comments"
-					value={review}
-					onChange={({ target }) => handleChangeReview(target)}
-					labelText="Comments"
-				/>
 			</Modal>
 		</div>
 	);

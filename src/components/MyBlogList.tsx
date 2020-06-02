@@ -41,11 +41,11 @@ export default function MyBlogList(props: Props) {
 		if (new_list.length === 0) {
 			return (
 				<div className="tabs-placeholder">
-					<h3 className="tabs-placeholder-text">No blogs available yet.</h3>
+					<h3 className="tabs-placeholder-text">No blogs available.</h3>
 				</div>
 			);
 		} else {
-			return new_list.map(({ title, summary, date, name, _id, filename, approved, review }, i) => (
+			return new_list.map(({ title, summary, date, name, _id, filename, approved }, i) => (
 				<div key={i} data-testid="blogPost" className="blog-row-wrapper">
 					<Tile className="blog-list-row my-blog-row">
 						<div className={direction}>
@@ -68,7 +68,7 @@ export default function MyBlogList(props: Props) {
 										<div className="blog-date">{date}</div>
 									</div>
 									<div className="blog-list-component" data-testid="more-info-wrapper">
-										{(currentUsername === name || searchType === 'approved') && (
+										{(currentUsername === name && status != "Rejected") && (
 											<OverflowMenu>
 												{currentUsername === name && (
 													<OverflowMenuItem
@@ -102,13 +102,6 @@ export default function MyBlogList(props: Props) {
 								</div>
 							</div>
 						</div>
-
-						{review && (
-							<div className="admin-review-wrapper">
-								<h4>Admin Feedback</h4>
-								<p>{review}</p>
-							</div>
-						)}
 					</Tile>
 				</div>
 			));
@@ -148,12 +141,23 @@ export default function MyBlogList(props: Props) {
 				>
 					<Tab
 						href="#"
+						id="tab-3"
+						label="Published"
+						handleTabAnchorFocus={() => {}}
+						handleTabClick={() => {}}
+						handleTabKeyDown={() => {}}
+						tabIndex={0}
+					>
+						<div className="approved-content">{formatBlogs(list, 'Approved')}</div>
+					</Tab>
+					<Tab
+						href="#"
 						id="tab-1"
 						label="Pending"
 						handleTabAnchorFocus={() => {}}
 						handleTabClick={() => {}}
 						handleTabKeyDown={() => {}}
-						tabIndex={0}
+						tabIndex={1}
 					>
 						<div className="pending-content">{formatBlogs(list, 'Pending')}</div>
 					</Tab>
@@ -164,31 +168,9 @@ export default function MyBlogList(props: Props) {
 						handleTabAnchorFocus={() => {}}
 						handleTabClick={() => {}}
 						handleTabKeyDown={() => {}}
-						tabIndex={1}
-					>
-						<div className="rejected-content">{formatBlogs(list, 'Rejected')}</div>
-					</Tab>
-					<Tab
-						href="#"
-						id="tab-3"
-						label="Approved"
-						handleTabAnchorFocus={() => {}}
-						handleTabClick={() => {}}
-						handleTabKeyDown={() => {}}
 						tabIndex={2}
 					>
-						<div className="approved-content">{formatBlogs(list, 'Approved')}</div>
-					</Tab>
-					<Tab
-						href="#"
-						id="tab-4"
-						label="All"
-						handleTabAnchorFocus={() => {}}
-						handleTabClick={() => {}}
-						handleTabKeyDown={() => {}}
-						tabIndex={3}
-					>
-						<div className="all-content">{formatBlogs(list)}</div>
+						<div className="rejected-content">{formatBlogs(list, 'Rejected')}</div>
 					</Tab>
 				</Tabs>
 			</div>

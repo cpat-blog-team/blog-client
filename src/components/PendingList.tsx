@@ -36,7 +36,7 @@ export default function PendingList(props: Props) {
 		let size = 'thumbnail-container';
 		let direction = 'content-row';
 
-		return list.map(({ title, summary, date, name, _id, filename }, i) => (
+		return list.map(({ title, summary, date, name, _id, filename, review }, i) => (
 			<div key={i} data-testid="blogPost" className="blog-row-wrapper">
 				<ClickableTile
 					className="blog-list-row my-blog-row"
@@ -67,6 +67,13 @@ export default function PendingList(props: Props) {
 							</div>
 						</div>
 					</div>
+
+					{review && (
+						<div className="report-info-wrapper">
+							<h4>Report details</h4>
+							<p>{review}</p>
+						</div>
+					)}
 				</ClickableTile>
 			</div>
 		));
