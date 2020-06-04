@@ -151,7 +151,7 @@ export default function WriteBlog() {
 		const blogPost = new FormData();
 		const formattedDelta = await formatDelta(delta);
 		const { data } = await axios.get('/user');
-
+		
 		blogPost.append('version', '1');
 		blogPost.append('name', data.name);
 		blogPost.append('email', data.email);
@@ -162,6 +162,22 @@ export default function WriteBlog() {
 		blogPost.append('file', thumbnail);
 		return blogPost;
 	};
+
+	const formatUpdatedPost = async () => {
+		const blogPost = new FormData();
+		const formattedDelta = await formatDelta(delta);
+		const { data } = await axios.get('/user');
+
+		blogPost.append('id', _id);
+		blogPost.append('name', data.name);
+		blogPost.append('email', data.email);
+		blogPost.append('_method', 'PATCH');
+		blogPost.append('title', title);
+		blogPost.append('content', JSON.stringify(formattedDelta));
+		blogPost.append('summary', summary);
+
+		return blogPost;
+	}
 
 	const clearForm = () => {
 		setTitle('');
@@ -177,11 +193,12 @@ export default function WriteBlog() {
 	};
 
 	const submit = async () => {
-		const formData = await formatPost();
 		try {
 			if (editorMode === 'update') {
-				axios.patch(`/api/blogs/${_id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+				const formData = await formatUpdatedPost();
+				axios.post(`/api/blogs/${_id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
 			} else {
+				const formData = await formatPost();
 				axios.post('/api/blogs/add', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
 			}
 			submitSuccess();

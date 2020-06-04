@@ -1,7 +1,7 @@
 .banner {
 	display: flex;
 	flex-direction: row;
-	justify-content: space-evenly;
+	justify-content: center;
 	padding-left: 8%;
 	padding-right: 8%;
 }
@@ -9,7 +9,7 @@
 .left-banner {
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
+	margin-right: 0.5rem;
 }
 
 .right-banner {
@@ -18,7 +18,7 @@
 }
 
 .right-banner > div {
-	margin-right: 1.25rem;
+	margin-right: 0.5rem;
 }
 
 .header-text {
@@ -65,7 +65,7 @@
 	display: flex;
 	width: 100%;
 	flex-direction: row;
-	margin-bottom: 1rem;
+	margin-bottom: 0.5rem;
 }
 
 .blog-more-info {
