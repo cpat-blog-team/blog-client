@@ -1,89 +1,364 @@
 .banner {
-  height: 18rem;
-  // background-color: #f4f4f4;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  color: #8f8b8b;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	padding-left: 8%;
+	padding-right: 8%;
 }
 
-.banner-title {
-  color: black;
-  font-weight: bold;
-  font-size: 7rem;
-  text-align: center;
-  margin-bottom: 1rem;
+.left-banner {
+	display: flex;
+	flex-direction: column;
+	margin-right: 0.5rem;
+}
+
+.right-banner {
+	display: flex;
+	flex-direction: row;
+}
+
+.right-banner > div {
+	margin-right: 0.5rem;
+}
+
+.header-text {
+	font-weight: 700;
+}
+
+.header-wrapper {
+	padding-top: 2.5rem;
+	padding-bottom: 3rem;
+	border-bottom: 1px solid rgba(0, 0, 0, .1);
+	margin-bottom: 5rem;
+}
+
+.user-blog-header-container {
+	padding-top: 2.5rem;
+	margin-bottom: 3rem;
+}
+
+.main-wrapper {
+	padding-top: 5rem;
+}
+
+.container-wide {
+	padding-left: 15%;
+	padding-right: 15%;
 }
 
 .blog-list-container {
-  display: flex;
-  justify-content: space-between;
+	display: flex;
+	justify-content: space-between;
 }
 
 .blog-list-component {
-  display: flex;
-  align-items: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
 }
 
 .blog-list-container:hover {
-  background-color: #f2f4f8;
+	background-color: #f2f4f8;
+}
+
+.blog-list-row {
+	display: flex;
+	width: 100%;
+	flex-direction: row;
+	margin-bottom: 0.5rem;
+}
+
+.blog-more-info {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.my-blog-row {
+	border-bottom: 1px solid rgba(0, 0, 0, .1);
+	padding-bottom: 1rem;
+}
+
+.report-info-wrapper {
+	max-height: 10rem;
+	width: 100%;
+	overflow: scroll;
+	overflow-x: hidden;
+	border: 0.05rem dashed gray;
+	padding: 1%;
+}
+
+// unhide scrollbar
+::-webkit-scrollbar {
+	-webkit-appearance: none;
+	width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+	border-radius: 4px;
+	background-color: rgba(0, 0, 0, .5);
+	box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}
+
+.report-info-wrapper p {
+	font-size: 0.9rem;
+	line-height: 1.3rem;
+}
+
+.report-info-wrapper h4 {
+	font-size: 1.1rem;
+	font-weight: 600;
+}
+
+.bx--tab-content {
+	padding: 0;
+}
+
+.tabs-placeholder {
+	padding-top: 3.5rem;
+}
+
+.tabs-placeholder-text {
+	color: gray;
+}
+
+.thumbnail-container {
+	position: relative;
+	height: 11rem;
+	width: 11rem;
+	overflow: hidden;
+}
+
+.thumbnail-container-large {
+	position: relative;
+	height: 18rem;
+	width: 18rem;
+	overflow: hidden;
+	margin-bottom: 0.5rem;
+}
+
+.thumbnail {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	height: 100%;
+	width: auto;
+	-webkit-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+
+.thumbnail-portrait {
+	width: 100%;
+	height: auto;
 }
 
 .formated-blog-content {
-  font-size: 1rem;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  white-space: pre-wrap; 
-  word-break: break-word;
+	font-size: 1rem;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
+		'Helvetica Neue', sans-serif;
+	white-space: pre-wrap;
+	word-break: break-word;
 }
 
 .search-blog {
-  width: 10rem;
+	width: 10rem;
 }
 
-.writePostNavLink, .writePostNavLink:hover {
-  color: #c6c6c6;
+.textEditorWrapper {
+	padding-left: 5%;
+	padding-right: 5%;
+}
+
+.writePostNavLink,
+.writePostNavLink:hover {
+	color: #c6c6c6;
 }
 
 .bx--text-input {
-  font-size: 1.25rem;
-  height: 3rem;
-  border-bottom: none;
-  font-weight: 500;
+	font-size: 1.25rem;
+	height: 3rem;
+	border-bottom: none;
+	font-weight: 500;
 }
 
 #blogSummary {
-  height: 2.5rem;
-  font-size: 1.15rem;
-  font-weight: 200;
+	height: 2.5rem;
+	font-size: 1.15rem;
+	font-weight: 200;
 }
 
 .ql-container {
-  height: 65vh;
+	height: 65vh;
 }
 
 .container {
-  width: 100%;
-  padding-top: 3.75rem;
+	width: 50%;
+	padding-top: 3.75rem;
+}
+
+.container img {
+	max-height: 100%;
+	max-width: 100%;
 }
 
 .textEditorContainer {
-  margin-top: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+#thumbnail-upload-item {
+	background-color: #393939;
+	color: #f4f4f4;
 }
 
 #blogSubmit {
-  margin-top: 1%;
-  float: right;
+	margin-top: 1%;
+	float: right;
 }
 
 .formatted-blog-content {
-  white-space: normal;
+	overflow-wrap: break-word;
 }
 
 .background-white {
-  background-color: white;
+	background-color: white;
 }
 
 .nav-box-shadow {
-  box-shadow: 0px 5px 20px rgb(199, 199, 199);
+	box-shadow: 0px 5px 20px rgb(199, 199, 199);
+}
+
+.bx--list-box__field:focus {
+	outline: none;
+}
+
+.row-content-to-right {
+	margin-bottom: 3rem;
+	margin-top: 3rem;
+	float: right;
+}
+
+#communityGuidelineSubmit {
+	margin-top: 3rem;
+	float: right;
+}
+
+.content-row {
+	display: flex;
+}
+
+.content-col {
+	display: flex;
+	flex-direction: column;
+}
+
+.content-row:hover,
+content-col:hover {
+	cursor: pointer;
+}
+
+.blog-title-summary {
+	display: flex;
+	flex-direction: column;
+}
+
+.blog-title {
+	font-weight: 800;
+	font-size: 1.5rem;
+}
+
+.blog-summary {
+	margin-top: 0.5rem;
+	line-height: 1.2rem;
+	color: gray;
+}
+
+.blog-author-date {
+	display: flex;
+	flex-direction: column;
+}
+
+.blog-author {
+	margin-top: 0.5rem;
+}
+
+.blog-date {
+	margin-top: 0.2rem;
+	color: gray;
+}
+
+.content-item {
+	margin-left: .5rem;
+	margin-right: .5rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	min-width: 12rem;
+}
+
+.content-bottom {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.notification {
+	position: fixed;
+	top: 6rem;
+	left: 3rem;
+	z-index: 2;
+	width: 25%;
+	min-width: 20rem;
+}
+
+.slide-in {
+	animation: slide-in 2s forwards;
+	-webkit-animation: slide-in 2s forwards;
+}
+
+.slide-out {
+	animation: slide-out 0.5s forwards;
+	-webkit-animation: slide-out 0.5s forwards;
+}
+
+@keyframes slide-in {
+	0% {
+		transform: translateX(-125%);
+	}
+	75% {
+		transform: translateX(-125%);
+	}
+	100% {
+		transform: translateX(0%);
+	}
+}
+
+@-webkit-keyframes slide-in {
+	0% {
+		transform: translateX(-125%);
+	}
+	75% {
+		transform: translateX(-125%);
+	}
+	100% {
+		-webkit-transform: translateX(0%);
+	}
+}
+
+@keyframes slide-out {
+	0% {
+		transform: translateX(0%);
+	}
+	100% {
+		transform: translateX(-125%);
+	}
+}
+
+@-webkit-keyframes slide-out {
+	0% {
+		-webkit-transform: translateX(0%);
+	}
+	100% {
+		-webkit-transform: translateX(-100%);
+	}
 }

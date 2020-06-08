@@ -4,6 +4,17 @@ import App from "./app";
 import "./index.scss";
 import "./app.scss";
 import { BrowserRouter } from 'react-router-dom';
+import axios from "axios";
+import userContext from "./userContext";
 
-var mountNode = document.getElementById("app");
-ReactDOM.render(<BrowserRouter><App /></BrowserRouter>, mountNode);
+axios("/user")
+  .then(({ data }) => {
+    ReactDOM.render(
+      <BrowserRouter>
+        <userContext.Provider value={data}>
+          <App />
+        </userContext.Provider>
+      </BrowserRouter>
+      , document.getElementById("app")
+    );
+  })

@@ -5,79 +5,50 @@ import { BlogPostInterface } from './exampleBlogPost';
 import { useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Thumbnail from './Thumbnail';
-import { useCookies } from 'react-cookie';
-import Notification from './Notification';
-import { OverflowMenu, OverflowMenuItem, Tile, Modal } from 'carbon-components-react';
+import { Modal, OverflowMenu, OverflowMenuItem, Tabs, Tab, Tile } from 'carbon-components-react';
 
 interface Props {}
 
-export default function BlogList(props: Props) {
+export default function MyBlogList(props: Props) {
 	const history = useHistory();
 	const { searchType, searchValue } = useParams();
 	const { name: currentUsername } = useContext(userContext);
-	const [ cookies, setCookie, removeCookie ] = useCookies();
 
-	const [ banner, setBanner ] = useState<BlogPostInterface[]>([]);
 	const [ list, setList ] = useState<BlogPostInterface[]>([]);
 	const [ deleteId, setDeleteId ] = useState('');
-	const [ blogRecentlySubmitted, setBlogRecentlySubmitted ] = useState(false);
-
-	useEffect(() => {
-		// if cookie "cpat_blog_posted" exists then render submission message
-		if (cookies.cpat_blog_posted) {
-			setBlogRecentlySubmitted(true);
-			removeCookie('cpat_blog_posted');
-		}
-	}, []);
-
-	useEffect(
-		() => {
-			getBlogs();
-		},
-		[ searchValue ]
-	);
 
 	const getQuery = () => {
 		if (searchType) return `/api/blogs/search?${searchType}=${searchValue}`;
 		return '/api/blogs';
 	};
 
-	const clearState = () => {
-		setBanner([]);
-		setList([]);
-	};
-
 	const getBlogs = async () => {
-		clearState();
-
 		try {
 			const query = getQuery();
 			const { data } = await axios(query);
-			const { blogs } = data;
-			if (blogs.length >= 4) {
-				setBanner(blogs.slice(0, 4));
-				setList(blogs.slice(4));
-			} else {
-				setList(blogs);
-			}
+			setList(data.blogs);
 		} catch (err) {
 			console.error(err);
 		}
 	};
 
-	const formatBlogs = (list, bannerBlog = false) => {
+	const formatBlogs = (list, status: any = null) => {
 		let size = 'thumbnail-container';
 		let direction = 'content-row';
 
-		if (bannerBlog) {
-			size = 'thumbnail-container-large';
-			direction = 'content-col';
-		}
+		const new_list = status ? list.filter((post) => post.approved === status) : list;
 
-		return list.map(({ title, summary, date, name, _id, filename }, i) => (
-			<div key={i} data-testid="blogPost" className="blog-row-wrapper">
-				<Tile className="blog-list-row">
-					<div className="blog-list-row-left">
+		if (new_list.length === 0) {
+			return (
+				<div className="tabs-placeholder">
+					<h3 className="tabs-placeholder-text">No blogs available.</h3>
+				</div>
+			);
+		} else {
+			return new_list.map(({ title, summary, date, name, _id, filename, approved }, i) => (
+				//@ts-ignore
+				<div key={i} data-testid="blogPost" className="blog-row-wrapper">
+					<Tile className="blog-list-row my-blog-row">
 						<div className={direction}>
 							<div onClick={() => history.push(`/viewBlog/id=${_id}`)}>
 								<Thumbnail size={size} filename={filename} />
@@ -97,9 +68,10 @@ export default function BlogList(props: Props) {
 										<div className="blog-author">{name}</div>
 										<div className="blog-date">{date}</div>
 									</div>
-									<div className="blog-list-component">
-										{(currentUsername === name || searchType === 'approved') && (
-											<OverflowMenu data-testid="more-info-wrapper">
+									<div className="blog-list-component" data-testid="more-info-wrapper">
+										{currentUsername === name &&
+										status != 'Rejected' && (
+											<OverflowMenu>
 												{currentUsername === name && (
 													<OverflowMenuItem
 														data-testid={`updateLink${i}`}
@@ -132,10 +104,10 @@ export default function BlogList(props: Props) {
 								</div>
 							</div>
 						</div>
-					</div>
-				</Tile>
-			</div>
-		));
+					</Tile>
+				</div>
+			));
+		}
 	};
 
 	const deleteBlog = async () => {
@@ -144,44 +116,66 @@ export default function BlogList(props: Props) {
 		getBlogs();
 	};
 
+	useEffect(
+		() => {
+			getBlogs();
+		},
+		[ searchValue ]
+	);
+
 	return (
 		<div>
-			{banner && (
-				<div className="banner">
-					<div className="left-banner">{formatBlogs(banner.slice(2, 4))}</div>
-					<div className="right-banner">
-						{formatBlogs(banner.slice(0, 1), true)}
-						{formatBlogs(banner.slice(1, 2), true)}
-					</div>
-				</div>
-			)}
-
-			{blogRecentlySubmitted && (
-				<Notification
-					kind="success"
-					handleClose={() => removeCookie('cpat_blog_posted')}
-					title="Post Success"
-					subtitle={
-						<span>
-							Your post has been successfully submitted. This may take some time before it is uploaded
-							onto the feed.
-							<br />
-						</span>
-					}
-				/>
-			)}
-
 			<div className="container-wide">
-				<hr className="my-4" />
-				<div />
-				{formatBlogs(list)}
-
-				{!list &&
-				!banner && (
-					<div className="banner">
-						<h4>...No Blogs Available</h4>
-					</div>
-				)}
+				<div className="user-blog-header-container">
+					<h1 className="header-text">Your blogs</h1>
+				</div>
+				<Tabs
+					ariaLabel="listbox"
+					className="some-class"
+					iconDescription="show menu options"
+					onKeyDown={function noRefCheck() {}}
+					onSelectionChange={function noRefCheck() {}}
+					role="navigation"
+					selected={0}
+					tabContentClassName="user-blog-tabs"
+					triggerHref="#"
+					//@ts-ignore
+					type="container"
+				>
+					<Tab
+						href="#"
+						id="tab-3"
+						label="Published"
+						handleTabAnchorFocus={() => {}}
+						handleTabClick={() => {}}
+						handleTabKeyDown={() => {}}
+						tabIndex={0}
+					>
+						<div className="approved-content">{formatBlogs(list, 'Approved')}</div>
+					</Tab>
+					<Tab
+						href="#"
+						id="tab-1"
+						label="Pending"
+						handleTabAnchorFocus={() => {}}
+						handleTabClick={() => {}}
+						handleTabKeyDown={() => {}}
+						tabIndex={1}
+					>
+						<div className="pending-content">{formatBlogs(list, 'Pending')}</div>
+					</Tab>
+					<Tab
+						href="#"
+						id="tab-2"
+						label="Rejected"
+						handleTabAnchorFocus={() => {}}
+						handleTabClick={() => {}}
+						handleTabKeyDown={() => {}}
+						tabIndex={2}
+					>
+						<div className="rejected-content">{formatBlogs(list, 'Rejected')}</div>
+					</Tab>
+				</Tabs>
 			</div>
 
 			{/* Error Modal will open automatically when errorMessage state is set */}

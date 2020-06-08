@@ -1,7 +1,7 @@
 import { createContext } from 'react'
 
 const userContext = createContext({
-  roles: {},
+  scopes: {},
   name: '',
   email: ''
 });
