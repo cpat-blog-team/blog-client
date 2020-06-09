@@ -21,6 +21,7 @@ export default function CommunityGuidelines(props: Props) {
   const [name, setName] = useState('');
   const [date, setDate] = useState('');
   const [title, setTitle] = useState('');
+  const [version, setVersion] = useState(0);
 
   const [delta, setDelta] = useState(new Delta());
   const [errorMessage, setErrorMessage] = useState('');
@@ -29,13 +30,14 @@ export default function CommunityGuidelines(props: Props) {
   const { scopes } = useContext(userContext);
 
 
-  const loadCommunityGuidelines = ({ content, name, date, title }) => {
+  const loadCommunityGuidelines = ({ content, name, date, title, version }) => {
     let { ops } = JSON.parse(content);
     const converter = new QuillDeltaToHtmlConverter(ops);
     setContent(converter.convert());
     setName(name);
     setTitle(title);
     setDate(date)
+    setVersion(version);
   }
 
   useEffect(() => {
@@ -44,26 +46,27 @@ export default function CommunityGuidelines(props: Props) {
       .catch(err => console.error(err));
   }, []);
 
-  const formatPost = () => ({
-    content: JSON.stringify(delta),
-    version: 1
-  });
+  const formatPost = async () => {
+    const { data } = await axios.get('/user');
 
-  const clearForm = () => {
-    setContent('');
-    setDelta(new Delta());
-  }
+    return({
+      name: data.name,
+      email: data.email,
+      content: JSON.stringify(delta),
+      version: version+1,
+    })
+  };
 
-  const submit = () => {
-    const communityGuidelinesPost = formatPost();
-    axios.post('/api/communityGuidelines', JSON.stringify({ content: communityGuidelinesPost.content }), { headers: { 'Content-Type': 'application/json' } })
+  const submit = async () => {
+    const communityGuidelinesPost = await formatPost();
+    await axios.post('/api/communityGuidelines', 
+    JSON.stringify(communityGuidelinesPost), { headers: { 'Content-Type': 'application/json' } })
       .then(() => submitSuccess())
       .catch(({ response }) => submitFail(response));
   }
 
   const submitSuccess = () => {
-    clearForm();
-    history.push('/');
+    setEditCommunityGuidelines(false);
   }
 
   const submitFail = ({ status, statusText }) => {
@@ -76,9 +79,9 @@ export default function CommunityGuidelines(props: Props) {
   const handleSubmit = () => {
     if (!invalidContent) submit();
   }
-
-  const validateContent = (value) => value.replace(/<[^>]*>/g, "") !== '' ? setInvalidContent(false) : setInvalidContent(true);
-  const validateContentOnBlur = () => content ? setInvalidContent(false) : setInvalidContent(true);
+	const removeHTMLTags = (value) => value.replace(/<[^>]*>/g, '');
+  const validateContent = (value) => (removeHTMLTags(value) ? setInvalidContent(false) : setInvalidContent(true));
+	const validateContentOnBlur = () => (content ? setInvalidContent(false) : setInvalidContent(true));
 
   const handleChangeContent = (content, delta, source, editor) => {
     setContent(content);
