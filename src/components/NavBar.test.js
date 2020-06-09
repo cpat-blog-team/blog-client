@@ -60,10 +60,10 @@ describe('BlogList component', () => {
 		expect(pushedRoute).toBe('/writeBlog');
 	});
 
-	test('clicking "My Blog Posts" button in side nav should push path /writeBlog to history', () => {
+	test('clicking "My Blog Posts" button in side nav should push path /myBlogList to history', () => {
 		const { getByTestId } = component;
 		fireEvent.click(getByTestId('side-nav-my-blog-posts-button'));
-		expect(pushedRoute).toBe(`/blogList/username/${mockUserCtx().name}`);
+		expect(pushedRoute).toBe(`/myBlogList/username/${mockUserCtx().name}`);
 	});
 
 	test('clicking "Community Guidelines" button in side nav should push path /communityGuidelines to history', () => {
