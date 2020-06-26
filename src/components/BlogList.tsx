@@ -75,7 +75,7 @@ export default function BlogList(props: Props) {
 		}
 
 		return list.map(({ title, summary, date, name, _id, filename }, i) => (
-			<div key={i} data-testid="blogPost" className="blog-row-wrapper">
+			<div key={i} data-testid="blogPost" className="blog-row-wrapper blog-list-wrapper">
 				<Tile className="blog-list-row">
 					<div className="blog-list-row-left">
 						<div className={direction}>
@@ -174,7 +174,10 @@ export default function BlogList(props: Props) {
 			<div className="container-wide">
 				<hr className="my-4" />
 				<div />
-				{formatBlogs(list)}
+				<div className="bottom-blog-feed">
+					{formatBlogs(list)}
+				</div>
+				
 
 				{!list &&
 				!banner && (
