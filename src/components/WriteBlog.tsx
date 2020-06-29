@@ -196,7 +196,7 @@ export default function WriteBlog() {
 		try {
 			if (editorMode === 'update') {
 				const formData = await formatUpdatedPost();
-				axios.post(`/api/blogs/${_id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+				axios.patch(`/api/blogs/${_id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
 			} else {
 				const formData = await formatPost();
 				axios.post('/api/blogs/add', formData, { headers: { 'Content-Type': 'multipart/form-data' } });

@@ -21,20 +21,16 @@ export default function BlogList(props: Props) {
 	const [ list, setList ] = useState<BlogPostInterface[]>([]);
 	const [ deleteId, setDeleteId ] = useState('');
 	const [ blogRecentlySubmitted, setBlogRecentlySubmitted ] = useState(false);
-
+	
 	useEffect(() => {
-		// if cookie "cpat_blog_posted" exists then render submission message
-		if (cookies.cpat_blog_posted) {
-			setBlogRecentlySubmitted(true);
-			removeCookie('cpat_blog_posted');
-		}
-	}, []);
-
-	useEffect(
-		() => {
-			getBlogs();
-		},
-		[ searchValue ]
+		getBlogs().then(() => {
+			if (cookies.cpat_blog_posted) {
+				setBlogRecentlySubmitted(true);
+				removeCookie('cpat_blog_posted');
+			}
+		})
+	},
+	[ searchValue ]
 	);
 
 	const getQuery = () => {
@@ -75,7 +71,7 @@ export default function BlogList(props: Props) {
 		}
 
 		return list.map(({ title, summary, date, name, _id, filename }, i) => (
-			<div key={i} data-testid="blogPost" className="blog-row-wrapper">
+			<div key={i} data-testid="blogPost" className="blog-row-wrapper blog-list-wrapper">
 				<Tile className="blog-list-row">
 					<div className="blog-list-row-left">
 						<div className={direction}>
@@ -174,7 +170,10 @@ export default function BlogList(props: Props) {
 			<div className="container-wide">
 				<hr className="my-4" />
 				<div />
-				{formatBlogs(list)}
+				<div className="bottom-blog-feed">
+					{formatBlogs(list)}
+				</div>
+				
 
 				{!list &&
 				!banner && (
