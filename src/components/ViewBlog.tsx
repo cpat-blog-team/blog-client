@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import userContext from '../userContext';
 import { useParams, useHistory } from 'react-router-dom';
 import { BlogPostInterface, emptyBlogPost } from './exampleBlogPost';
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
@@ -10,8 +11,10 @@ interface Props {}
 
 export default function ViewBlog(props: Props) {
 	const { _id } = useParams();
+	const { name: currentUsername } = useContext(userContext);
 	const [ blog, setBlog ] = useState<BlogPostInterface>(emptyBlogPost());
 	const [ html, setHtml ] = useState('');
+	const [ deleteId, setDeleteId ] = useState('');
 	const [ reportModalOpen, setReportModalOpen] = useState(false);
 	const [ review, setReview ] = useState('');
 	const history = useHistory();
@@ -35,6 +38,12 @@ export default function ViewBlog(props: Props) {
 		});
 		history.push('/');
 	}
+
+	const deleteBlog = async () => {
+		await axios.delete(`/api/blogs/${deleteId}`);
+		setDeleteId('');
+		history.push('/');
+	};
 
 	const handleChangeReview = ({ value }) => setReview(value);
 
@@ -64,9 +73,26 @@ export default function ViewBlog(props: Props) {
 							{date}
 						</small>
 					</div>
-
 					{approved !== 'Rejected' &&
 					<OverflowMenu data-testid="more-info-wrapper">
+						{currentUsername === name && (
+							<OverflowMenuItem
+								data-testid="updateMyBlog"
+								itemText="Update"
+								onClick={() => history.push(`/writeBlog/id=${_id}`)}
+								primaryFocus
+							/>
+						)}
+
+						{currentUsername === name && (
+							<OverflowMenuItem
+								data-testid="deleteMyBlog"
+								itemText="Delete"
+								onClick={() => setDeleteId(_id)}
+								isDelete
+								hasDivider
+							/>
+						)}
 						<OverflowMenuItem
 							itemText="Report"
 							onClick={() => setReportModalOpen(true) }
@@ -105,6 +131,17 @@ export default function ViewBlog(props: Props) {
 					labelText="Please provide use with more information."
 				/>
 			</Modal>
+
+			{/* Error Modal will open automatically when errorMessage state is set */}
+			<Modal
+				open={deleteId ? true : false}
+				onRequestClose={() => setDeleteId('')}
+				modalHeading="Are you sure you want to delete this blog?"
+				primaryButtonText="Yes"
+				secondaryButtonText="Cancel"
+				onSecondarySubmit={() => setDeleteId('')}
+				onRequestSubmit={() => deleteBlog()}
+			/>
 			</div>
 
 		</div>

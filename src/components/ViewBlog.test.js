@@ -3,7 +3,8 @@ import { render, wait } from "@testing-library/react";
 import ViewBlog from "./ViewBlog";
 import "@testing-library/jest-dom";
 import { exampleBlogPost } from './exampleBlogPost';
-import mockAxios from 'axios';
+import userContext from '../userContext';
+import axios from 'axios';
 
 jest.mock('axios');
 
@@ -22,19 +23,23 @@ describe("ViewBlog component", () => {
 
   beforeAll(() => {
     // mockAPI returns a mock blog and stores the queried route in the variable "queriedRoute" for testing
-    const mockApi = (route) => {
+    axios.mockImplementation((route) => {
       queriedRoute = route;
       return Promise.resolve({ data: { blog: exampleBlogPost } });
-    };
-    mockAxios.mockImplementation(mockApi);
-  });
-
-  beforeEach(async () => {
-    // component must be awaited because useEffect makes an api call upon first render
-    await wait(() => {
-      component = render(<ViewBlog />);
     });
   });
+
+  beforeEach(async (done) => {
+		// component must be awaited because useEffect makes an api call up first render
+		await wait(() => {
+			component = render(
+				<userContext.Provider value={{ name: exampleBlogPost.name }}>
+					<ViewBlog />
+				</userContext.Provider>
+			);
+		});
+		done();
+	});
 
   test("canary test", () => {
     expect(true).toEqual(true);

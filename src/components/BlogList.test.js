@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, wait, queryAllByRole, getAllByTestId } from '@testing-library/react';
+import { render, wait } from '@testing-library/react';
 import { exampleList, exampleBlogPost } from './exampleBlogPost';
 import userContext from '../userContext';
 import BlogList from './BlogList';
