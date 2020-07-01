@@ -305,7 +305,7 @@ export default function WriteBlog() {
           hideLabel
           onBlur={({ target }) => validateTitle(target.value)}
           value={title}
-          placeholder="Blog Post Title!!"
+          placeholder="Blog Post Title"
           invalid={invalidTitle ? true : false}
           invalidText="Title is required"
           onChange={handleChangeTitle}
