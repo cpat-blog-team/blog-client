@@ -26,7 +26,7 @@
     "@carbon/icons-react": "^10.9.1",
     "@coreui/coreui": "^2.1.16",
     "@types/node-sass": "^4.11.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "carbon-components": "^10.10.1",
     "carbon-components-react": "^7.10.3",
